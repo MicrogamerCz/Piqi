@@ -27,6 +27,7 @@ add_library(piqi SHARED
     comment.h
     stamp.h
     bookmarkdetails.h
+    searchrequest.h
 )
 
 set_target_properties(piqi PROPERTIES AUTOMOC ON)

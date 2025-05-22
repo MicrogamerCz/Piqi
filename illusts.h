@@ -19,7 +19,7 @@ class Illusts : public QObject
                 m_illusts.append(illust);
             }
             if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
-            else m_nextUrl = ""
+            else m_nextUrl = "";
         };
         Q_SLOT void Extend(Illusts* nextFeed) {
             m_nextUrl = nextFeed->m_nextUrl;
@@ -47,4 +47,18 @@ class Recommended : public Illusts
                 }
                 m_contestExists = data["contest_exists"].toBool();
             };
+};
+class SearchResults : public Illusts
+{
+    Q_OBJECT
+    QML_ELEMENT;
+
+    QM_PROPERTY(bool, showAi)
+
+    public:
+        SearchResults(QObject* parent = nullptr) : Illusts(parent) {};
+        SearchResults(QObject* parent, QJsonObject data) : Illusts(parent, data)
+        {
+            m_showAi = data["show_ai"].toBool();
+        };
 };

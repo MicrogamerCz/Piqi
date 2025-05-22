@@ -3,6 +3,7 @@
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
+#include "searchrequest.h"
 #include <QCoro>
 #include <QCoroQmlTask>
 #include <QObject>
@@ -19,7 +20,7 @@ class Piqi : public QObject
     Q_OBJECT
     QML_ELEMENT;
 
-    QM_PROPERTY(User *, user)
+    QM_PROPERTY(Account *, user)
     QM_PROPERTY(QList<Account*>, otherUsers)
 
     QNetworkAccessManager manager;
@@ -48,6 +49,9 @@ public:
     QCoro::Task<FollowDetails*> FollowDetailTask(User* user);
     QCoro::Task<Illusts*> RelatedIllustsTask(Illustration* illust);
     QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
+    QCoro::Task<Illusts*> SearchPopularPreviewTask(SearchRequest* params);
+    QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
+    QCoro::Task<SearchResults*> SearchNextTask(SearchResults* results);
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
@@ -68,4 +72,7 @@ public Q_SLOTS:
     QCoro::QmlTask FollowDetail(User* user);
     QCoro::QmlTask RelatedIllusts(Illustration* illust);
     QCoro::QmlTask SearchAutocomplete(QString query);
+    QCoro::QmlTask SearchPopularPreview(SearchRequest* params);
+    QCoro::QmlTask Search(SearchRequest* params);
+    QCoro::QmlTask SearchNext(SearchResults* results);
 };

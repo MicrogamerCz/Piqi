@@ -1,6 +1,8 @@
 #include "piqi.h"
 #include "comments.h"
+#include "illustration.h"
 #include "illusts.h"
+#include "searchrequest.h"
 #include "tag.h"
 #include <QJsonDocument>
 #include <QUrlQuery>
@@ -14,9 +16,12 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 #include <qlist.h>
+#include <qlogging.h>
 #include <qnetworkreply.h>
 #include <qnetworkrequest.h>
+#include <qstringview.h>
 #include <qtmetamacros.h>
+#include <qtypes.h>
 #include <qurl.h>
 #include <qurlquery.h>
 
@@ -69,14 +74,14 @@ QCoro::Task<bool> Piqi::LoginTask(QString refreshToken)
     accessToken = data["access_token"].toString();
     refreshToken = data["refresh_token"].toString();
     expiration = QDateTime::currentDateTime().addSecs(3600);
-    m_user = new User(nullptr, data["user"].toObject());
+    m_user = new Account(nullptr, data["user"].toObject());
     Q_EMIT userChanged();
     co_return (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200);
 }
 
 QCoro::QmlTask Piqi::Walkthrough() { return WalkthroughTask(); }
 QCoro::Task<Illusts *> Piqi::WalkthroughTask() {
-    co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts")));
+    co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts"), false));
 }
 
 QCoro::QmlTask Piqi::RecommendedFeed(QString type, bool includeRanking, bool includePrivacyPolicy) {
@@ -95,7 +100,7 @@ QCoro::Task<Recommended *> Piqi::RecommendedFeedTask(QString type, bool includeR
 }
 QCoro::QmlTask Piqi::RecommendedFeedNext(Recommended* recommended) { return RecommendedFeedNextTask(recommended); }
 QCoro::Task<Recommended *> Piqi::RecommendedFeedNextTask(Recommended* recommended) {
-    co_return (co_await SendGet<Recommended>(recommended->m_nextUrl));
+    co_return (co_await SendGet<Recommended>(QUrl(recommended->m_nextUrl)));
 }
 
 QCoro::QmlTask Piqi::FollowingFeed(QString type, QString restriction) { return FollowingFeedTask(type, restriction); }
@@ -106,7 +111,7 @@ QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString type, QString restriction
     co_return (co_await SendGet<Illusts>(url));
 }
 QCoro::Task<Illusts *> Piqi::FollowingFeedNextTask(Illusts* feed) {
-    co_return (co_await SendGet<Illusts>(feed->m_nextUrl));
+    co_return (co_await SendGet<Illusts>(QUrl(feed->m_nextUrl)));
 }
 
 QCoro::QmlTask Piqi::AddBookmark(Illustration *illust, bool isPrivate) { return AddBookmarkTask(illust, isPrivate); }
@@ -258,4 +263,102 @@ QCoro::Task<QList<Tag*>> Piqi::SearchAutocompleteTask(QString query) {
     }
 
     co_return tags;
+}
+
+QCoro::QmlTask Piqi::SearchPopularPreview(SearchRequest* params) {
+    return SearchPopularPreviewTask(params);
+}
+QCoro::Task<Illusts*> Piqi::SearchPopularPreviewTask(SearchRequest* params) {
+    QUrl url("https://app-api.pixiv.net/v1/search/popular-preview/illust");
+    QUrlQuery query;
+
+    QString words;
+    for (int i = 0; i < params->m_tags.length(); i++) {
+        Tag* tag = params->m_tags[i];
+        words += tag->m_name + " ";
+    }
+    words.removeLast();
+    query.addQueryItem("word", words);
+
+    switch (params->m_searchTarget) {
+        case SearchRequest::SearchTarget::PartialTagsMatch: {
+            query.addQueryItem("search_target", "partial_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::ExactTagsMatch: {
+            query.addQueryItem("search_target", "exact_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::TitleAndDescription: {
+            query.addQueryItem("search_target", "title_and_caption");
+            break;
+        }
+    }
+
+    if (params->m_end_date != nullptr) {
+        if (params->m_start_date)
+            query.addQueryItem("start_date", params->m_start_date->toString(Qt::DateFormat::ISODate));
+        else
+            query.addQueryItem("start_date", QDate::currentDate().toString(Qt::DateFormat::ISODate));
+
+        query.addQueryItem("end_date", params->m_end_date->toString(Qt::DateFormat::ISODate));
+    }
+
+    url.setQuery(query);
+    co_return (co_await SendGet<Illusts>(url));
+}
+
+QCoro::QmlTask Piqi::Search(SearchRequest* params) {
+    return SearchTask(params);
+}
+QCoro::Task<SearchResults*> Piqi::SearchTask(SearchRequest* params) {
+    QUrl url("https://app-api.pixiv.net/v1/search/illust");
+    QUrlQuery query;
+
+    QString words;
+    for (int i = 0; i < params->m_tags.length(); i++) {
+        Tag* tag = params->m_tags[i];
+        words += tag->m_name + " ";
+    }
+    words.removeLast();
+    query.addQueryItem("word", words);
+
+    switch (params->m_searchTarget) {
+        case SearchRequest::SearchTarget::PartialTagsMatch: {
+            query.addQueryItem("search_target", "partial_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::ExactTagsMatch: {
+            query.addQueryItem("search_target", "exact_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::TitleAndDescription: {
+            query.addQueryItem("search_target", "title_and_caption");
+            break;
+        }
+    }
+
+    if (params->m_end_date != nullptr) {
+        if (params->m_start_date)
+            query.addQueryItem("start_date", params->m_start_date->toString(Qt::DateFormat::ISODate));
+        else
+            query.addQueryItem("start_date", QDate::currentDate().toString(Qt::DateFormat::ISODate));
+
+        query.addQueryItem("end_date", params->m_end_date->toString(Qt::DateFormat::ISODate));
+    }
+
+    if (params->m_sortAscending)
+        query.addQueryItem("sort", "date_asc");
+    else
+        query.addQueryItem("sort", "date_desc");
+
+    url.setQuery(query);
+
+    co_return (co_await SendGet<SearchResults>(url));
+}
+QCoro::QmlTask Piqi::SearchNext(SearchResults* results) {
+    return SearchNextTask(results);
+}
+QCoro::Task<SearchResults*> Piqi::SearchNextTask(SearchResults* results) {
+    co_return (co_await SendGet<SearchResults>(QUrl(results->m_nextUrl)));
 }
