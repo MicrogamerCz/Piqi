@@ -1,45 +1,53 @@
 cmake_minimum_required(VERSION 3.16)
 project(piqi VERSION 0.1)
 
+set(KF6_MIN_VERSION 6.13.0)
 set(QT6_MIN_VERSION 6.9.0)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines")
 remove_definitions(-DQT_NO_CAST_TO_ASCII -DQT_NO_CAST_FROM_ASCII)
 
+find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 find_package(Qt6 ${QT6_MIN_VERSION} REQUIRED COMPONENTS Core Qml Network)
 find_package(QCoro6 REQUIRED COMPONENTS Core Network DBus Qml)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
+
+qt_standard_project_setup(REQUIRES 6.9)
 qt_policy(SET QTP0001 NEW)
 qcoro_enable_coroutines()
+include(FeatureSummary)
+include(ECMQmlModule)
 
-add_library(piqi SHARED
-    piqi.cpp
-    illusts.h
-    illustration.h
-    imageurls.h
-    series.h
-    tag.h
-    user.h
-    qepr.h
-    privacypolicy.h
-    comments.h
-    comment.h
-    stamp.h
-    bookmarkdetails.h
-    searchrequest.h
-)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
-set_target_properties(piqi PROPERTIES AUTOMOC ON)
-set_target_properties(piqi PROPERTIES AUTORCC ON)
-set_target_properties(piqi PROPERTIES AUTOUIC ON)
-
-qt_add_qml_module(piqi
-    # SHARED
+qt_add_library(piqi STATIC)
+ecm_add_qml_module(piqi
+    GENERATE_PLUGIN_SOURCE
     URI org.kde.piqi
     VERSION 1.0
-    # OUTPUT_DIRECTORY
-        # "${CMAKE_BINARY_DIR}/org/kde/piqi"
+    SOURCES
+        illustration.cpp
+        user.cpp
+        imageurls.cpp
+        series.cpp
+        tag.cpp
+
+        piqi.cpp
+
+        bookmarkdetails.h
+        illusts.h
+        qepr.h
+        privacypolicy.h
+        comments.h
+        comment.h
+        stamp.h
+        searchrequest.h
+    OUTPUT_DIRECTORY
+        "${CMAKE_BINARY_DIR}/org/kde/piqi"
 )
 add_compile_definitions(QCORO_NO_WARN_DEPRECATED_TASK_H)
 target_compile_options (piqi PUBLIC -fexceptions)

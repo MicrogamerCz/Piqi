@@ -11,11 +11,7 @@ class Series : public QObject
     QM_PROPERTY(int, id)
     QM_PROPERTY(QString, title)
 
-    public:
-        Series(QObject* parent = nullptr) : QObject(parent) {};
-        Series(QObject* parent, QJsonObject data) : QObject(parent)
-        {
-            m_id = data["id"].toInt();
-            m_title = data["title"].toString();
-        };
+public:
+    Series(QObject* parent = nullptr);
+    Series(QObject* parent, QJsonObject data);
 };
