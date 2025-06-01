@@ -4,7 +4,9 @@ User::User(QObject* parent) : QObject(parent) {}
 
 User::User(QObject* parent, QJsonObject data) : QObject(parent)
 {
-    m_id = data["id"].toInt();
+    auto id = data["id"];
+    if (id.isString()) m_id = data["id"].toString().toInt();
+    else m_id = data["id"].toInt();
     m_name = data["name"].toString();
     m_account = data["account"].toString();
     m_profileImageUrls = new ImageUrls(nullptr, data["profile_image_urls"].toObject());

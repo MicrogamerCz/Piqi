@@ -6,7 +6,7 @@ Unofficial async Qt-based library for interacting with the official pixiv Androi
 Probably not, it's still a risk though, as with any 3rd party library
 
 **Is this compatible with QtQuick?**\
-Yes. All classes are registered `QML_ELEMENT`s and they can be used in QtQuick projects with no further setup, you only need to add `import org.kde.piqi` in your *.qml* files.\
+Yes. All classes are registered `QML_ELEMENT`s and they can be used in QtQuick projects with no further setup, you only need to add `import io.github.micro.piqi` in your *.qml* files.\
 However this compatibility with QtQuick means, that QtQuick is a dependency of any project using piqi, whether it's using QtQuick or not.
 
 ## Installation

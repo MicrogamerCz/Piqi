@@ -27,7 +27,7 @@ set(CMAKE_AUTOUIC ON)
 qt_add_library(piqi STATIC)
 ecm_add_qml_module(piqi
     GENERATE_PLUGIN_SOURCE
-    URI org.kde.piqi
+    URI io.github.micro.piqi
     VERSION 1.0
     SOURCES
         illustration.cpp
@@ -47,7 +47,7 @@ ecm_add_qml_module(piqi
         stamp.h
         searchrequest.h
     OUTPUT_DIRECTORY
-        "${CMAKE_BINARY_DIR}/org/kde/piqi"
+        "${CMAKE_BINARY_DIR}/io/github/micro/piqi"
 )
 add_compile_definitions(QCORO_NO_WARN_DEPRECATED_TASK_H)
 target_compile_options (piqi PUBLIC -fexceptions)

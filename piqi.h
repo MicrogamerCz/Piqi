@@ -8,12 +8,15 @@
 #include <QCoroQmlTask>
 #include <QObject>
 #include <QQmlEngine>
+#include <qcontainerfwd.h>
 #include <qcoroprocess.h>
 #include <qcoroqmltask.h>
 #include <qdatetime.h>
 #include <qnetworkaccessmanager.h>
 #include <qstringview.h>
 #include <qtmetamacros.h>
+
+// TODO: merge next feed requests into one
 
 class Piqi : public QObject
 {
@@ -35,9 +38,7 @@ public:
     QCoro::Task<bool> LoginTask(QString refreshToken);
     QCoro::Task<Illusts *> WalkthroughTask();
     QCoro::Task<Recommended *> RecommendedFeedTask(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
-    QCoro::Task<Recommended *> RecommendedFeedNextTask(Recommended* recommended);
     QCoro::Task<Illusts *> FollowingFeedTask(QString type, QString restriction);
-    QCoro::Task<Illusts *> FollowingFeedNextTask(Illusts* feed);
     QCoro::Task<void> AddBookmarkTask(Illustration *illust, bool isPrivate = false);
     QCoro::Task<void> RemoveBookmarkTask(Illustration *illust);
     QCoro::Task<QList<Illustration*>> UserIllustsTask(User* user, QString type);
@@ -51,16 +52,21 @@ public:
     QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
     QCoro::Task<Illusts*> SearchPopularPreviewTask(SearchRequest* params);
     QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
+    QCoro::Task<Illusts*> LatestGlobalTask(QString type);
+    QCoro::Task<Illusts*> BookmarksFeedTask(QString type, QString restriction);
+
+    QCoro::Task<Recommended *> RecommendedFeedNextTask(Recommended* recommended);
+    QCoro::Task<Illusts *> FollowingFeedNextTask(Illusts* feed);
     QCoro::Task<SearchResults*> SearchNextTask(SearchResults* results);
+    QCoro::Task<Illusts*> LatestGlobalTaskNext(Illusts* illusts);
+    QCoro::Task<Illusts*> BookmarksFeedTaskNext(Illusts* illusts);
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
     QCoro::QmlTask Login(QString refreshToken);
     QCoro::QmlTask Walkthrough();
     QCoro::QmlTask RecommendedFeed(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
-    QCoro::QmlTask RecommendedFeedNext(Recommended* recommended);
     QCoro::QmlTask FollowingFeed(QString type, QString restriction);
-    QCoro::QmlTask FollowingFeedNext(Illusts* feed);
     QCoro::QmlTask AddBookmark(Illustration *illust, bool isPrivate = false);
     QCoro::QmlTask RemoveBookmark(Illustration *illust);
     QCoro::QmlTask UserIllusts(User* user, QString type);
@@ -74,5 +80,12 @@ public Q_SLOTS:
     QCoro::QmlTask SearchAutocomplete(QString query);
     QCoro::QmlTask SearchPopularPreview(SearchRequest* params);
     QCoro::QmlTask Search(SearchRequest* params);
+    QCoro::QmlTask LatestGlobal(QString type);
+    QCoro::QmlTask BookmarksFeed(QString type, QString restriction);
+
+    QCoro::QmlTask RecommendedFeedNext(Recommended* recommended);
+    QCoro::QmlTask FollowingFeedNext(Illusts* feed);
     QCoro::QmlTask SearchNext(SearchResults* results);
+    QCoro::QmlTask LatestGlobalNext(Illusts* illusts);
+    QCoro::QmlTask BookmarksFeedNext(Illusts* illusts);
 };

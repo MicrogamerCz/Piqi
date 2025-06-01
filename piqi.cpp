@@ -43,7 +43,7 @@ QCoro::Task<bool> Piqi::IsLoggedIn()
 }
 
 template<class T> QCoro::Task<T*> Piqi::SendGet(QUrl url, bool authenticated) {
-    if (!(co_await IsLoggedIn()))
+    if (authenticated && !(co_await IsLoggedIn()))
         co_return nullptr;
 
     QNetworkRequest request(url);
@@ -361,4 +361,40 @@ QCoro::QmlTask Piqi::SearchNext(SearchResults* results) {
 }
 QCoro::Task<SearchResults*> Piqi::SearchNextTask(SearchResults* results) {
     co_return (co_await SendGet<SearchResults>(QUrl(results->m_nextUrl)));
+}
+
+QCoro::QmlTask Piqi::LatestGlobal(QString type) {
+    return LatestGlobalTask(type);
+}
+QCoro::Task<Illusts*> Piqi::LatestGlobalTask(QString type) {
+    if (type == "novel") co_return nullptr;
+    co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type)));
+}
+QCoro::QmlTask Piqi::LatestGlobalNext(Illusts* illusts) {
+    return LatestGlobalTaskNext(illusts);
+}
+QCoro::Task<Illusts*> Piqi::LatestGlobalTaskNext(Illusts* illusts) {
+    co_return (co_await SendGet<Illusts>(QUrl(illusts->m_nextUrl)));
+}
+
+QCoro::QmlTask Piqi::BookmarksFeed(QString type, QString restriction) {
+    return BookmarksFeedTask(type, restriction);
+}
+QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(QString type, QString restriction) {
+    if (type == "novel") co_return nullptr;
+    QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/" + type);
+    QUrlQuery query {
+        { "user_id", QString::number(m_user->m_id) },
+        { "restrict", restriction }
+    };
+    url.setQuery(query);
+
+    co_return (co_await SendGet<Illusts>(url));
+}
+
+QCoro::QmlTask Piqi::BookmarksFeedNext(Illusts* illusts) {
+    return BookmarksFeedTaskNext(illusts);
+}
+QCoro::Task<Illusts*> Piqi::BookmarksFeedTaskNext(Illusts* illusts) {
+    co_return (co_await SendGet<Illusts>(QUrl(illusts->m_nextUrl)));
 }
