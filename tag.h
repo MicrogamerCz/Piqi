@@ -6,7 +6,7 @@
 class Tag : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(QString, name)
     QM_PROPERTY(QString, translatedName)
@@ -19,7 +19,7 @@ class Tag : public QObject
 class BookmarkTag : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(QString, name)
     QM_PROPERTY(bool, isRegistered)

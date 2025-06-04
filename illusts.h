@@ -51,7 +51,7 @@ class Recommended : public Illusts
 class SearchResults : public Illusts
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(bool, showAi)
 

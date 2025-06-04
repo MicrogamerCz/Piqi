@@ -5,7 +5,7 @@
 class User : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(int, id)
     QM_PROPERTY(QString, name)
@@ -22,7 +22,7 @@ public:
 class Account : public User
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(bool, isMailAuthorized)
     QM_PROPERTY(bool, isPremium)
