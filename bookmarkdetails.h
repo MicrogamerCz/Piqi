@@ -5,7 +5,7 @@
 class BookmarkDetails : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(bool, isBookmarked)
     QM_PROPERTY(QList<BookmarkTag *>, tags)
@@ -28,7 +28,7 @@ public:
 class FollowDetails : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(bool, isFollowed)
     QM_PROPERTY(QString, restriction)

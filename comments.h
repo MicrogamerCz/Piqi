@@ -5,7 +5,7 @@
 class Comments : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(QList<Comment *>, comments)
     QM_PROPERTY(QString, nextUrl)

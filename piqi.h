@@ -21,7 +21,7 @@
 class Piqi : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(Account *, user)
     QM_PROPERTY(QList<Account*>, otherUsers)

@@ -5,7 +5,7 @@
 class Comment : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT;
+    QML_ELEMENT
 
     QM_PROPERTY(int, id)
     QM_PROPERTY(QString, comment)
