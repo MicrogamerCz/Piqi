@@ -2,7 +2,7 @@
 #include "privacypolicy.h"
 #include "illustration.h"
 
-class Illusts : public QObject
+class Illusts : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
@@ -10,23 +10,39 @@ class Illusts : public QObject
     QM_PROPERTY(QList<Illustration*>, illusts)
     QM_PROPERTY(QString, nextUrl)
 
-    public:
-        Illusts(QObject* parent = nullptr) : QObject(parent) {};
-        Illusts(QObject* parent, QJsonObject data) : QObject(parent)
-        {
-            for (QJsonValue il : data["illusts"].toArray()) {
-                Illustration* illust = new Illustration(nullptr, il.toObject());
-                m_illusts.append(illust);
-            }
-            if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
-            else m_nextUrl = "";
-        };
-        Q_SLOT void Extend(Illusts* nextFeed) {
-            m_nextUrl = nextFeed->m_nextUrl;
-            m_illusts.append(nextFeed->m_illusts);
-            Q_EMIT illustsChanged();
-        };
+public:
+    Illusts(QObject* parent = nullptr) : QAbstractListModel(parent) {};
+    Illusts(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
+    {
+        beginResetModel();
+        for (QJsonValue il : data["illusts"].toArray()) {
+            Illustration* illust = new Illustration(nullptr, il.toObject());
+            m_illusts.append(illust);
+        }
+        endResetModel();
+        if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
+        else m_nextUrl = "";
+    }
+    Q_SLOT void Extend(Illusts* nextFeed) {
+        m_nextUrl = nextFeed->m_nextUrl;
+
+        beginInsertRows({}, m_illusts.count(), m_illusts.count() + nextFeed->m_illusts.count() - 1);
+        m_illusts.append(nextFeed->m_illusts);
+        endInsertRows();
+
+        Q_EMIT illustsChanged();
+    }
+
+    enum CustomRoles {
+        IllustRole = Qt::UserRole,
+    };
+    Q_ENUM(CustomRoles)
+
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QHash<int, QByteArray> roleNames() const override;
 };
+
 class Recommended : public Illusts
 {
     Q_OBJECT
@@ -48,6 +64,7 @@ class Recommended : public Illusts
                 m_contestExists = data["contest_exists"].toBool();
             };
 };
+
 class SearchResults : public Illusts
 {
     Q_OBJECT

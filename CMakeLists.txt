@@ -34,6 +34,7 @@ ecm_add_qml_module(piqi
         imageurls.cpp
         series.cpp
         tag.cpp
+        illusts.cpp
 
         piqi.cpp
 
