@@ -15,8 +15,7 @@
 #include <qnetworkaccessmanager.h>
 #include <qstringview.h>
 #include <qtmetamacros.h>
-
-// TODO: merge next feed requests into one
+#include "userdetails.h"
 
 class Piqi : public QObject
 {
@@ -37,6 +36,7 @@ public:
     Piqi(QObject *parent = nullptr);
     QCoro::Task<bool> LoginTask(QString refreshToken);
     QCoro::Task<Illusts *> WalkthroughTask();
+    QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
     QCoro::Task<Recommended *> RecommendedFeedTask(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::Task<Illusts *> FollowingFeedTask(QString type, QString restriction);
     QCoro::Task<void> AddBookmarkTask(Illustration *illust, bool isPrivate = false);
@@ -54,17 +54,13 @@ public:
     QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
     QCoro::Task<Illusts*> LatestGlobalTask(QString type);
     QCoro::Task<Illusts*> BookmarksFeedTask(QString type, QString restriction);
-
-    QCoro::Task<Recommended *> RecommendedFeedNextTask(Recommended* recommended);
-    QCoro::Task<Illusts *> FollowingFeedNextTask(Illusts* feed);
-    QCoro::Task<SearchResults*> SearchNextTask(SearchResults* results);
-    QCoro::Task<Illusts*> LatestGlobalTaskNext(Illusts* illusts);
-    QCoro::Task<Illusts*> BookmarksFeedTaskNext(Illusts* illusts);
+    QCoro::Task<UserDetails*> DetailsTask(User* user);
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
     QCoro::QmlTask Login(QString refreshToken);
     QCoro::QmlTask Walkthrough();
+    QCoro::QmlTask FetchNextFeed(Illusts* feed);
     QCoro::QmlTask RecommendedFeed(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::QmlTask FollowingFeed(QString type, QString restriction);
     QCoro::QmlTask AddBookmark(Illustration *illust, bool isPrivate = false);
@@ -82,10 +78,5 @@ public Q_SLOTS:
     QCoro::QmlTask Search(SearchRequest* params);
     QCoro::QmlTask LatestGlobal(QString type);
     QCoro::QmlTask BookmarksFeed(QString type, QString restriction);
-
-    QCoro::QmlTask RecommendedFeedNext(Recommended* recommended);
-    QCoro::QmlTask FollowingFeedNext(Illusts* feed);
-    QCoro::QmlTask SearchNext(SearchResults* results);
-    QCoro::QmlTask LatestGlobalNext(Illusts* illusts);
-    QCoro::QmlTask BookmarksFeedNext(Illusts* illusts);
+    QCoro::QmlTask Details(User* user);
 };

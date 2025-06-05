@@ -4,6 +4,7 @@
 #include "illusts.h"
 #include "searchrequest.h"
 #include "tag.h"
+#include "userdetails.h"
 #include <QJsonDocument>
 #include <QUrlQuery>
 #include <qcborvalue.h>
@@ -84,6 +85,13 @@ QCoro::Task<Illusts *> Piqi::WalkthroughTask() {
     co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts"), false));
 }
 
+QCoro::QmlTask Piqi::FetchNextFeed(Illusts* feed) {
+    return FetchNextFeedTask(feed);
+}
+QCoro::Task<Illusts*> Piqi::FetchNextFeedTask(Illusts* feed) {
+    co_return (co_await SendGet<Illusts>(QUrl(feed->m_nextUrl)));
+}
+
 QCoro::QmlTask Piqi::RecommendedFeed(QString type, bool includeRanking, bool includePrivacyPolicy) {
     return RecommendedFeedTask(type, includeRanking, includePrivacyPolicy);
 }
@@ -98,20 +106,12 @@ QCoro::Task<Recommended *> Piqi::RecommendedFeedTask(QString type, bool includeR
         url.setQuery(query);
     co_return (co_await SendGet<Recommended>(url));
 }
-QCoro::QmlTask Piqi::RecommendedFeedNext(Recommended* recommended) { return RecommendedFeedNextTask(recommended); }
-QCoro::Task<Recommended *> Piqi::RecommendedFeedNextTask(Recommended* recommended) {
-    co_return (co_await SendGet<Recommended>(QUrl(recommended->m_nextUrl)));
-}
 
 QCoro::QmlTask Piqi::FollowingFeed(QString type, QString restriction) { return FollowingFeedTask(type, restriction); }
-QCoro::QmlTask Piqi::FollowingFeedNext(Illusts* feed) { return FollowingFeedNextTask(feed); }
 QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString type, QString restriction)
 {
     QUrl url(("https://app-api.pixiv.net/v2/" + type + "/follow?restrict=" + restriction));
     co_return (co_await SendGet<Illusts>(url));
-}
-QCoro::Task<Illusts *> Piqi::FollowingFeedNextTask(Illusts* feed) {
-    co_return (co_await SendGet<Illusts>(QUrl(feed->m_nextUrl)));
 }
 
 QCoro::QmlTask Piqi::AddBookmark(Illustration *illust, bool isPrivate) { return AddBookmarkTask(illust, isPrivate); }
@@ -356,12 +356,6 @@ QCoro::Task<SearchResults*> Piqi::SearchTask(SearchRequest* params) {
 
     co_return (co_await SendGet<SearchResults>(url));
 }
-QCoro::QmlTask Piqi::SearchNext(SearchResults* results) {
-    return SearchNextTask(results);
-}
-QCoro::Task<SearchResults*> Piqi::SearchNextTask(SearchResults* results) {
-    co_return (co_await SendGet<SearchResults>(QUrl(results->m_nextUrl)));
-}
 
 QCoro::QmlTask Piqi::LatestGlobal(QString type) {
     return LatestGlobalTask(type);
@@ -369,12 +363,6 @@ QCoro::QmlTask Piqi::LatestGlobal(QString type) {
 QCoro::Task<Illusts*> Piqi::LatestGlobalTask(QString type) {
     if (type == "novel") co_return nullptr;
     co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type)));
-}
-QCoro::QmlTask Piqi::LatestGlobalNext(Illusts* illusts) {
-    return LatestGlobalTaskNext(illusts);
-}
-QCoro::Task<Illusts*> Piqi::LatestGlobalTaskNext(Illusts* illusts) {
-    co_return (co_await SendGet<Illusts>(QUrl(illusts->m_nextUrl)));
 }
 
 QCoro::QmlTask Piqi::BookmarksFeed(QString type, QString restriction) {
@@ -392,9 +380,15 @@ QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(QString type, QString restriction)
     co_return (co_await SendGet<Illusts>(url));
 }
 
-QCoro::QmlTask Piqi::BookmarksFeedNext(Illusts* illusts) {
-    return BookmarksFeedTaskNext(illusts);
+QCoro::QmlTask Piqi::Details(User* user) {
+    return DetailsTask(user);
 }
-QCoro::Task<Illusts*> Piqi::BookmarksFeedTaskNext(Illusts* illusts) {
-    co_return (co_await SendGet<Illusts>(QUrl(illusts->m_nextUrl)));
+QCoro::Task<UserDetails*> Piqi::DetailsTask(User* user) {
+    QUrl url("https://app-api.pixiv.net/v2/user/detail");
+    QUrlQuery query {
+        { "user_id", QString::number(user->m_id) }
+    };
+    url.setQuery(query);
+
+    co_return (co_await SendGet<UserDetails>(url));
 }

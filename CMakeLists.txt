@@ -35,6 +35,9 @@ ecm_add_qml_module(piqi
         series.cpp
         tag.cpp
         illusts.cpp
+        profile.cpp
+        userdetails.cpp
+        workspace.cpp
 
         piqi.cpp
 
