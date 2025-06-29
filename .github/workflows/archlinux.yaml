@@ -3,11 +3,9 @@
 # Based on: https://github.com/Bali10050/Darkly/blob/main/.github/workflows/archlinux.yml
 
 on:
-  workflow_call:
-    inputs:
-      version:
-        required: true
-        type: string
+  push:
+    tags:
+      - "*"
 env:
   PKGBUILD: $GITHUB_WORKSPACE/.github/assets/PKGBUILD
 jobs:
