@@ -24,7 +24,7 @@ jobs:
       - name: Install sudo, git and compile dependencies
         # Using qcoro as the only dependency (qt6-declarative and qt6-base are implicit deps)
         run: |
-          pacman -Sy sudo git binutils make gcc pkg-config fakeroot \
+          pacman -Sy sudo git binutils make gcc pkg-config fakeroot debugedit \
           cmake extra-cmake-modules ninja qcoro --noconfirm
       - name: Setup build user
         run: |
