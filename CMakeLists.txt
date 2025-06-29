@@ -58,6 +58,7 @@ ecm_add_qml_module(piqi
     # OUTPUT_DIRECTORY
         # "${CMAKE_BINARY_DIR}/io/github/micro/piqi"
 )
+add_library(Piqi::piqi ALIAS piqi)
 add_compile_definitions(QCORO_NO_WARN_DEPRECATED_TASK_H)
 target_compile_options (piqi PUBLIC -fexceptions)
 
