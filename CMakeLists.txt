@@ -62,6 +62,36 @@ add_library(Piqi::piqi ALIAS piqi)
 add_compile_definitions(QCORO_NO_WARN_DEPRECATED_TASK_H)
 target_compile_options (piqi PUBLIC -fexceptions)
 
+ecm_generate_headers(piqi_HEADERS
+    HEADER_NAMES
+        Illustration
+        User
+        ImageUrls
+        Series
+        Tag
+        Illusts
+        Profile
+        UserDetails
+        Workspace
+        Piqi
+        BookmarkDetails
+        Illusts
+        PrivacyPolicy
+        Comments
+        Comment
+        Stamp
+        SearchRequest
+    REQUIRED_HEADERS
+        piqi_HEADERS
+)
+
+install(FILES
+    ${piqi_HEADERS}
+    DESTINATION "${KDE_INSTALL_INCLUDEDIR}/piqi"
+    COMPONENT Devel
+)
+
+
 target_link_libraries(piqi PUBLIC
     Qt6::Core
     Qt6::Qml
