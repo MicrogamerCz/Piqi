@@ -64,3 +64,5 @@ target_link_libraries(piqi PUBLIC
     QCoro::DBus
     QCoro::Qml
 )
+
+ecm_finalize_qml_module(piqi DESTINATION ${KDE_INSTALL_QMLDIR})
