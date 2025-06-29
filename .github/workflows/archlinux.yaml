@@ -47,7 +47,7 @@ jobs:
           tag_version="${GITHUB_REF#refs/tags/}"
           sudo -u builduser bash -c 'cd /var/tmp/piqi-archlinux; makepkg -s'
           zst_file=$(find /var/tmp/piqi-archlinux -name "*.zst*")
-          publish_filename=piqi-${tag_version}-1-x86_64.pkg.zst
+          publish_filename=piqi-${tag_version}-1-x86_64.pkg.tar.zst
           mv "$zst_file" $publish_filename
           echo "ZST_ASSET=$publish_filename" >> "$GITHUB_ENV"
       - name: Release
