@@ -14,13 +14,16 @@ find_package(QCoro6 REQUIRED COMPONENTS Core Network DBus Qml)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
-qt_standard_project_setup(REQUIRES 6.9)
+# qt_standard_project_setup(REQUIRES 6.9)
 qt_policy(SET QTP0001 NEW)
 qcoro_enable_coroutines()
 
 include(FeatureSummary)
 include(ECMQmlModule)
 include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings NO_POLICY_SCOPE)
+include(ECMGenerateExportHeader)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
