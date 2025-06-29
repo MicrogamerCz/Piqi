@@ -33,10 +33,10 @@ jobs:
           printf 'builduser ALL=(ALL) ALL\n' | tee -a /etc/sudoers # Allow the builduser passwordless sudo
       - name: Update PKGBUILD file with new checksum and git tag values
         run: |
-          # update tag with latest version
+          tag_version="${GITHUB_REF#refs/tags/}"
           mkdir /var/tmp/piqi-archlinux
           cp ${{ env.PKGBUILD }} /var/tmp/piqi-archlinux
-          sed -i "s/.*pkgver=.*/pkgver=${{ inputs.version }}/" /var/tmp/piqi-archlinux/PKGBUILD
+          sed -i "s/.*pkgver=.*/pkgver=${tag_version}/" /var/tmp/piqi-archlinux/PKGBUILD
       - name: Change permissions of build directory
         run: |
           chown builduser:builduser -R /var/tmp/piqi-archlinux
