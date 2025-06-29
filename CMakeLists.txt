@@ -6,8 +6,6 @@ set(QT6_MIN_VERSION 6.9.0)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 
-remove_definitions(-DQT_NO_CAST_TO_ASCII -DQT_NO_CAST_FROM_ASCII)
-
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 find_package(Qt6 ${QT6_MIN_VERSION} REQUIRED COMPONENTS Core Qml Network)
 find_package(QCoro6 REQUIRED COMPONENTS Core Network DBus Qml)
@@ -24,6 +22,8 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMGenerateExportHeader)
+
+remove_definitions(-DQT_NO_CAST_TO_ASCII -DQT_NO_CAST_FROM_ASCII)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
