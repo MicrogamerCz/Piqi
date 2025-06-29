@@ -26,7 +26,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-qt_add_library(piqi STATIC)
+# qt_add_library(piqi STATIC)
 ecm_add_qml_module(piqi
     GENERATE_PLUGIN_SOURCE
     URI io.github.micro.piqi
