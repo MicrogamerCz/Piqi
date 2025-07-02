@@ -16,15 +16,13 @@ There are no packages currently.
 ## Usage (CMake only)
 
 ```cmake
-find_package(piqi REQUIRED)
-# or
-add_subdirectory(piqi) # if you use piqi from source
-
-target_link_libraries(your_target_name PRIVATE piqi::piqi)
+find_package(Piqi COMPONENTS piqi)
+target_link_libraries(target_exec_or_lib PRIVATE Piqi::piqi)
 ```
 
 ## Dependencies
-- QtDeclarative
+- Extra CMake Modules (only for building)
+- QtDeclarative (QtBase is an implicit dependency)
 - QCoro
 
 ## Contributing
