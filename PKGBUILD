@@ -9,7 +9,7 @@ url="https://github.com/MicrogamerCz/Piqi"
 license=(Unlicense)
 depends=(qcoro)
 makedepends=(extra-cmake-modules ninja git)
-source=("https://github.com/MicrogamerCz/Piqi.git")
+source=("git+https://github.com/MicrogamerCz/Piqi")
 sha256sums=('SKIP')
 
 build() {
@@ -21,4 +21,3 @@ build() {
 package() {
   DESTDIR="$pkgdir" cmake --install build
 }
-p
