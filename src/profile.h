@@ -11,7 +11,7 @@ class PIQI_EXPORT Profile : public QObject {
     QML_ELEMENT
 
     QM_PROPERTY(QString, webpage)
-    // gender
+    QM_PROPERTY(int, gender)
     // birth
     // birth_day
     // birth_year

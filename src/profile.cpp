@@ -6,7 +6,7 @@
 Profile::Profile(QObject* parent) : QObject(parent) {}
 Profile::Profile(QObject* parent, QJsonObject data) : QObject(parent) {
     m_webpage = data["webpage"].toString();
-    // gender
+    m_gender = data["gender"].toInt();
     // birth
     // birth_day
     // birth_year

@@ -149,7 +149,7 @@ QCoro::Task<void> Piqi::RemoveBookmarkTask(Illustration *illust)
 }
 
 QCoro::QmlTask Piqi::UserIllusts(User* user, QString type) { return UserIllustsTask(user, type); }
-QCoro::Task<QList<Illustration *>> Piqi::UserIllustsTask(User* user, QString type)
+QCoro::Task<Illusts*> Piqi::UserIllustsTask(User* user, QString type)
 {
     // In intercepted requests from the official pixiv App, this endpoint returned <6 illusts,
     // usually the showcase ones when profile is opened, or the three suggested ones under an illust.
@@ -163,9 +163,7 @@ QCoro::Task<QList<Illustration *>> Piqi::UserIllustsTask(User* user, QString typ
         {"type", type}
     };
     url.setQuery(query);
-
-    Illusts* illusts = co_await SendGet<Illusts>(url);
-    co_return illusts->m_illusts;
+    co_return (co_await SendGet<Illusts>(url));
 }
 
 QCoro::QmlTask Piqi::IllustComments(Illustration *illust) { return IllustCommentsTask(illust); }

@@ -42,7 +42,7 @@ public:
     QCoro::Task<Illusts *> FollowingFeedTask(QString type, QString restriction);
     QCoro::Task<void> AddBookmarkTask(Illustration *illust, bool isPrivate = false);
     QCoro::Task<void> RemoveBookmarkTask(Illustration *illust);
-    QCoro::Task<QList<Illustration*>> UserIllustsTask(User* user, QString type);
+    QCoro::Task<Illusts*> UserIllustsTask(User* user, QString type);
     QCoro::Task<Comments*> IllustCommentsTask(Illustration* illust);
     QCoro::Task<Comments*> CommentRepliesTask(Comment* comment);
     QCoro::Task<BookmarkDetails*> BookmarkDetailTask(Illustration* illust);
