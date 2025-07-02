@@ -13,7 +13,7 @@ source=("https://github.com/MicrogamerCz/Piqi.git")
 sha256sums=('SKIP')
 
 build() {
-  cmake -GNinja -B build -S piqi \
+  cmake -GNinja -B build -S Piqi \
     -DCMAKE_INSTALL_PREFIX=/usr
   cmake --build build
 }
@@ -21,3 +21,4 @@ build() {
 package() {
   DESTDIR="$pkgdir" cmake --install build
 }
+p
