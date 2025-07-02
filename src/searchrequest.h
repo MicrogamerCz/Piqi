@@ -3,6 +3,7 @@
 #include <QtQmlIntegration>
 #include <QAbstractListModel>
 #include <qdatetime.h>
+#include <qqmlintegration.h>
 #include <qtmetamacros.h>
 #include "piqi_export.h"
 #include "qepr.h"
@@ -29,6 +30,6 @@ class PIQI_EXPORT SearchRequest : public QObject
         QM_PROPERTY(QDate*, start_date) // if this date is nullptr, it's set to current date
         QM_PROPERTY(QDate*, end_date) // if this date is nullptr, both date parameters are ignored in the request
 
-        SearchRequest(QObject* parent);
+        SearchRequest(QObject* parent = nullptr);
         Q_SLOT void SetTags(QAbstractListModel* tags);
 };
