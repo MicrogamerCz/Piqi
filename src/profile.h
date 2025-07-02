@@ -1,11 +1,12 @@
 #pragma once
+#include "piqi_export.h"
 #include "qepr.h"
 #include <qjsonobject.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 #include <qtmetamacros.h>
 
-class Profile : public QObject {
+class PIQI_EXPORT Profile : public QObject {
     Q_OBJECT
     QML_ELEMENT
 

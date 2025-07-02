@@ -1,8 +1,9 @@
 #pragma once
+#include "piqi_export.h"
 #include "privacypolicy.h"
 #include "illustration.h"
 
-class Illusts : public QAbstractListModel
+class PIQI_EXPORT Illusts : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT

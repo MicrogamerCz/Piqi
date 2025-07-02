@@ -3,6 +3,7 @@
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
+#include "piqi_export.h"
 #include "searchrequest.h"
 #include <QCoro>
 #include <QCoroQmlTask>
@@ -17,7 +18,7 @@
 #include <qtmetamacros.h>
 #include "userdetails.h"
 
-class Piqi : public QObject
+class PIQI_EXPORT Piqi : public QObject
 {
     Q_OBJECT
     QML_ELEMENT

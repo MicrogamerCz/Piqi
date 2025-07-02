@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16)
-project(piqi VERSION 0.1)
+cmake_minimum_required(VERSION 3.25)
+project(piqi VERSION 0.1.0)
 
 set(KF6_MIN_VERSION 6.13.0)
 set(QT6_MIN_VERSION 6.9.0)
@@ -12,10 +12,6 @@ find_package(QCoro6 REQUIRED COMPONENTS Core Network DBus Qml)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
-# qt_standard_project_setup(REQUIRES 6.9)
-qt_policy(SET QTP0001 NEW)
-qcoro_enable_coroutines()
-
 include(FeatureSummary)
 include(ECMQmlModule)
 include(KDEInstallDirs)
@@ -23,84 +19,28 @@ include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMGenerateExportHeader)
 include(ECMGenerateHeaders)
+include(CMakePackageConfigHelpers)
 
-remove_definitions(-DQT_NO_CAST_TO_ASCII -DQT_NO_CAST_FROM_ASCII)
+set(PIQI_INSTALL_CMAKEDIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/Piqi"
+    CACHE STRING "Install path for example CMake package files")
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+add_subdirectory(src)
 
-# qt_add_library(piqi STATIC)
-ecm_add_qml_module(piqi
-    GENERATE_PLUGIN_SOURCE
-    URI io.github.micro.piqi
-    VERSION 1.0
-    SOURCES
-        illustration.cpp
-        user.cpp
-        imageurls.cpp
-        series.cpp
-        tag.cpp
-        illusts.cpp
-        profile.cpp
-        userdetails.cpp
-        workspace.cpp
-
-        piqi.cpp
-
-        bookmarkdetails.h
-        illusts.h
-        qepr.h
-        privacypolicy.h
-        comments.h
-        comment.h
-        stamp.h
-        searchrequest.h
-    # OUTPUT_DIRECTORY
-        # "${CMAKE_BINARY_DIR}/io/github/micro/piqi"
-)
-add_library(Piqi::piqi ALIAS piqi)
-add_compile_definitions(QCORO_NO_WARN_DEPRECATED_TASK_H)
-target_compile_options (piqi PUBLIC -fexceptions)
-
-ecm_generate_headers(piqi_HEADERS
-    HEADER_NAMES
-        Illustration
-        User
-        ImageUrls
-        Series
-        Tag
-        Illusts
-        Profile
-        UserDetails
-        Workspace
-        Piqi
-        BookmarkDetails
-        Illusts
-        PrivacyPolicy
-        Comments
-        Comment
-        Stamp
-        SearchRequest
-    REQUIRED_HEADERS
-        piqi_HEADERS
+configure_package_config_file(
+  PiqiConfig.cmake.in "${PIQI_INSTALL_CMAKEDIR}/PiqiConfig.cmake"
+  INSTALL_DESTINATION "${PIQI_INSTALL_CMAKEDIR}"
+  NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
-install(FILES
-    ${piqi_HEADERS}
-    DESTINATION "${KDE_INSTALL_INCLUDEDIR}/piqi"
-    COMPONENT Devel
+write_basic_package_version_file(
+  "${PIQI_INSTALL_CMAKEDIR}/PiqiConfigVersion.cmake"
+  VERSION ${example_VERSION}
+  COMPATIBILITY SameMajorVersion
 )
 
-
-target_link_libraries(piqi PUBLIC
-    Qt6::Core
-    Qt6::Qml
-    Qt6::Network
-    QCoro::Core
-    QCoro::Network
-    QCoro::DBus
-    QCoro::Qml
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PIQI_INSTALL_CMAKEDIR}/PiqiConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${PIQI_INSTALL_CMAKEDIR}/PiqiConfigVersion.cmake"
+  DESTINATION "${PIQI_INSTALL_CMAKEDIR}"
 )
-
-ecm_finalize_qml_module(piqi DESTINATION ${KDE_INSTALL_QMLDIR})

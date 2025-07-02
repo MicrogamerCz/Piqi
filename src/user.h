@@ -1,8 +1,9 @@
 #pragma once
 #include <QtQmlIntegration>
 #include "imageurls.h"
+#include "piqi_export.h"
 
-class User : public QObject
+class PIQI_EXPORT User : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
@@ -19,7 +20,7 @@ public:
     User(QObject* parent, QJsonObject data);
 };
 
-class Account : public User
+class PIQI_EXPORT Account : public User
 {
     Q_OBJECT
     QML_ELEMENT

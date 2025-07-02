@@ -4,6 +4,7 @@ ImageUrls::ImageUrls(QObject* parent)
     : QObject(parent)
 {
 }
+ImageUrls::~ImageUrls() = default;
 
 ImageUrls::ImageUrls(QObject* parent, QJsonObject data)
     : QObject(parent)
