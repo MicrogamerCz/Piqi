@@ -11,20 +11,33 @@ However this compatibility with QtQuick means, that QtQuick is a dependency of a
 
 ## Installation
 
-There are no packages currently.
+```fish
+# Prebuilt Arch package (use from download directory)
+sudo pacman -U ./piqi-0.1.0-1-x86_64.pkg.tar.zst
+# or downlaod PKGBUILD from the repo root
+makepkg -si
+```
+
+### Building from source
+```fish
+git clone https://github.com/MicrogamerCz/Piqi
+mkdir Piqi/build
+cd Piqi/build/
+cmake ..
+make
+sudo make install
+```
 
 ## Usage (CMake only)
 
 ```cmake
-find_package(piqi REQUIRED)
-# or
-add_subdirectory(piqi) # if you use piqi from source
-
-target_link_libraries(your_target_name PRIVATE piqi::piqi)
+find_package(Piqi COMPONENTS piqi)
+target_link_libraries(target_exec_or_lib PRIVATE Piqi::piqi)
 ```
 
 ## Dependencies
-- QtDeclarative
+- Extra CMake Modules (only for building)
+- QtDeclarative (QtBase is an implicit dependency)
 - QCoro
 
 ## Contributing

@@ -4,12 +4,13 @@
 #include <QAbstractListModel>
 #include <qdatetime.h>
 #include <qtmetamacros.h>
+#include "piqi_export.h"
 #include "qepr.h"
 #include "tag.h"
 
 // Purely a helper class as Pixiv search requests have quite a few parameters.
 // Some optional, others not. This is the better solution imo
-class SearchRequest : public QObject
+class PIQI_EXPORT SearchRequest : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
@@ -28,15 +29,6 @@ class SearchRequest : public QObject
         QM_PROPERTY(QDate*, start_date) // if this date is nullptr, it's set to current date
         QM_PROPERTY(QDate*, end_date) // if this date is nullptr, both date parameters are ignored in the request
 
-        SearchRequest(QObject* parent = nullptr) : QObject(parent) {
-            m_searchTarget = SearchTarget::PartialTagsMatch;
-            m_sortAscending = false;
-            m_start_date = m_end_date = nullptr;
-        };
-        Q_SLOT void SetTags(QAbstractListModel* tags) {
-            for (int i = 0; i < tags->rowCount(); i++) {
-                auto item = tags->data(tags->index(i), Qt::DisplayRole).value<Tag*>();
-                m_tags.append(item);
-            }
-        }
+        SearchRequest(QObject* parent);
+        Q_SLOT void SetTags(QAbstractListModel* tags);
 };

@@ -2,8 +2,9 @@
 #include <QtQmlIntegration>
 #include <QJsonObject>
 #include "qepr.h"
+#include "piqi_export.h"
 
-class Series : public QObject
+class PIQI_EXPORT Series : public QObject
 {
     Q_OBJECT
     QML_ELEMENT

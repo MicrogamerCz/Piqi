@@ -1,4 +1,5 @@
 #pragma once
+#include "piqi_export.h"
 #include "profile.h"
 #include "qepr.h"
 #include "user.h"
@@ -7,7 +8,7 @@
 #include <qqmlintegration.h>
 #include <qtmetamacros.h>
 
-class UserDetails : public QObject {
+class PIQI_EXPORT UserDetails : public QObject {
     Q_OBJECT
     QML_ELEMENT
 

@@ -1,9 +1,10 @@
 #pragma once
+#include "piqi_export.h"
 #include "series.h"
 #include "tag.h"
 #include "user.h"
 
-class Illustration : public QObject
+class PIQI_EXPORT Illustration : public QObject
 {
     Q_OBJECT
     QML_ELEMENT

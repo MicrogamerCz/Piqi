@@ -2,8 +2,9 @@
 #include <QJsonObject>
 #include <QtQmlIntegration>
 #include "qepr.h"
+#include "piqi_export.h"
 
-class ImageUrls : public QObject
+class PIQI_EXPORT ImageUrls : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
@@ -19,4 +20,5 @@ class ImageUrls : public QObject
 public:
     ImageUrls(QObject* parent = nullptr);
     ImageUrls(QObject* parent, QJsonObject data);
+    ~ImageUrls() override;
 };
