@@ -26,6 +26,7 @@ public:
     }
     Q_SLOT void Extend(Illusts* nextFeed) {
         m_nextUrl = nextFeed->m_nextUrl;
+        Q_EMIT nextUrlChanged();
 
         beginInsertRows({}, m_illusts.count(), m_illusts.count() + nextFeed->m_illusts.count() - 1);
         m_illusts.append(nextFeed->m_illusts);
