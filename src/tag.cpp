@@ -13,10 +13,10 @@ Tag::Tag(QObject* parent, QJsonObject data)
         m_translatedName = data["translated_name"].toString();
 }
 
-// BookmarkTag::BookmarkTag(QObject* parent)
-    // : Tag(parent)
-// {
-// }
+BookmarkTag::BookmarkTag(QObject* parent)
+    : Tag(parent)
+{
+}
 
 BookmarkTag::BookmarkTag(QObject* parent, QJsonObject data)
     : Tag(parent, data)

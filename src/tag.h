@@ -26,6 +26,6 @@ class PIQI_EXPORT BookmarkTag : public Tag
     QM_PROPERTY(int, count) // optional
 
     public:
-        // BookmarkTag(QObject* parent = nullptr);
+        BookmarkTag(QObject* parent = nullptr);
         BookmarkTag(QObject* parent, QJsonObject data);
 };
