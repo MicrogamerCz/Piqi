@@ -6,6 +6,7 @@ User::User(QObject* parent, QJsonObject data) : QObject(parent)
 {
     auto id = data["id"];
     if (id.isString()) m_id = data["id"].toString().toInt();
+    else m_id = data["id"].toInt();
     m_name = data["name"].toString();
     m_account = data["account"].toString();
     if (data.contains("comment")) m_comment = data["comment"].toString();
