@@ -30,9 +30,16 @@ int Tags::rowCount(const QModelIndex &parent) const
     Q_UNUSED(parent)
     return tags.count();
 }
-
 QVariant Tags::data(const QModelIndex &index, int role) const
 {
     const Tag* tag = tags[index.row()];
-    return QVariant::fromValue(tag);
+    switch (role) {
+        case NameRole: return tag->m_name;
+        default: return QVariant::fromValue(tag);
+    }
+}
+QHash<int, QByteArray> Tags::roleNames() const {
+    QHash<int, QByteArray> roles;
+    roles[NameRole] = "name";
+    return roles;
 }

@@ -22,10 +22,15 @@ class PIQI_EXPORT Tags : public QAbstractListModel
         Tags(QObject* parent = nullptr);
         Tags(QObject* parent, QJsonObject data);
 
-        Q_SLOT void Extend(Tags* nextTags);
-
         int rowCount(const QModelIndex &parent) const override;
         QVariant data(const QModelIndex &index, int role = Qt::UserRole) const override;
+        QHash<int, QByteArray> roleNames() const override;
+
+        Q_SLOT void Extend(Tags* nextTags);
 
         Q_SIGNAL void tagsChanged();
+
+        enum Roles {
+            NameRole = Qt::UserRole + 1
+        };
 };
