@@ -371,9 +371,9 @@ QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(QString type, bool restricted, QSt
     QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/" + type);
     QUrlQuery query {
         { "user_id", QString::number(m_user->m_id) },
-        { "restrict", restricted ? "private" : "public" },
-        { "tag", tag }
+        { "restrict", restricted ? "private" : "public" }
     };
+    if (tag != "") query.addQueryItem("tag", tag);
     url.setQuery(query);
 
     co_return (co_await SendGet<Illusts>(url));
