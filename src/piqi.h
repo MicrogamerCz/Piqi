@@ -16,6 +16,8 @@
 #include <qnetworkaccessmanager.h>
 #include <qstringview.h>
 #include <qtmetamacros.h>
+#include "tag.h"
+#include "tags.h"
 #include "userdetails.h"
 
 class PIQI_EXPORT Piqi : public QObject
@@ -56,6 +58,7 @@ public:
     QCoro::Task<Illusts*> LatestGlobalTask(QString type);
     QCoro::Task<Illusts*> BookmarksFeedTask(QString type, QString restriction);
     QCoro::Task<UserDetails*> DetailsTask(User* user);
+    QCoro::Task<Tags*> BookmarkIllustTagsTask(User* user, bool restricted = false);
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
@@ -80,4 +83,5 @@ public Q_SLOTS:
     QCoro::QmlTask LatestGlobal(QString type);
     QCoro::QmlTask BookmarksFeed(QString type, QString restriction);
     QCoro::QmlTask Details(User* user);
+    QCoro::QmlTask BookmarkIllustTags(User* user, bool restricted = false);
 };

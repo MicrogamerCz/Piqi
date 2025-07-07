@@ -390,3 +390,17 @@ QCoro::Task<UserDetails*> Piqi::DetailsTask(User* user) {
 
     co_return (co_await SendGet<UserDetails>(url));
 }
+
+QCoro::QmlTask Piqi::BookmarkIllustTags(User* user, bool restricted) {
+    return BookmarkIllustTagsTask(user, restricted);
+}
+QCoro::Task<Tags*> Piqi::BookmarkIllustTagsTask(User* user, bool restricted) {
+    QUrl url("https://app-api.pixiv.net/v1/user/bookmark-tags/illust");
+    QUrlQuery query {
+        { "user_id", QString::number(user->m_id) },
+        { "restrict", restricted ? "private" : "public" }
+    };
+    url.setQuery(query);
+
+    co_return (co_await SendGet<Tags>(url));
+}

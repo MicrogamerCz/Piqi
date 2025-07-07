@@ -9,17 +9,21 @@ Tag::Tag(QObject* parent, QJsonObject data)
     : QObject(parent)
 {
     m_name = data["name"].toString();
-    m_translatedName = data["translated_name"].toString();
+    if (data.contains("translated_name"))
+        m_translatedName = data["translated_name"].toString();
 }
 
-BookmarkTag::BookmarkTag(QObject* parent)
-    : QObject(parent)
-{
-}
+// BookmarkTag::BookmarkTag(QObject* parent)
+    // : Tag(parent)
+// {
+// }
 
 BookmarkTag::BookmarkTag(QObject* parent, QJsonObject data)
-    : QObject(parent)
+    : Tag(parent, data)
 {
-    m_name = data["name"].toString();
-    m_isRegistered = data["is_registered"].toBool();
+    if (data.contains("is_registered"))
+        m_isRegistered = data["is_registered"].toBool();
+    if (data.contains("count"))
+        m_count = data["count"].toInt();
+    else m_count = 0;
 }
