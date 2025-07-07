@@ -9,7 +9,7 @@ Tags::Tags(QObject* parent, QJsonObject data) : QAbstractListModel(parent) {
     beginResetModel();
     for (QJsonValue il : data["bookmark_tags"].toArray()) {
         BookmarkTag* tag = new BookmarkTag(nullptr, il.toObject());
-        tags.append(tag);
+        m_tags.append(tag);
     }
     endResetModel();
     if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
@@ -19,8 +19,8 @@ void Tags::Extend(Tags* nextTags) {
     m_nextUrl = nextTags->m_nextUrl;
     Q_EMIT nextUrlChanged();
 
-    beginInsertRows({}, tags.count(), tags.count() + nextTags->tags.count() - 1);
-    tags.append(nextTags->tags);
+    beginInsertRows({}, m_tags.count(), m_tags.count() + nextTags->m_tags.count() - 1);
+    m_tags.append(nextTags->m_tags);
     endInsertRows();
 
     Q_EMIT tagsChanged();
@@ -28,11 +28,11 @@ void Tags::Extend(Tags* nextTags) {
 int Tags::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return tags.count();
+    return m_tags.count();
 }
 QVariant Tags::data(const QModelIndex &index, int role) const
 {
-    const Tag* tag = tags[index.row()];
+    const Tag* tag = m_tags[index.row()];
     switch (role) {
         case NameRole: return tag->m_name;
         default: return QVariant::fromValue(tag);

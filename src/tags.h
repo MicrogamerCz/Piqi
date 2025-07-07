@@ -15,8 +15,8 @@ class PIQI_EXPORT Tags : public QAbstractListModel
     QML_ELEMENT
 
     QM_PROPERTY(QString, nextUrl)
+    QM_PROPERTY(QList<Tag*>, tags)
 
-    QList<Tag*> tags;
 
     public:
         Tags(QObject* parent = nullptr);
@@ -27,8 +27,6 @@ class PIQI_EXPORT Tags : public QAbstractListModel
         QHash<int, QByteArray> roleNames() const override;
 
         Q_SLOT void Extend(Tags* nextTags);
-
-        Q_SIGNAL void tagsChanged();
 
         enum Roles {
             NameRole = Qt::UserRole + 1
