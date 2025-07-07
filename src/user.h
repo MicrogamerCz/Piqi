@@ -11,6 +11,7 @@ class PIQI_EXPORT User : public QObject
     QM_PROPERTY(int, id)
     QM_PROPERTY(QString, name)
     QM_PROPERTY(QString, account)
+    QM_PROPERTY(QString, comment)
     QM_PROPERTY(ImageUrls*, profileImageUrls)
     QM_PROPERTY(int, isFollowed)
     QM_PROPERTY(bool, isAcceptRequest)

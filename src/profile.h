@@ -12,14 +12,14 @@ class PIQI_EXPORT Profile : public QObject {
 
     QM_PROPERTY(QString, webpage)
     QM_PROPERTY(int, gender)
-    // birth
-    // birth_day
-    // birth_year
+    QM_PROPERTY(QString, birth)
+    QM_PROPERTY(QString, birthDay)
+    QM_PROPERTY(int, birthYear)
     QM_PROPERTY(QString, region)
     QM_PROPERTY(int, addressId)
     QM_PROPERTY(QString, countryCode)
-    // job
-    // job_id
+    QM_PROPERTY(QString, job)
+    QM_PROPERTY(int, jobId)
     QM_PROPERTY(int, totalFollowUsers)
     QM_PROPERTY(int, totalMyPixivUsers)
     QM_PROPERTY(int, totalIllusts)
@@ -29,7 +29,7 @@ class PIQI_EXPORT Profile : public QObject {
     QM_PROPERTY(int, totalNovelSeries)
     QM_PROPERTY(QString, backgroundImageUrl) // profile banner
     // twitter_account
-    // twitter_url
+    QM_PROPERTY(QString, twitterUrl)
     QM_PROPERTY(bool, isPremium)
     QM_PROPERTY(bool, isUsingCustomProfileImage)
 

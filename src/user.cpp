@@ -6,9 +6,9 @@ User::User(QObject* parent, QJsonObject data) : QObject(parent)
 {
     auto id = data["id"];
     if (id.isString()) m_id = data["id"].toString().toInt();
-    else m_id = data["id"].toInt();
     m_name = data["name"].toString();
     m_account = data["account"].toString();
+    if (data.contains("comment")) m_comment = data["comment"].toString();
     m_profileImageUrls = new ImageUrls(nullptr, data["profile_image_urls"].toObject());
     m_isFollowed = data["is_followed"].toBool(); // 0 - not followed, 1 - publicly followed, 2 - privately followed
     m_isAcceptRequest = data["is_accept_request"].toBool();
