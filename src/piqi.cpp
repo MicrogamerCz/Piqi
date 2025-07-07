@@ -363,15 +363,16 @@ QCoro::Task<Illusts*> Piqi::LatestGlobalTask(QString type) {
     co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type)));
 }
 
-QCoro::QmlTask Piqi::BookmarksFeed(QString type, QString restriction) {
-    return BookmarksFeedTask(type, restriction);
+QCoro::QmlTask Piqi::BookmarksFeed(QString type, bool restricted, QString tag) {
+    return BookmarksFeedTask(type, restricted, tag);
 }
-QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(QString type, QString restriction) {
+QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(QString type, bool restricted, QString tag) {
     if (type == "novel") co_return nullptr;
     QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/" + type);
     QUrlQuery query {
         { "user_id", QString::number(m_user->m_id) },
-        { "restrict", restriction }
+        { "restrict", restricted ? "private" : "public" },
+        { "tag", tag }
     };
     url.setQuery(query);
 
@@ -391,13 +392,13 @@ QCoro::Task<UserDetails*> Piqi::DetailsTask(User* user) {
     co_return (co_await SendGet<UserDetails>(url));
 }
 
-QCoro::QmlTask Piqi::BookmarkIllustTags(User* user, bool restricted) {
-    return BookmarkIllustTagsTask(user, restricted);
+QCoro::QmlTask Piqi::BookmarkIllustTags(bool restricted) {
+    return BookmarkIllustTagsTask(restricted);
 }
-QCoro::Task<Tags*> Piqi::BookmarkIllustTagsTask(User* user, bool restricted) {
+QCoro::Task<Tags*> Piqi::BookmarkIllustTagsTask(bool restricted) {
     QUrl url("https://app-api.pixiv.net/v1/user/bookmark-tags/illust");
     QUrlQuery query {
-        { "user_id", QString::number(user->m_id) },
+        { "user_id", QString::number(m_user->m_id) },
         { "restrict", restricted ? "private" : "public" }
     };
     url.setQuery(query);

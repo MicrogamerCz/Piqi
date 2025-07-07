@@ -56,9 +56,9 @@ public:
     QCoro::Task<Illusts*> SearchPopularPreviewTask(SearchRequest* params);
     QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
     QCoro::Task<Illusts*> LatestGlobalTask(QString type);
-    QCoro::Task<Illusts*> BookmarksFeedTask(QString type, QString restriction);
+    QCoro::Task<Illusts*> BookmarksFeedTask(QString type, bool restricted = false, QString tag = "");
     QCoro::Task<UserDetails*> DetailsTask(User* user);
-    QCoro::Task<Tags*> BookmarkIllustTagsTask(User* user, bool restricted = false);
+    QCoro::Task<Tags*> BookmarkIllustTagsTask(bool restricted = false);
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
@@ -81,7 +81,7 @@ public Q_SLOTS:
     QCoro::QmlTask SearchPopularPreview(SearchRequest* params);
     QCoro::QmlTask Search(SearchRequest* params);
     QCoro::QmlTask LatestGlobal(QString type);
-    QCoro::QmlTask BookmarksFeed(QString type, QString restriction);
+    QCoro::QmlTask BookmarksFeed(QString type, bool restricted = false, QString tag = "");
     QCoro::QmlTask Details(User* user);
-    QCoro::QmlTask BookmarkIllustTags(User* user, bool restricted = false);
+    QCoro::QmlTask BookmarkIllustTags(bool restricted = false);
 };
