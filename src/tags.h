@@ -26,4 +26,6 @@ class PIQI_EXPORT Tags : public QAbstractListModel
 
         int rowCount(const QModelIndex &parent) const override;
         QVariant data(const QModelIndex &index, int role = Qt::UserRole) const override;
+
+        Q_SIGNAL void tagsChanged();
 };

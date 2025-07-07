@@ -15,6 +15,16 @@ Tags::Tags(QObject* parent, QJsonObject data) : QAbstractListModel(parent) {
     if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
     else m_nextUrl = "";
 }
+void Tags::Extend(Tags* nextTags) {
+    m_nextUrl = nextTags->m_nextUrl;
+    Q_EMIT nextUrlChanged();
+
+    beginInsertRows({}, tags.count(), tags.count() + nextTags->tags.count() - 1);
+    tags.append(nextTags->tags);
+    endInsertRows();
+
+    Q_EMIT tagsChanged();
+}
 int Tags::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)

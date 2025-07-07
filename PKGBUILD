@@ -8,6 +8,7 @@ arch=(x86_64)
 url="https://github.com/MicrogamerCz/Piqi"
 license=(Unlicense)
 depends=(qcoro)
+provides=('piqi')
 makedepends=(extra-cmake-modules ninja git)
 source=("git+https://github.com/MicrogamerCz/Piqi")
 sha256sums=('SKIP')
