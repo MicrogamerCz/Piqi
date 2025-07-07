@@ -21,6 +21,7 @@ qt_add_library(piqi SHARED
     series.cpp
     stamp.cpp
     tag.cpp
+    tags.cpp
     user.cpp
     userdetails.cpp
     workspace.cpp
@@ -51,6 +52,7 @@ ecm_generate_headers(piqi_HEADERS
         Series
         Stamp
         Tag
+        Tags
         User
         UserDetails
         Workspace
