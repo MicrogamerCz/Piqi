@@ -3,6 +3,7 @@
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
+#include "novels.h"
 #include "piqi_export.h"
 #include "searchrequest.h"
 #include <QCoro>
@@ -41,6 +42,7 @@ public:
     QCoro::Task<Illusts *> WalkthroughTask();
     QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
     QCoro::Task<Recommended *> RecommendedFeedTask(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
+    QCoro::Task<RecommendedNovels *> RecommendedNovelsFeedTask(bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::Task<Illusts *> FollowingFeedTask(QString type, QString restriction);
     QCoro::Task<void> AddBookmarkTask(Illustration *illust, bool isPrivate = false);
     QCoro::Task<void> RemoveBookmarkTask(Illustration *illust);
@@ -66,6 +68,7 @@ public Q_SLOTS:
     QCoro::QmlTask Walkthrough();
     QCoro::QmlTask FetchNextFeed(Illusts* feed);
     QCoro::QmlTask RecommendedFeed(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
+    QCoro::QmlTask RecommendedNovelsFeed(bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::QmlTask FollowingFeed(QString type, QString restriction);
     QCoro::QmlTask AddBookmark(Illustration *illust, bool isPrivate = false);
     QCoro::QmlTask RemoveBookmark(Illustration *illust);

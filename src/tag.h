@@ -11,6 +11,7 @@ class PIQI_EXPORT Tag : public QObject
 
     QM_PROPERTY(QString, name)
     QM_PROPERTY(QString, translatedName) // optional
+    QM_PROPERTY(bool, addedByUploadedUser) // optional
 
     public:
         Tag(QObject* parent = nullptr);

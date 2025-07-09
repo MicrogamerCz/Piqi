@@ -11,6 +11,8 @@ Tag::Tag(QObject* parent, QJsonObject data)
     m_name = data["name"].toString();
     if (data.contains("translated_name"))
         m_translatedName = data["translated_name"].toString();
+    if (data.contains("added_by_uploaded_user"))
+        m_addedByUploadedUser = data["added_by_uploaded_user"].toBool();
 }
 
 BookmarkTag::BookmarkTag(QObject* parent)

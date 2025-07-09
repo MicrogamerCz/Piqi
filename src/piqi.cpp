@@ -2,6 +2,7 @@
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
+#include "novels.h"
 #include "searchrequest.h"
 #include "tag.h"
 #include "userdetails.h"
@@ -97,14 +98,27 @@ QCoro::QmlTask Piqi::RecommendedFeed(QString type, bool includeRanking, bool inc
 }
 QCoro::Task<Recommended *> Piqi::RecommendedFeedTask(QString type, bool includeRanking, bool includePrivacyPolicy)
 {
+    if (type == "novel") co_return nullptr;
+
     QUrl url("https://app-api.pixiv.net/v1/" + type + "/recommended");
     QUrlQuery query{
         {"include_ranking_illusts", includeRanking ? "true" : "false"},
         {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}
     };
-    if (type != "novel")
-        url.setQuery(query);
+    url.setQuery(query);
     co_return (co_await SendGet<Recommended>(url));
+}
+QCoro::QmlTask Piqi::RecommendedNovelsFeed(bool includeRanking, bool includePrivacyPolicy) {
+    return RecommendedNovelsFeedTask(includeRanking, includePrivacyPolicy);
+}
+QCoro::Task<RecommendedNovels*> Piqi::RecommendedNovelsFeedTask(bool includeRanking, bool includePrivacyPolicy) {
+    QUrl url("https://app-api.pixiv.net/v1/novel/recommended");
+    QUrlQuery query{
+        {"include_ranking_illusts", includeRanking ? "true" : "false"},
+        {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}
+    };
+    url.setQuery(query);
+    co_return (co_await SendGet<RecommendedNovels>(url));
 }
 
 QCoro::QmlTask Piqi::FollowingFeed(QString type, QString restriction) { return FollowingFeedTask(type, restriction); }
