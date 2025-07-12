@@ -114,7 +114,7 @@ QCoro::QmlTask Piqi::RecommendedNovelsFeed(bool includeRanking, bool includePriv
 QCoro::Task<RecommendedNovels*> Piqi::RecommendedNovelsFeedTask(bool includeRanking, bool includePrivacyPolicy) {
     QUrl url("https://app-api.pixiv.net/v1/novel/recommended");
     QUrlQuery query{
-        {"include_ranking_illusts", includeRanking ? "true" : "false"},
+        {"include_ranking_novels", includeRanking ? "true" : "false"},
         {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}
     };
     url.setQuery(query);

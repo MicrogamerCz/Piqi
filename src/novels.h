@@ -16,8 +16,7 @@ class PIQI_EXPORT Novels : public QAbstractListModel
     QML_ELEMENT
 
     QM_PROPERTY(QString, nextUrl)
-
-    QList<Novel*> novels;
+    QM_PROPERTY(QList<Novel*>, novels)
 
     public:
         Novels(QObject* parent = nullptr);
@@ -40,7 +39,7 @@ class PIQI_EXPORT RecommendedNovels : public Novels
     QML_ELEMENT
 
     QM_PROPERTY(PrivacyPolicy*, privacyPolicy)
-    QM_PROPERTY(QList<Novel*>, rankingNovels)
+    QM_PROPERTY(Novels*, ranking)
     QM_PROPERTY(bool, contestExists)
 
     public:
