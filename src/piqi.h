@@ -61,6 +61,7 @@ public:
     QCoro::Task<Illusts*> BookmarksFeedTask(QString type, bool restricted = false, QString tag = "");
     QCoro::Task<UserDetails*> DetailsTask(User* user);
     QCoro::Task<Tags*> BookmarkIllustTagsTask(bool restricted = false);
+    QCoro::Task<Illustration*> IllustDetailTask(int id);
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
@@ -87,4 +88,5 @@ public Q_SLOTS:
     QCoro::QmlTask BookmarksFeed(QString type, bool restricted = false, QString tag = "");
     QCoro::QmlTask Details(User* user);
     QCoro::QmlTask BookmarkIllustTags(bool restricted = false);
+    QCoro::QmlTask IllustDetail(int id);
 };

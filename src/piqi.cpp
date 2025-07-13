@@ -419,3 +419,24 @@ QCoro::Task<Tags*> Piqi::BookmarkIllustTagsTask(bool restricted) {
 
     co_return (co_await SendGet<Tags>(url));
 }
+
+QCoro::QmlTask Piqi::IllustDetail(int id) {
+    return IllustDetailTask(id);
+}
+QCoro::Task<Illustration*> Piqi::IllustDetailTask(int id) {
+    QUrl url("https://app-api.pixiv.net/v1/illust/detail");
+    QUrlQuery query {
+        { "illust_id", QString::number(id) }
+    };
+    url.setQuery(query);
+
+    if (!(co_await IsLoggedIn()))
+        co_return nullptr;
+
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    QNetworkReply *reply = co_await manager.get(request);
+    QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
+
+    co_return new Illustration(nullptr, json["illust"].toObject());
+}

@@ -1,5 +1,6 @@
 #include "illustration.h"
 #include <qjsonobject.h>
+#include <qjsonvalue.h>
 #include <qobject.h>
 
 Illustration::Illustration(QObject* parent) : Work(parent) { }
@@ -18,4 +19,10 @@ Illustration::Illustration(QObject* parent, QJsonObject data) : Work(parent, dat
     Q_EMIT metaPagesChanged();
     m_illustAiType = data["illust_ai_type"].toInt();
     m_illustBookType = data["illust_book_type"].toInt();
+    if (data.contains("restriction_attributes")) {
+        for (QJsonValue val : data["restriction_attributes"].toArray())
+            m_restrictionAttributes.append(val.toString());
+    }
+    if (data.contains("comment_access_control"))
+        m_commentAccessControl = data["comment_access_control"].toInt();
 }

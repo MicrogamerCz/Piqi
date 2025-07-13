@@ -4,6 +4,9 @@
 #include "tag.h"
 #include "user.h"
 #include "work.h"
+#include "workspace.h"
+#include <QStringList>
+#include <qcontainerfwd.h>
 
 class PIQI_EXPORT Illustration : public Work
 {
@@ -20,6 +23,11 @@ class PIQI_EXPORT Illustration : public Work
     QM_PROPERTY(QList<ImageUrls *>, metaPages)
     QM_PROPERTY(int, illustAiType)
     QM_PROPERTY(int, illustBookType)
+    // seasonal_effect_animation_urls
+    // event_banners
+    // request
+    QM_PROPERTY(QStringList, restrictionAttributes)
+    QM_PROPERTY(int, commentAccessControl)
 
 public:
     Illustration(QObject *parent = nullptr);
