@@ -121,10 +121,10 @@ QCoro::Task<RecommendedNovels*> Piqi::RecommendedNovelsFeedTask(bool includeRank
     co_return (co_await SendGet<RecommendedNovels>(url));
 }
 
-QCoro::QmlTask Piqi::FollowingFeed(QString type, QString restriction) { return FollowingFeedTask(type, restriction); }
-QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString type, QString restriction)
+QCoro::QmlTask Piqi::FollowingFeed(QString restriction) { return FollowingFeedTask(restriction); }
+QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString restriction)
 {
-    QUrl url(("https://app-api.pixiv.net/v2/" + type + "/follow?restrict=" + restriction));
+    QUrl url(("https://app-api.pixiv.net/v2/illust/follow?restrict=" + restriction));
     co_return (co_await SendGet<Illusts>(url));
 }
 
@@ -377,12 +377,11 @@ QCoro::Task<Illusts*> Piqi::LatestGlobalTask(QString type) {
     co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type)));
 }
 
-QCoro::QmlTask Piqi::BookmarksFeed(QString type, bool restricted, QString tag) {
-    return BookmarksFeedTask(type, restricted, tag);
+QCoro::QmlTask Piqi::BookmarksFeed(bool restricted, QString tag) {
+    return BookmarksFeedTask(restricted, tag);
 }
-QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(QString type, bool restricted, QString tag) {
-    if (type == "novel") co_return nullptr;
-    QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/" + type);
+QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(bool restricted, QString tag) {
+    QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/illust");
     QUrlQuery query {
         { "user_id", QString::number(m_user->m_id) },
         { "restrict", restricted ? "private" : "public" }
@@ -439,4 +438,26 @@ QCoro::Task<Illustration*> Piqi::IllustDetailTask(int id) {
     QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
 
     co_return new Illustration(nullptr, json["illust"].toObject());
+}
+
+QCoro::QmlTask Piqi::NovelsBookmarksFeed(bool restricted, QString tag) {
+    return NovelsBookmarksFeedTask(restricted, tag);
+}
+QCoro::Task<Novels*> Piqi::NovelsBookmarksFeedTask(bool restricted, QString tag) {
+    QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/novel");
+    QUrlQuery query {
+        { "user_id", QString::number(m_user->m_id) },
+        { "restrict", restricted ? "private" : "public" }
+    };
+    if (tag != "") query.addQueryItem("tag", tag);
+    url.setQuery(query);
+
+    co_return (co_await SendGet<Novels>(url));
+}
+QCoro::QmlTask Piqi::FollowingNovelsFeed(QString restriction) {
+    return FollowingNovelsFeedTask(restriction);
+}
+QCoro::Task<Novels*> Piqi::FollowingNovelsFeedTask(QString restriction) {
+    QUrl url(("https://app-api.pixiv.net/v1/novel/follow?restrict=" + restriction));
+    co_return (co_await SendGet<Novels>(url));
 }

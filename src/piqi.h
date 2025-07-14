@@ -43,7 +43,7 @@ public:
     QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
     QCoro::Task<Recommended *> RecommendedFeedTask(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::Task<RecommendedNovels *> RecommendedNovelsFeedTask(bool includeRanking = false, bool includePrivacyPolicy = false);
-    QCoro::Task<Illusts *> FollowingFeedTask(QString type, QString restriction);
+    QCoro::Task<Illusts *> FollowingFeedTask(QString restriction);
     QCoro::Task<void> AddBookmarkTask(Illustration *illust, bool isPrivate = false);
     QCoro::Task<void> RemoveBookmarkTask(Illustration *illust);
     QCoro::Task<Illusts*> UserIllustsTask(User* user, QString type);
@@ -58,10 +58,12 @@ public:
     QCoro::Task<Illusts*> SearchPopularPreviewTask(SearchRequest* params);
     QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
     QCoro::Task<Illusts*> LatestGlobalTask(QString type);
-    QCoro::Task<Illusts*> BookmarksFeedTask(QString type, bool restricted = false, QString tag = "");
+    QCoro::Task<Illusts*> BookmarksFeedTask(bool restricted = false, QString tag = "");
     QCoro::Task<UserDetails*> DetailsTask(User* user);
     QCoro::Task<Tags*> BookmarkIllustTagsTask(bool restricted = false);
     QCoro::Task<Illustration*> IllustDetailTask(int id);
+    QCoro::Task<Novels*> NovelsBookmarksFeedTask(bool restricted = false, QString tag = "");
+    QCoro::Task<Novels*> FollowingNovelsFeedTask(QString restriction);
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
@@ -70,7 +72,7 @@ public Q_SLOTS:
     QCoro::QmlTask FetchNextFeed(Illusts* feed);
     QCoro::QmlTask RecommendedFeed(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::QmlTask RecommendedNovelsFeed(bool includeRanking = false, bool includePrivacyPolicy = false);
-    QCoro::QmlTask FollowingFeed(QString type, QString restriction);
+    QCoro::QmlTask FollowingFeed(QString restriction);
     QCoro::QmlTask AddBookmark(Illustration *illust, bool isPrivate = false);
     QCoro::QmlTask RemoveBookmark(Illustration *illust);
     QCoro::QmlTask UserIllusts(User* user, QString type);
@@ -85,8 +87,30 @@ public Q_SLOTS:
     QCoro::QmlTask SearchPopularPreview(SearchRequest* params);
     QCoro::QmlTask Search(SearchRequest* params);
     QCoro::QmlTask LatestGlobal(QString type);
-    QCoro::QmlTask BookmarksFeed(QString type, bool restricted = false, QString tag = "");
+    QCoro::QmlTask BookmarksFeed(bool restricted = false, QString tag = ""); // Add back user with nullptr value by default
     QCoro::QmlTask Details(User* user);
     QCoro::QmlTask BookmarkIllustTags(bool restricted = false);
     QCoro::QmlTask IllustDetail(int id);
+    QCoro::QmlTask NovelsBookmarksFeed(bool restricted = false, QString tag = ""); // Same as with normal BookmarksFeed
+    QCoro::QmlTask FollowingNovelsFeed(QString restriction);
 };
+
+/*
+ * TODO endpoints:
+ * /v1/notification/new-from-following [GET]
+ * - Parameters:
+ *   - last_seen_illust_id: int
+ *   - last_seen_novel_id: int
+ *   - last_notified_datetime: datetime (yyyy-MM-ddThh:mm:ssZ)
+ * - Returns:
+ *   {
+ *     "notification": {
+ *          "title": string
+ *          "body" : string
+ *          "target_url" : string
+ *          "analytics_type" : string
+ *      }
+ *     "last_seen_illust_id": int
+ *     "last_seen_novel_id": int
+ *   }
+ */
