@@ -51,3 +51,9 @@ RecommendedNovels::RecommendedNovels(QObject* parent, QJsonObject data) : Novels
     m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
     m_contestExists = data["contest_exists"].toBool();
 }
+
+NovelSearchResults::NovelSearchResults(QObject* parent) : Novels(parent) {};
+NovelSearchResults::NovelSearchResults(QObject* parent, QJsonObject data) : Novels(parent, data)
+{
+    m_showAi = data["show_ai"].toBool();
+};

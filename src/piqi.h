@@ -38,32 +38,43 @@ class PIQI_EXPORT Piqi : public QObject
 
 public:
     Piqi(QObject *parent = nullptr);
+
+    // Other methods
     QCoro::Task<bool> LoginTask(QString refreshToken);
-    QCoro::Task<Illusts *> WalkthroughTask();
-    QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
-    QCoro::Task<Recommended *> RecommendedFeedTask(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
-    QCoro::Task<RecommendedNovels *> RecommendedNovelsFeedTask(bool includeRanking = false, bool includePrivacyPolicy = false);
-    QCoro::Task<Illusts *> FollowingFeedTask(QString restriction);
     QCoro::Task<void> AddBookmarkTask(Illustration *illust, bool isPrivate = false);
     QCoro::Task<void> RemoveBookmarkTask(Illustration *illust);
-    QCoro::Task<Illusts*> UserIllustsTask(User* user, QString type);
     QCoro::Task<Comments*> IllustCommentsTask(Illustration* illust);
     QCoro::Task<Comments*> CommentRepliesTask(Comment* comment);
     QCoro::Task<BookmarkDetails*> BookmarkDetailTask(Illustration* illust);
     QCoro::Task<void> FollowTask(User* user, bool privateFollow = false);
     QCoro::Task<void> RemoveFollowTask(User* user);
     QCoro::Task<FollowDetails*> FollowDetailTask(User* user);
+    QCoro::Task<UserDetails*> DetailsTask(User* user);
+    QCoro::Task<Tags*> BookmarkTagsTask(QString type = "illust", bool restricted = false);
+    QCoro::Task<Illustration*> IllustDetailTask(int id);
+
+    // Feed methods
+    QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
+    QCoro::Task<Illusts *> WalkthroughTask();
+    QCoro::Task<Recommended *> RecommendedFeedTask(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
+    QCoro::Task<RecommendedNovels *> RecommendedNovelsFeedTask(bool includeRanking = false, bool includePrivacyPolicy = false);
+    QCoro::Task<Illusts *> FollowingFeedTask(QString restriction);
+    QCoro::Task<Illusts*> UserIllustsTask(User* user, QString type);
     QCoro::Task<Illusts*> RelatedIllustsTask(Illustration* illust);
-    QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
-    QCoro::Task<Illusts*> SearchPopularPreviewTask(SearchRequest* params);
-    QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
     QCoro::Task<Illusts*> LatestGlobalTask(QString type);
     QCoro::Task<Illusts*> BookmarksFeedTask(bool restricted = false, QString tag = "");
-    QCoro::Task<UserDetails*> DetailsTask(User* user);
-    QCoro::Task<Tags*> BookmarkIllustTagsTask(bool restricted = false);
-    QCoro::Task<Illustration*> IllustDetailTask(int id);
     QCoro::Task<Novels*> NovelsBookmarksFeedTask(bool restricted = false, QString tag = "");
     QCoro::Task<Novels*> FollowingNovelsFeedTask(QString restriction);
+    QCoro::Task<Novels*> LatestNovelsGlobalTask();
+    QCoro::Task<Novels*> UserNovelsTask(User* user);
+
+    // Search methods
+    QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
+    QCoro::Task<Illusts*> SearchPopularPreviewTask(SearchRequest* params);
+    QCoro::Task<Novels*> SearchNovelsPopularPreviewTask(SearchRequest* params);
+    QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
+    QCoro::Task<NovelSearchResults*> SearchNovelsTask(SearchRequest* params);
+
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
@@ -89,10 +100,14 @@ public Q_SLOTS:
     QCoro::QmlTask LatestGlobal(QString type);
     QCoro::QmlTask BookmarksFeed(bool restricted = false, QString tag = ""); // Add back user with nullptr value by default
     QCoro::QmlTask Details(User* user);
-    QCoro::QmlTask BookmarkIllustTags(bool restricted = false);
+    QCoro::QmlTask BookmarkTags(QString type = "illust", bool restricted = false);
     QCoro::QmlTask IllustDetail(int id);
     QCoro::QmlTask NovelsBookmarksFeed(bool restricted = false, QString tag = ""); // Same as with normal BookmarksFeed
     QCoro::QmlTask FollowingNovelsFeed(QString restriction);
+    QCoro::QmlTask LatestNovelsGlobal();
+    QCoro::QmlTask SearchNovelsPopularPreview(SearchRequest* params);
+    QCoro::QmlTask SearchNovels(SearchRequest* params);
+    QCoro::QmlTask UserNovels(User* user);
 };
 
 /*

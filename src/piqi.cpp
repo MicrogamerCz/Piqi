@@ -2,6 +2,7 @@
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
+#include "novel.h"
 #include "novels.h"
 #include "searchrequest.h"
 #include "tag.h"
@@ -405,10 +406,10 @@ QCoro::Task<UserDetails*> Piqi::DetailsTask(User* user) {
     co_return (co_await SendGet<UserDetails>(url));
 }
 
-QCoro::QmlTask Piqi::BookmarkIllustTags(bool restricted) {
-    return BookmarkIllustTagsTask(restricted);
+QCoro::QmlTask Piqi::BookmarkTags(QString type, bool restricted) {
+    return BookmarkTagsTask(type, restricted);
 }
-QCoro::Task<Tags*> Piqi::BookmarkIllustTagsTask(bool restricted) {
+QCoro::Task<Tags*> Piqi::BookmarkTagsTask(QString type, bool restricted) {
     QUrl url("https://app-api.pixiv.net/v1/user/bookmark-tags/illust");
     QUrlQuery query {
         { "user_id", QString::number(m_user->m_id) },
@@ -459,5 +460,114 @@ QCoro::QmlTask Piqi::FollowingNovelsFeed(QString restriction) {
 }
 QCoro::Task<Novels*> Piqi::FollowingNovelsFeedTask(QString restriction) {
     QUrl url(("https://app-api.pixiv.net/v1/novel/follow?restrict=" + restriction));
+    co_return (co_await SendGet<Novels>(url));
+}
+
+QCoro::QmlTask Piqi::LatestNovelsGlobal() { return LatestNovelsGlobalTask(); }
+QCoro::Task<Novels*> Piqi::LatestNovelsGlobalTask() {
+    co_return (co_await SendGet<Novels>(QUrl("https://app-api.pixiv.net/v1/novel/new")));
+}
+
+QCoro::QmlTask Piqi::SearchNovelsPopularPreview(SearchRequest* params) {
+    return SearchNovelsPopularPreviewTask(params);
+}
+QCoro::Task<Novels*> Piqi::SearchNovelsPopularPreviewTask(SearchRequest* params) {
+    QUrl url("https://app-api.pixiv.net/v1/search/popular-preview/novel");
+    QUrlQuery query;
+
+    QString words;
+    for (int i = 0; i < params->m_tags.length(); i++) {
+        Tag* tag = params->m_tags[i];
+        words += tag->m_name + " ";
+    }
+    words.removeLast();
+    query.addQueryItem("word", words);
+
+    switch (params->m_searchTarget) {
+        case SearchRequest::SearchTarget::PartialTagsMatch: {
+            query.addQueryItem("search_target", "partial_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::ExactTagsMatch: {
+            query.addQueryItem("search_target", "exact_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::TitleAndDescription: {
+            query.addQueryItem("search_target", "title_and_caption");
+            break;
+        }
+    }
+
+    if (params->m_end_date != nullptr) {
+        if (params->m_start_date)
+            query.addQueryItem("start_date", params->m_start_date->toString(Qt::DateFormat::ISODate));
+        else
+            query.addQueryItem("start_date", QDate::currentDate().toString(Qt::DateFormat::ISODate));
+
+        query.addQueryItem("end_date", params->m_end_date->toString(Qt::DateFormat::ISODate));
+    }
+
+    url.setQuery(query);
+    co_return (co_await SendGet<Novels>(url));
+}
+
+QCoro::QmlTask Piqi::SearchNovels(SearchRequest* params) {
+    return SearchNovelsTask(params);
+}
+QCoro::Task<NovelSearchResults*> Piqi::SearchNovelsTask(SearchRequest* params) {
+    QUrl url("https://app-api.pixiv.net/v1/search/novel");
+    QUrlQuery query;
+
+    QString words;
+    for (int i = 0; i < params->m_tags.length(); i++) {
+        Tag* tag = params->m_tags[i];
+        words += tag->m_name + " ";
+    }
+    words.removeLast();
+    query.addQueryItem("word", words);
+
+    switch (params->m_searchTarget) {
+        case SearchRequest::SearchTarget::PartialTagsMatch: {
+            query.addQueryItem("search_target", "partial_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::ExactTagsMatch: {
+            query.addQueryItem("search_target", "exact_match_for_tags");
+            break;
+        }
+        case SearchRequest::SearchTarget::TitleAndDescription: {
+            query.addQueryItem("search_target", "title_and_caption");
+            break;
+        }
+    }
+
+    if (params->m_end_date != nullptr) {
+        if (params->m_start_date)
+            query.addQueryItem("start_date", params->m_start_date->toString(Qt::DateFormat::ISODate));
+        else
+            query.addQueryItem("start_date", QDate::currentDate().toString(Qt::DateFormat::ISODate));
+
+        query.addQueryItem("end_date", params->m_end_date->toString(Qt::DateFormat::ISODate));
+    }
+
+    if (params->m_sortAscending)
+        query.addQueryItem("sort", "date_asc");
+    else
+        query.addQueryItem("sort", "date_desc");
+
+    url.setQuery(query);
+
+    co_return (co_await SendGet<NovelSearchResults>(url));
+}
+
+QCoro::QmlTask Piqi::UserNovels(User* user) {
+    return UserNovelsTask(user);
+}
+QCoro::Task<Novels*> Piqi::UserNovelsTask(User* user) {
+    QUrl url("https://app-api.pixiv.net/v1/user/novels");
+    QUrlQuery query{
+        {"user_id", QString::number(user->m_id)}
+    };
+    url.setQuery(query);
     co_return (co_await SendGet<Novels>(url));
 }

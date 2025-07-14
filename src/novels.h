@@ -46,3 +46,15 @@ class PIQI_EXPORT RecommendedNovels : public Novels
         RecommendedNovels(QObject* parent = nullptr);
         RecommendedNovels(QObject* parent, QJsonObject data);
 };
+
+class NovelSearchResults : public Novels
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+    QM_PROPERTY(bool, showAi)
+
+    public:
+        NovelSearchResults(QObject* parent = nullptr);
+        NovelSearchResults(QObject* parent, QJsonObject data);
+};
