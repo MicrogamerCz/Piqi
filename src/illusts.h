@@ -51,18 +51,20 @@ class Recommended : public Illusts
     QML_ELEMENT
 
     QM_PROPERTY(PrivacyPolicy*, privacyPolicy)
-    QM_PROPERTY(QList<Illustration*>, rankingIllusts)
+    QM_PROPERTY(Illusts*, ranking)
     QM_PROPERTY(bool, contestExists)
 
         public:
             Recommended(QObject* parent = nullptr) : Illusts(parent) {};
             Recommended(QObject* parent, QJsonObject data) : Illusts(parent, data)
             {
-                m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
+                m_ranking = new Illusts;
                 for (QJsonValue il : data["ranking_illusts"].toArray()) {
                     Illustration* illust = new Illustration(nullptr, il.toObject());
-                    m_rankingIllusts.append(illust);
+                    m_ranking->m_illusts.append(illust);
                 }
+
+                m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
                 m_contestExists = data["contest_exists"].toBool();
             };
 };
