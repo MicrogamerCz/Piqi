@@ -571,3 +571,31 @@ QCoro::Task<Novels*> Piqi::UserNovelsTask(User* user) {
     url.setQuery(query);
     co_return (co_await SendGet<Novels>(url));
 }
+
+QCoro::QmlTask Piqi::FetchNovel(Novel* novel) { return FetchNovelTask(novel); }
+QCoro::Task<QString> Piqi::FetchNovelTask(Novel* novel) {
+    if (!(co_await IsLoggedIn()))
+        co_return nullptr;
+
+    QUrl url("https://app-api.pixiv.net/webview/v2/novel");
+    QUrlQuery query { // TODO: optional parameters, parameters other than id are based on the default settings
+        {"id",QString::number(novel->m_id)},
+        {"font","default"},
+        {"font_size","16.0px"},
+        {"line_height","1.75"},
+        {"color","#B7B7B7"},
+        {"background_color","#1F1F1F"},
+        {"margin_top","56px"},
+        {"margin_bottom","53px"},
+        {"theme","dark"},
+        {"use_bloc","true"},
+        {"viewer_version","20250616_seasonal_effect"},
+        {"restricted_mode","false"},
+    };
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("X-Requested-With", "jp.pxv.android"); // NECESSARY! Without this header the endpoint returns (probably random) binary data
+    QNetworkReply *reply = co_await manager.get(request);
+    co_return reply->readAll();
+}

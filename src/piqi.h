@@ -3,6 +3,7 @@
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
+#include "novel.h"
 #include "novels.h"
 #include "piqi_export.h"
 #include "searchrequest.h"
@@ -52,6 +53,7 @@ public:
     QCoro::Task<UserDetails*> DetailsTask(User* user);
     QCoro::Task<Tags*> BookmarkTagsTask(QString type = "illust", bool restricted = false);
     QCoro::Task<Illustration*> IllustDetailTask(int id);
+    QCoro::Task<QString> FetchNovelTask(Novel* novel); // TODO: optional parameters
 
     // Feed methods
     QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
@@ -108,6 +110,7 @@ public Q_SLOTS:
     QCoro::QmlTask SearchNovelsPopularPreview(SearchRequest* params);
     QCoro::QmlTask SearchNovels(SearchRequest* params);
     QCoro::QmlTask UserNovels(User* user);
+    QCoro::QmlTask FetchNovel(Novel* novel); // TODO: optional parameters
 };
 
 /*
