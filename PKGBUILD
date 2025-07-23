@@ -9,12 +9,12 @@ url="https://github.com/MicrogamerCz/Piqi"
 license=(Unlicense)
 depends=(qcoro)
 provides=('piqi')
-makedepends=(extra-cmake-modules ninja git)
+makedepends=(extra-cmake-modules git)
 source=("git+https://github.com/MicrogamerCz/Piqi")
 sha256sums=('SKIP')
 
 build() {
-  cmake -GNinja -B build -S Piqi \
+  cmake -B build -S Piqi \
     -DCMAKE_INSTALL_PREFIX=/usr
   cmake --build build
 }
