@@ -12,10 +12,10 @@ However this compatibility with QtQuick means, that QtQuick is a dependency of a
 ## Installation
 
 ```fish
+# AUR
+yay -S piqi-git
 # Prebuilt Arch package (use from download directory)
-sudo pacman -U ./piqi-0.1.0-1-x86_64.pkg.tar.zst
-# or downlaod PKGBUILD from the repo root
-makepkg -si
+sudo pacman -U ./piqi-0.2.0-1-x86_64.pkg.tar.zst
 ```
 
 ### Building from source

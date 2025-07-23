@@ -13,6 +13,8 @@ qt_add_library(piqi SHARED
     illustration.cpp
     illusts.cpp
     imageurls.cpp
+    novel.cpp
+    novels.cpp
     piqi.cpp
     privacypolicy.cpp
     profile.cpp
@@ -24,6 +26,7 @@ qt_add_library(piqi SHARED
     tags.cpp
     user.cpp
     userdetails.cpp
+    work.cpp
     workspace.cpp
 )
 
@@ -44,6 +47,8 @@ ecm_generate_headers(piqi_HEADERS
         Illustration
         Illusts
         ImageUrls
+        Novel
+        Novels
         Piqi
         PrivacyPolicy
         Profile
@@ -55,6 +60,7 @@ ecm_generate_headers(piqi_HEADERS
         Tags
         User
         UserDetails
+        Work
         Workspace
     REQUIRED_HEADERS
         piqi_HEADERS
