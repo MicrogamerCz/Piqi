@@ -4,6 +4,19 @@
 #include "tag.h"
 #include "user.h"
 
+class PIQI_EXPORT WorkPrimitive : public QObject
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+    QM_PROPERTY(int, id)
+    QM_PROPERTY(QString, title)
+
+public:
+    WorkPrimitive(QObject* parent = nullptr);
+    WorkPrimitive(QObject* parent, QJsonObject data);
+};
+
 class PIQI_EXPORT Work : public QObject
 {
     Q_OBJECT

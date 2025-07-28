@@ -18,6 +18,7 @@
 #include <qnetworkaccessmanager.h>
 #include <qstringview.h>
 #include <qtmetamacros.h>
+#include "series.h"
 #include "tag.h"
 #include "tags.h"
 #include "userdetails.h"
@@ -54,6 +55,7 @@ public:
     QCoro::Task<Tags*> BookmarkTagsTask(QString type = "illust", bool restricted = false);
     QCoro::Task<Illustration*> IllustDetailTask(int id);
     QCoro::Task<QString> FetchNovelTask(Novel* novel); // TODO: optional parameters
+    QCoro::Task<IllustSeries*> IllustSeriesDetailsTask(Illustration* illust);
 
     // Feed methods
     QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
@@ -69,6 +71,9 @@ public:
     QCoro::Task<Novels*> FollowingNovelsFeedTask(QString restriction);
     QCoro::Task<Novels*> LatestNovelsGlobalTask();
     QCoro::Task<Novels*> UserNovelsTask(User* user);
+    QCoro::Task<Series*> SeriesFeedTask(int id);
+    QCoro::Task<SeriesDetails*> UserSeriesTask(User* user);
+    QCoro::Task<SeriesDetails*> WatchlistFeedTask();
 
     // Search methods
     QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
@@ -111,6 +116,10 @@ public Q_SLOTS:
     QCoro::QmlTask SearchNovels(SearchRequest* params);
     QCoro::QmlTask UserNovels(User* user);
     QCoro::QmlTask FetchNovel(Novel* novel); // TODO: optional parameters
+    QCoro::QmlTask IllustSeriesDetails(Illustration* illust);
+    QCoro::QmlTask SeriesFeed(int id);
+    QCoro::QmlTask UserSeries(User* user);
+    QCoro::QmlTask WatchlistFeed();
 };
 
 /*

@@ -2,6 +2,18 @@
 #include <qjsonobject.h>
 #include <qobject.h>
 
+WorkPrimitive::WorkPrimitive(QObject* parent)
+    : QObject(parent)
+{
+}
+
+WorkPrimitive::WorkPrimitive(QObject* parent, QJsonObject data)
+    : QObject(parent)
+{
+    m_id = data["id"].toInt();
+    m_title = data["title"].toString();
+}
+
 Work::Work(QObject* parent) : QObject(parent) { }
 Work::Work(QObject* parent, QJsonObject data) : QObject(parent) {
     m_id = data["id"].toInt();

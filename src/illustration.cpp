@@ -12,7 +12,7 @@ Illustration::Illustration(QObject* parent, QJsonObject data) : Work(parent, dat
     m_height = data["height"].toInt();
     m_sanityLevel = data["sanity_level"].toInt();
     if (data.contains("series"))
-        m_series = new Series(nullptr, data["series"].toObject());
+        m_series = new WorkPrimitive(nullptr, data["series"].toObject());
     m_metaSinglePage = data["meta_single_page"].toObject()["original_image_url"].toString();
     for (QJsonValue metaPage : data["meta_pages"].toArray())
         m_metaPages.append(new ImageUrls(nullptr, metaPage.toObject()["image_urls"].toObject()));
@@ -25,4 +25,5 @@ Illustration::Illustration(QObject* parent, QJsonObject data) : Work(parent, dat
     }
     if (data.contains("comment_access_control"))
         m_commentAccessControl = data["comment_access_control"].toInt();
+    m_totalComments = data["total_comments"].toInt();
 }

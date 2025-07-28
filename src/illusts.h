@@ -2,6 +2,11 @@
 #include "piqi_export.h"
 #include "privacypolicy.h"
 #include "illustration.h"
+#include "series.h"
+#include "workspace.h"
+#include <qobject.h>
+#include <qqmlintegration.h>
+#include <qtmetamacros.h>
 
 class PIQI_EXPORT Illusts : public QAbstractListModel
 {
@@ -45,7 +50,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 };
 
-class Recommended : public Illusts
+class PIQI_EXPORT Recommended : public Illusts
 {
     Q_OBJECT
     QML_ELEMENT
@@ -69,7 +74,7 @@ class Recommended : public Illusts
             };
 };
 
-class SearchResults : public Illusts
+class PIQI_EXPORT SearchResults : public Illusts
 {
     Q_OBJECT
     QML_ELEMENT
@@ -81,5 +86,22 @@ class SearchResults : public Illusts
         SearchResults(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
             m_showAi = data["show_ai"].toBool();
+        };
+};
+
+class PIQI_EXPORT Series : public Illusts
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+    QM_PROPERTY(SeriesDetail*, illustSeriesDetail)
+    QM_PROPERTY(Illustration*, illustSeriesFirstIllust)
+
+    public:
+        Series(QObject* parent = nullptr) : Illusts(parent) {};
+        Series(QObject* parent, QJsonObject data) : Illusts(parent, data)
+        {
+            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_first_illust"].toObject());
+            m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_detail"].toObject());
         };
 };

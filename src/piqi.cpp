@@ -599,3 +599,46 @@ QCoro::Task<QString> Piqi::FetchNovelTask(Novel* novel) {
     QNetworkReply *reply = co_await manager.get(request);
     co_return reply->readAll();
 }
+
+QCoro::QmlTask Piqi::IllustSeriesDetails(Illustration* illust) {
+    return IllustSeriesDetailsTask(illust);
+}
+QCoro::Task<IllustSeries*> Piqi::IllustSeriesDetailsTask(Illustration* illust) {
+    QUrl url("https://app-api.pixiv.net/v1/illust-series/illust");
+    QUrlQuery query{
+        {"illust_id", QString::number(illust->m_id)}
+    };
+    url.setQuery(query);
+    co_return (co_await SendGet<IllustSeries>(url));
+}
+
+QCoro::QmlTask Piqi::SeriesFeed(int id) {
+    return SeriesFeedTask(id);
+}
+QCoro::Task<Series*> Piqi::SeriesFeedTask(int id) {
+    QUrl url("https://app-api.pixiv.net/v1/illust/series");
+    QUrlQuery query {
+        {"illust_series_id", QString::number(id)}
+    };
+    url.setQuery(query);
+    co_return (co_await SendGet<Series>(url));
+}
+
+QCoro::QmlTask Piqi::UserSeries(User* user) {
+    return UserSeriesTask(user);
+}
+QCoro::Task<SeriesDetails*> Piqi::UserSeriesTask(User* user) {
+    QUrl url("https://app-api.pixiv.net/v1/user/illust-series");
+    QUrlQuery query{
+        {"user_id", QString::number(user->m_id)}
+    };
+    url.setQuery(query);
+    co_return (co_await SendGet<SeriesDetails>(url));
+}
+QCoro::QmlTask Piqi::WatchlistFeed() {
+    return WatchlistFeedTask();
+}
+QCoro::Task<SeriesDetails*> Piqi::WatchlistFeedTask() {
+    QUrl url("https://app-api.pixiv.net/v1/watchlist/manga");
+    co_return (co_await SendGet<SeriesDetails>(url));
+}
