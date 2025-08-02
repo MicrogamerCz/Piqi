@@ -66,7 +66,7 @@ public:
     QCoro::Task<Illusts*> UserIllustsTask(User* user, QString type);
     QCoro::Task<Illusts*> RelatedIllustsTask(Illustration* illust);
     QCoro::Task<Illusts*> LatestGlobalTask(QString type);
-    QCoro::Task<Illusts*> BookmarksFeedTask(bool restricted = false, QString tag = "");
+    QCoro::Task<Illusts*> BookmarksFeedTask(User* user = nullptr, bool restricted = false, QString tag = "");
     QCoro::Task<Novels*> NovelsBookmarksFeedTask(bool restricted = false, QString tag = "");
     QCoro::Task<Novels*> FollowingNovelsFeedTask(QString restriction);
     QCoro::Task<Novels*> LatestNovelsGlobalTask();
@@ -105,7 +105,7 @@ public Q_SLOTS:
     QCoro::QmlTask SearchPopularPreview(SearchRequest* params);
     QCoro::QmlTask Search(SearchRequest* params);
     QCoro::QmlTask LatestGlobal(QString type);
-    QCoro::QmlTask BookmarksFeed(bool restricted = false, QString tag = ""); // Add back user with nullptr value by default
+    QCoro::QmlTask BookmarksFeed(User* user = nullptr, bool restricted = false, QString tag = ""); // Add back user with nullptr value by default
     QCoro::QmlTask Details(User* user);
     QCoro::QmlTask BookmarkTags(QString type = "illust", bool restricted = false);
     QCoro::QmlTask IllustDetail(int id);

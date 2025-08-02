@@ -378,13 +378,14 @@ QCoro::Task<Illusts*> Piqi::LatestGlobalTask(QString type) {
     co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type)));
 }
 
-QCoro::QmlTask Piqi::BookmarksFeed(bool restricted, QString tag) {
-    return BookmarksFeedTask(restricted, tag);
+QCoro::QmlTask Piqi::BookmarksFeed(User* user, bool restricted, QString tag) {
+    return BookmarksFeedTask(user, restricted, tag);
 }
-QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(bool restricted, QString tag) {
+QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(User* user, bool restricted, QString tag) {
+    if (!user) user = m_user;
     QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/illust");
     QUrlQuery query {
-        { "user_id", QString::number(m_user->m_id) },
+        { "user_id", QString::number(user->m_id) },
         { "restrict", restricted ? "private" : "public" }
     };
     if (tag != "") query.addQueryItem("tag", tag);
