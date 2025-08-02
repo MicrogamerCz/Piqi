@@ -1,6 +1,7 @@
 #include "series.h"
 #include "illustration.h"
 #include <qjsonobject.h>
+#include <qjsonvalue.h>
 #include <qobject.h>
 
 SeriesDetail::SeriesDetail(QObject* parent) : Work(parent) {}
@@ -21,9 +22,11 @@ IllustSeriesContext::IllustSeriesContext(QObject* parent) : QObject(parent) {}
 IllustSeriesContext::IllustSeriesContext(QObject* parent, QJsonObject data) : QObject(parent)
 {
     m_contentOrder = data["content_order"].toInt();
-    if (data.contains("prev")) m_prev = new Illustration(nullptr, data["prev"].toObject());
+    QJsonValue prev = data["prev"],
+               next = data["next"];
+    if (!prev.isNull()) m_prev = new Illustration(nullptr, prev.toObject());
     else m_prev = nullptr;
-    if (data.contains("next")) m_next = new Illustration(nullptr, data["next"].toObject());
+    if (!next.isNull()) m_next = new Illustration(nullptr, next.toObject());
     else m_next = nullptr;
 }
 
