@@ -1,5 +1,6 @@
 #include "series.h"
 #include "illustration.h"
+#include "imageurls.h"
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 #include <qobject.h>
@@ -7,7 +8,11 @@
 SeriesDetail::SeriesDetail(QObject* parent) : Work(parent) {}
 SeriesDetail::SeriesDetail(QObject* parent, QJsonObject data) : Work(parent, data)
 {
-    m_coverImageUrls = new ImageUrls(this, data["cover_image_urls"].toObject());
+    if (data.contains("cover_image_urls")) m_coverImageUrls = new ImageUrls(this, data["cover_image_urls"].toObject());
+    else {
+        m_coverImageUrls = new ImageUrls;
+        m_coverImageUrls->m_medium = data["url"].toString(); // why, pixiv, why?
+    }
     if (data.contains("series_work_count")) m_seriesWorkCount = data["series_work_count"].toInt();
     else if (data.contains("published_content_count")) m_seriesWorkCount = data["published_content_count"].toInt();
     if (data.contains("width")) m_width = data["width"].toInt();
