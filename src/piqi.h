@@ -74,6 +74,8 @@ public:
     QCoro::Task<Series*> SeriesFeedTask(int id);
     QCoro::Task<SeriesDetails*> UserSeriesTask(User* user);
     QCoro::Task<SeriesDetails*> WatchlistFeedTask();
+    QCoro::Task<> WatchlistAddTask(SeriesDetail* series, QString type);
+    QCoro::Task<> WatchlistDeleteTask(SeriesDetail* series, QString type);
 
     // Search methods
     QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
@@ -120,6 +122,8 @@ public Q_SLOTS:
     QCoro::QmlTask SeriesFeed(int id);
     QCoro::QmlTask UserSeries(User* user);
     QCoro::QmlTask WatchlistFeed();
+    QCoro::QmlTask WatchlistAdd(SeriesDetail* series, QString type);
+    QCoro::QmlTask WatchlistDelete(SeriesDetail* series, QString type);
 };
 
 /*
