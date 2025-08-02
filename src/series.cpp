@@ -21,7 +21,8 @@ IllustSeriesContext::IllustSeriesContext(QObject* parent) : QObject(parent) {}
 IllustSeriesContext::IllustSeriesContext(QObject* parent, QJsonObject data) : QObject(parent)
 {
     m_contentOrder = data["content_order"].toInt();
-    m_prev = new Illustration(nullptr, data["prev"].toObject());
+    if (data.contains("prev")) m_prev = new Illustration(nullptr, data["prev"].toObject());
+    else m_prev = nullptr;
     if (data.contains("next")) m_next = new Illustration(nullptr, data["next"].toObject());
     else m_next = nullptr;
 }
