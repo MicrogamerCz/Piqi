@@ -101,7 +101,7 @@ class PIQI_EXPORT Series : public Illusts
         Series(QObject* parent = nullptr) : Illusts(parent) {};
         Series(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
-            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_first_illust"].toObject());
-            m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_detail"].toObject());
+            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject());
+        m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_first_illust"].toObject());
         };
 };
