@@ -442,13 +442,14 @@ QCoro::Task<Illustration*> Piqi::IllustDetailTask(int id) {
     co_return new Illustration(nullptr, json["illust"].toObject());
 }
 
-QCoro::QmlTask Piqi::NovelsBookmarksFeed(bool restricted, QString tag) {
-    return NovelsBookmarksFeedTask(restricted, tag);
+QCoro::QmlTask Piqi::NovelsBookmarksFeed(User* user, bool restricted, QString tag) {
+    return NovelsBookmarksFeedTask(user, restricted, tag);
 }
-QCoro::Task<Novels*> Piqi::NovelsBookmarksFeedTask(bool restricted, QString tag) {
+QCoro::Task<Novels*> Piqi::NovelsBookmarksFeedTask(User* user, bool restricted, QString tag) {
+    if (!user) user = m_user;
     QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/novel");
     QUrlQuery query {
-        { "user_id", QString::number(m_user->m_id) },
+        { "user_id", QString::number(user->m_id) },
         { "restrict", restricted ? "private" : "public" }
     };
     if (tag != "") query.addQueryItem("tag", tag);

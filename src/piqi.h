@@ -67,7 +67,7 @@ public:
     QCoro::Task<Illusts*> RelatedIllustsTask(Illustration* illust);
     QCoro::Task<Illusts*> LatestGlobalTask(QString type);
     QCoro::Task<Illusts*> BookmarksFeedTask(User* user = nullptr, bool restricted = false, QString tag = "");
-    QCoro::Task<Novels*> NovelsBookmarksFeedTask(bool restricted = false, QString tag = "");
+    QCoro::Task<Novels*> NovelsBookmarksFeedTask(User* user = nullptr, bool restricted = false, QString tag = "");
     QCoro::Task<Novels*> FollowingNovelsFeedTask(QString restriction);
     QCoro::Task<Novels*> LatestNovelsGlobalTask();
     QCoro::Task<Novels*> UserNovelsTask(User* user);
@@ -109,7 +109,7 @@ public Q_SLOTS:
     QCoro::QmlTask Details(User* user);
     QCoro::QmlTask BookmarkTags(QString type = "illust", bool restricted = false);
     QCoro::QmlTask IllustDetail(int id);
-    QCoro::QmlTask NovelsBookmarksFeed(bool restricted = false, QString tag = ""); // Same as with normal BookmarksFeed
+    QCoro::QmlTask NovelsBookmarksFeed(User* user = nullptr, bool restricted = false, QString tag = ""); // Same as with normal BookmarksFeed
     QCoro::QmlTask FollowingNovelsFeed(QString restriction);
     QCoro::QmlTask LatestNovelsGlobal();
     QCoro::QmlTask SearchNovelsPopularPreview(SearchRequest* params);
