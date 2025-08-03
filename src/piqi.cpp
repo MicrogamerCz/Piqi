@@ -650,7 +650,7 @@ QCoro::QmlTask Piqi::WatchlistAdd(SeriesDetail* series, QString type) {
     return WatchlistAddTask(series, type);
 }
 QCoro::Task<> Piqi::WatchlistAddTask(SeriesDetail* series, QString type) {
-    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/add"));
+    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/" + type + "/add"));
     request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     QUrlQuery query{
@@ -662,7 +662,7 @@ QCoro::QmlTask Piqi::WatchlistDelete(SeriesDetail* series, QString type) {
     return WatchlistDeleteTask(series, type);
 }
 QCoro::Task<> Piqi::WatchlistDeleteTask(SeriesDetail* series, QString type) {
-    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/delete"));
+    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/" + type + "/delete"));
     request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     QUrlQuery query{
