@@ -2,6 +2,11 @@ qt_policy(SET QTP0001 NEW)
 qcoro_enable_coroutines()
 remove_definitions(-DQT_NO_CAST_TO_ASCII -DQT_NO_CAST_FROM_ASCII)
 
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    add_compile_options(-fPIC)
+endif()
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
