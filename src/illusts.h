@@ -16,13 +16,23 @@ class PIQI_EXPORT Illusts : public QAbstractListModel
     QM_PROPERTY(QList<Illustration*>, illusts)
     QM_PROPERTY(QString, nextUrl)
 
+protected:
+    QString accessToken, refreshToken;
+
 public:
-    Illusts(QObject* parent = nullptr) : QAbstractListModel(parent) {};
-    Illusts(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
+    // Illusts(QObject* parent = nullptr) : QAbstractListModel(parent) {};
+    Illusts(QObject* parent = nullptr, QString accessToken = "", QString refreshToken = "") : QAbstractListModel(parent) {
+        this->accessToken = accessToken;
+        this->refreshToken = refreshToken;
+    };
+    Illusts(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : QAbstractListModel(parent)
     {
+        this->accessToken = accessToken;
+        this->refreshToken = refreshToken;
+
         beginResetModel();
         for (QJsonValue il : data["illusts"].toArray()) {
-            Illustration* illust = new Illustration(nullptr, il.toObject());
+            Illustration* illust = new Illustration(nullptr, il.toObject(), accessToken, refreshToken);
             m_illusts.append(illust);
         }
         endResetModel();
@@ -61,9 +71,10 @@ class PIQI_EXPORT Recommended : public Illusts
 
         public:
             Recommended(QObject* parent = nullptr) : Illusts(parent) {};
-            Recommended(QObject* parent, QJsonObject data) : Illusts(parent, data)
+            Recommended(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data, accessToken, refreshToken)
             {
-                m_ranking = new Illusts;
+                m_ranking = new Illusts(nullptr, accessToken, refreshToken);
+
                 for (QJsonValue il : data["ranking_illusts"].toArray()) {
                     Illustration* illust = new Illustration(nullptr, il.toObject());
                     m_ranking->m_illusts.append(illust);
@@ -83,7 +94,7 @@ class PIQI_EXPORT SearchResults : public Illusts
 
     public:
         SearchResults(QObject* parent = nullptr) : Illusts(parent) {};
-        SearchResults(QObject* parent, QJsonObject data) : Illusts(parent, data)
+        SearchResults(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data, accessToken, refreshToken)
         {
             m_showAi = data["show_ai"].toBool();
         };
@@ -99,9 +110,9 @@ class PIQI_EXPORT Series : public Illusts
 
     public:
         Series(QObject* parent = nullptr) : Illusts(parent) {};
-        Series(QObject* parent, QJsonObject data) : Illusts(parent, data)
+        Series(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data, accessToken, refreshToken)
         {
-            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject());
-        m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_first_illust"].toObject());
+            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject(), accessToken, refreshToken);
+            m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_first_illust"].toObject());
         };
 };

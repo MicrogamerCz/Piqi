@@ -20,7 +20,7 @@ class PIQI_EXPORT Novels : public QAbstractListModel
 
     public:
         Novels(QObject* parent = nullptr);
-        Novels(QObject* parent, QJsonObject data);
+        Novels(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 
         Q_SLOT void Extend(Novels* nextFeed);
 
@@ -44,7 +44,7 @@ class PIQI_EXPORT RecommendedNovels : public Novels
 
     public:
         RecommendedNovels(QObject* parent = nullptr);
-        RecommendedNovels(QObject* parent, QJsonObject data);
+        RecommendedNovels(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 };
 
 class NovelSearchResults : public Novels
@@ -56,5 +56,5 @@ class NovelSearchResults : public Novels
 
     public:
         NovelSearchResults(QObject* parent = nullptr);
-        NovelSearchResults(QObject* parent, QJsonObject data);
+        NovelSearchResults(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 };

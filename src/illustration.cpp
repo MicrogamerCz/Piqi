@@ -4,7 +4,8 @@
 #include <qobject.h>
 
 Illustration::Illustration(QObject* parent) : Work(parent) { }
-Illustration::Illustration(QObject* parent, QJsonObject data) : Work(parent, data) {
+Illustration::Illustration(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken)
+    : Work(parent, data, accessToken, refreshToken) {
     for (QJsonValue tool : data["tools"].toArray())
         m_tools.append(tool.toString());
     m_pageCount = data["page_count"].toInt();

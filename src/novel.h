@@ -26,5 +26,5 @@ class PIQI_EXPORT Novel : public Work
 
     public:
         Novel(QObject* parent = nullptr);
-        Novel(QObject* parent, QJsonObject data);
+        Novel(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 };

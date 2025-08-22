@@ -6,7 +6,7 @@
 #include <qobject.h>
 
 SeriesDetail::SeriesDetail(QObject* parent) : Work(parent) {}
-SeriesDetail::SeriesDetail(QObject* parent, QJsonObject data) : Work(parent, data)
+SeriesDetail::SeriesDetail(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : Work(parent, data, accessToken, refreshToken)
 {
     if (data.contains("cover_image_urls")) m_coverImageUrls = new ImageUrls(this, data["cover_image_urls"].toObject());
     else {
@@ -36,8 +36,11 @@ IllustSeriesContext::IllustSeriesContext(QObject* parent, QJsonObject data) : QO
 }
 
 IllustSeries::IllustSeries(QObject* parent) : QObject(parent) {}
-IllustSeries::IllustSeries(QObject* parent, QJsonObject data) : QObject(parent)
+IllustSeries::IllustSeries(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : QObject(parent)
 {
+    Q_UNUSED(accessToken);
+    Q_UNUSED(refreshToken);
+
     m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject());
     m_illustSeriesContext = new IllustSeriesContext(nullptr, data["illust_series_context"].toObject());
 }

@@ -14,7 +14,7 @@ class PIQI_EXPORT BookmarkDetails : public QObject
 
 public:
     BookmarkDetails(QObject *parent = nullptr);
-    BookmarkDetails(QObject *parent, QJsonObject data);
+    BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 };
 class FollowDetails : public QObject
 {

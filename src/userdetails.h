@@ -19,5 +19,5 @@ class PIQI_EXPORT UserDetails : public QObject {
 
     public:
         UserDetails(QObject* parent = nullptr);
-        UserDetails(QObject* parent, QJsonObject data);
+        UserDetails(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 };

@@ -54,7 +54,7 @@ template<class T> QCoro::Task<T*> Piqi::SendGet(QUrl url, bool authenticated) {
     if (authenticated) request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
     QNetworkReply *reply = co_await manager.get(request);
     QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
-    co_return new T(nullptr, json);
+    co_return new T(nullptr, json, accessToken, refreshToken);
 }
 
 void Piqi::SetLogin(QString accessToken, QString refreshToken)

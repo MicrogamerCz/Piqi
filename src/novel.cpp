@@ -6,7 +6,7 @@
 #include <qobject.h>
 
 Novel::Novel(QObject* parent) : Work(parent) { }
-Novel::Novel(QObject* parent, QJsonObject data) : Work(parent, data) {
+Novel::Novel(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : Work(parent, data, accessToken, refreshToken) {
     m_isOriginal = data["is_original"].toBool();
     m_textLength = data["text_length"].toInt();
     // series
@@ -15,4 +15,8 @@ Novel::Novel(QObject* parent, QJsonObject data) : Work(parent, data) {
     m_isXRestricted = data["is_x_restricted"].toBool();
     m_novelAiType = data["novel_ai_type"].toInt();
     // request
+}
+
+const QString Novel::type() {
+    return "novel";
 }

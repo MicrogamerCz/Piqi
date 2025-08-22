@@ -15,7 +15,10 @@ WorkPrimitive::WorkPrimitive(QObject* parent, QJsonObject data)
 }
 
 Work::Work(QObject* parent) : QObject(parent) { }
-Work::Work(QObject* parent, QJsonObject data) : QObject(parent) {
+Work::Work(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : QObject(parent) {
+    this->accessToken = accessToken;
+    this->refreshToken = refreshToken;
+
     m_id = data["id"].toInt();
     m_title = data["title"].toString();
     m_imageUrls = new ImageUrls(nullptr, data["image_urls"].toObject());

@@ -31,5 +31,6 @@ class PIQI_EXPORT Illustration : public Work
 
 public:
     Illustration(QObject *parent = nullptr);
-    Illustration(QObject *parent, QJsonObject data);
+    Illustration(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+    
 };

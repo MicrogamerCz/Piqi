@@ -3,9 +3,13 @@
 #include <qabstractitemmodel.h>
 #include <qjsonobject.h>
 #include <qobject.h>
+#include <qtpreprocessorsupport.h>
 
 Tags::Tags(QObject* parent) : QAbstractListModel(parent) {}
-Tags::Tags(QObject* parent, QJsonObject data) : QAbstractListModel(parent) {
+Tags::Tags(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : QAbstractListModel(parent) {
+    Q_UNUSED(accessToken);
+    Q_UNUSED(refreshToken);
+
     beginResetModel();
     for (QJsonValue il : data["bookmark_tags"].toArray()) {
         BookmarkTag* tag = new BookmarkTag(nullptr, il.toObject());

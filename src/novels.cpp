@@ -6,10 +6,11 @@
 #include <qobject.h>
 
 Novels::Novels(QObject* parent) : QAbstractListModel(parent) { }
-Novels::Novels(QObject* parent, QJsonObject data) : QAbstractListModel(parent) {
+Novels::Novels(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : QAbstractListModel(parent)
+{
     beginResetModel();
     for (QJsonValue nl : data["novels"].toArray()) {
-        Novel* novel = new Novel(nullptr, nl.toObject());
+        Novel* novel = new Novel(nullptr, nl.toObject(), accessToken, refreshToken);
         m_novels.append(novel);
     }
     endResetModel();
@@ -42,10 +43,10 @@ QHash<int, QByteArray> Novels::roleNames() const
 }
 
 RecommendedNovels::RecommendedNovels(QObject* parent) : Novels(parent) { }
-RecommendedNovels::RecommendedNovels(QObject* parent, QJsonObject data) : Novels(parent, data) {
+RecommendedNovels::RecommendedNovels(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : Novels(parent, data, accessToken, refreshToken) {
     m_ranking = new Novels;
     for (QJsonValue nl : data["ranking_novels"].toArray()) {
-        Novel* novel = new Novel(nullptr, nl.toObject());
+        Novel* novel = new Novel(nullptr, nl.toObject(), accessToken, refreshToken);
         m_ranking->m_novels.append(novel);
     }
     m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
@@ -53,7 +54,7 @@ RecommendedNovels::RecommendedNovels(QObject* parent, QJsonObject data) : Novels
 }
 
 NovelSearchResults::NovelSearchResults(QObject* parent) : Novels(parent) {};
-NovelSearchResults::NovelSearchResults(QObject* parent, QJsonObject data) : Novels(parent, data)
+NovelSearchResults::NovelSearchResults(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : Novels(parent, data, accessToken, refreshToken)
 {
     m_showAi = data["show_ai"].toBool();
 };
