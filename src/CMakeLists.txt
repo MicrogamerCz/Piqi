@@ -7,6 +7,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 qt_add_library(piqi SHARED
+    piqi.cpp
+    requestworker.cpp
+    requestworker.h
+
     bookmarkdetails.cpp
     comment.cpp
     comments.cpp
@@ -15,7 +19,6 @@ qt_add_library(piqi SHARED
     imageurls.cpp
     novel.cpp
     novels.cpp
-    piqi.cpp
     privacypolicy.cpp
     profile.cpp
     qepr.h

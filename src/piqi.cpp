@@ -6,8 +6,10 @@
 #include "novel.h"
 #include "novels.h"
 #include "searchrequest.h"
+#include "series.h"
 #include "tag.h"
 #include "userdetails.h"
+#include "requestworker.h"
 #include <QJsonDocument>
 #include <QUrlQuery>
 #include <qcborvalue.h>
@@ -25,6 +27,7 @@
 #include <qnetworkrequest.h>
 #include <qstringview.h>
 #include <qtmetamacros.h>
+#include <qtpreprocessorsupport.h>
 #include <qtypes.h>
 #include <qurl.h>
 #include <qurlquery.h>
@@ -36,51 +39,17 @@ Piqi::Piqi(QObject *parent)
     Q_EMIT userChanged();
 }
 
-QCoro::Task<bool> Piqi::IsLoggedIn()
-{
-    bool emptyAT = accessToken.isEmpty();
-    bool expired = (expiration.toMSecsSinceEpoch() - QDateTime::currentDateTime().toMSecsSinceEpoch()) < 0;
-    bool result = !(emptyAT || expired);
-    if (!result)
-        result |= (co_await LoginTask(refreshToken));
-    co_return result;
-}
-
-template<class T> QCoro::Task<T*> Piqi::SendGet(QUrl url, bool authenticated) {
-    if (authenticated && !(co_await IsLoggedIn()))
-        co_return nullptr;
-
-    QNetworkRequest request(url);
-    if (authenticated) request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
-    QNetworkReply *reply = co_await manager.get(request);
-    QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
-    co_return new T(nullptr, json, accessToken, refreshToken);
-}
-
 void Piqi::SetLogin(QString accessToken, QString refreshToken)
 {
-    this->accessToken = accessToken;
-    this->refreshToken = refreshToken;
-    expiration = QDateTime::currentDateTime().addSecs(3600);
+    PiqiInternal::accessToken = accessToken;
+    PiqiInternal::refreshToken = refreshToken;
+    PiqiInternal::expiration = QDateTime::currentDateTime().addSecs(3600);
 }
 
 QCoro::QmlTask Piqi::Login(QString refreshToken) { return LoginTask(refreshToken); }
-QCoro::Task<bool> Piqi::LoginTask(QString refreshToken)
-{
-    QNetworkRequest request(QUrl("https://oauth.secure.pixiv.net/auth/token"));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    QUrlQuery obj{{"client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"},
-                  {"client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"},
-                  {"grant_type", "refresh_token"},
-                  {"refresh_token", refreshToken}};
-    QNetworkReply *reply = co_await manager.post(request, obj.toString().toUtf8());
-    QJsonObject data = QJsonDocument::fromJson(reply->readAll()).object();
-    accessToken = data["access_token"].toString();
-    refreshToken = data["refresh_token"].toString();
-    expiration = QDateTime::currentDateTime().addSecs(3600);
-    m_user = new Account(nullptr, data["user"].toObject());
-    Q_EMIT userChanged();
-    co_return (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200);
+QCoro::Task<bool> Piqi::LoginTask(QString refreshToken) {
+    m_user = co_await PiqiInternal::LoginTask(refreshToken);
+    co_return (m_user != nullptr);
 }
 
 QCoro::QmlTask Piqi::Walkthrough() { return WalkthroughTask(); }
@@ -108,7 +77,7 @@ QCoro::Task<Recommended *> Piqi::RecommendedFeedTask(QString type, bool includeR
         {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}
     };
     url.setQuery(query);
-    co_return (co_await SendGet<Recommended>(url));
+    co_return (co_await PiqiInternal::SendGet<Recommended>(url));
 }
 QCoro::QmlTask Piqi::RecommendedNovelsFeed(bool includeRanking, bool includePrivacyPolicy) {
     return RecommendedNovelsFeedTask(includeRanking, includePrivacyPolicy);
@@ -120,14 +89,14 @@ QCoro::Task<RecommendedNovels*> Piqi::RecommendedNovelsFeedTask(bool includeRank
         {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}
     };
     url.setQuery(query);
-    co_return (co_await SendGet<RecommendedNovels>(url));
+    return PiqiInternal::SendGet<RecommendedNovels>(url);
 }
 
 QCoro::QmlTask Piqi::FollowingFeed(QString restriction) { return FollowingFeedTask(restriction); }
 QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString restriction)
 {
     QUrl url(("https://app-api.pixiv.net/v2/illust/follow?restrict=" + restriction));
-    co_return (co_await SendGet<Illusts>(url));
+    return PiqiInternal::SendGet<Illusts>(url);
 }
 
 QCoro::QmlTask Piqi::AddBookmark(Illustration *illust, bool isPrivate) { return AddBookmarkTask(illust, isPrivate); }
@@ -179,7 +148,7 @@ QCoro::Task<Illusts*> Piqi::UserIllustsTask(User* user, QString type)
         {"type", type}
     };
     url.setQuery(query);
-    co_return (co_await SendGet<Illusts>(url));
+    return PiqiInternal::SendGet<Illusts>(url);
 }
 
 QCoro::QmlTask Piqi::IllustComments(Illustration *illust) { return IllustCommentsTask(illust); }
@@ -195,6 +164,7 @@ QCoro::Task<Comments*> Piqi::CommentRepliesTask(Comment* comment) {
     QUrl url("https://app-api.pixiv.net/v2/illust/comment/replies");
     QUrlQuery query{{"comment_id", QString::number(comment->m_id)}};
     url.setQuery(query);
+    return PiqiInternal::SendGet<Comments>(url);
     co_return (co_await SendGet<Comments>(url));
 }
 
@@ -211,7 +181,7 @@ QCoro::QmlTask Piqi::Follow(User *user, bool privateFollow) { return FollowTask(
 QCoro::Task<void> Piqi::FollowTask(User *user, bool privateFollow)
 {
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/user/follow/add"));
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     QUrlQuery query{{"user_id", QString::number(user->m_id)}, {"restrict", (privateFollow ? "private" : "public")}};
     user->m_isFollowed = (privateFollow ? 2 : 1);
@@ -222,7 +192,7 @@ QCoro::QmlTask Piqi::RemoveFollow(User *user) { return RemoveFollowTask(user); }
 QCoro::Task<void> Piqi::RemoveFollowTask(User *user)
 {
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/user/follow/delete"));
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     QUrlQuery query{
         {"user_id", QString::number(user->m_id)},
@@ -239,7 +209,7 @@ QCoro::Task<FollowDetails *> Piqi::FollowDetailTask(User *user)
     QUrlQuery query{{"user_id", QString::number(user->m_id)}};
     url.setQuery(query);
     QNetworkRequest request(url);
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
 
     QNetworkReply *reply = co_await manager.get(request);
     QJsonObject data = QJsonDocument::fromJson(reply->readAll()).object();
@@ -252,7 +222,7 @@ QCoro::Task<Illusts *> Piqi::RelatedIllustsTask(Illustration *illust)
     QUrl url("https://app-api.pixiv.net/v2/illust/related");
     QUrlQuery query{{"illust_id", QString::number(illust->m_id)}};
     url.setQuery(query);
-    co_return (co_await SendGet<Illusts>(url));
+    return PiqiInternal::SendGet<Illusts>(url);
 }
 
 QCoro::QmlTask Piqi::SearchAutocomplete(QString query) { return SearchAutocompleteTask(query); }
@@ -265,7 +235,7 @@ QCoro::Task<QList<Tag*>> Piqi::SearchAutocompleteTask(QString query) {
     url.setQuery(params);
 
     QNetworkRequest request(url);
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
 
     QNetworkReply* reply = co_await manager.get(request);
     QJsonObject obj = QJsonDocument::fromJson(reply->readAll()).object();
@@ -319,7 +289,7 @@ QCoro::Task<Illusts*> Piqi::SearchPopularPreviewTask(SearchRequest* params) {
     }
 
     url.setQuery(query);
-    co_return (co_await SendGet<Illusts>(url));
+    return PiqiInternal::SendGet<Illusts>(url);
 }
 
 QCoro::QmlTask Piqi::Search(SearchRequest* params) {
@@ -368,7 +338,7 @@ QCoro::Task<SearchResults*> Piqi::SearchTask(SearchRequest* params) {
 
     url.setQuery(query);
 
-    co_return (co_await SendGet<SearchResults>(url));
+    return PiqiInternal::SendGet<SearchResults>(url);
 }
 
 QCoro::QmlTask Piqi::LatestGlobal(QString type) {
@@ -376,7 +346,7 @@ QCoro::QmlTask Piqi::LatestGlobal(QString type) {
 }
 QCoro::Task<Illusts*> Piqi::LatestGlobalTask(QString type) {
     if (type == "novel") co_return nullptr;
-    co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type)));
+    co_return co_await PiqiInternal::SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type));
 }
 
 QCoro::QmlTask Piqi::BookmarksFeed(User* user, bool restricted, QString tag) {
@@ -392,7 +362,7 @@ QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(User* user, bool restricted, QStri
     if (tag != "") query.addQueryItem("tag", tag);
     url.setQuery(query);
 
-    co_return (co_await SendGet<Illusts>(url));
+    return PiqiInternal::SendGet<Illusts>(url);
 }
 
 QCoro::QmlTask Piqi::Details(User* user) {
@@ -405,13 +375,14 @@ QCoro::Task<UserDetails*> Piqi::DetailsTask(User* user) {
     };
     url.setQuery(query);
 
-    co_return (co_await SendGet<UserDetails>(url));
+    return PiqiInternal::SendGet<UserDetails>(url);
 }
 
 QCoro::QmlTask Piqi::BookmarkTags(QString type, bool restricted) {
     return BookmarkTagsTask(type, restricted);
 }
 QCoro::Task<Tags*> Piqi::BookmarkTagsTask(QString type, bool restricted) {
+    Q_UNUSED(type)
     QUrl url("https://app-api.pixiv.net/v1/user/bookmark-tags/illust");
     QUrlQuery query {
         { "user_id", QString::number(m_user->m_id) },
@@ -419,7 +390,7 @@ QCoro::Task<Tags*> Piqi::BookmarkTagsTask(QString type, bool restricted) {
     };
     url.setQuery(query);
 
-    co_return (co_await SendGet<Tags>(url));
+    return PiqiInternal::SendGet<Tags>(url);
 }
 
 QCoro::QmlTask Piqi::IllustDetail(int id) {
@@ -432,11 +403,11 @@ QCoro::Task<Illustration*> Piqi::IllustDetailTask(int id) {
     };
     url.setQuery(query);
 
-    if (!(co_await IsLoggedIn()))
+    if (!(co_await PiqiInternal::IsLoggedIn()))
         co_return nullptr;
 
     QNetworkRequest request(url);
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     QNetworkReply *reply = co_await manager.get(request);
     QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
 
@@ -456,19 +427,19 @@ QCoro::Task<Novels*> Piqi::NovelsBookmarksFeedTask(User* user, bool restricted, 
     if (tag != "") query.addQueryItem("tag", tag);
     url.setQuery(query);
 
-    co_return (co_await SendGet<Novels>(url));
+    return PiqiInternal::SendGet<Novels>(url);
 }
 QCoro::QmlTask Piqi::FollowingNovelsFeed(QString restriction) {
     return FollowingNovelsFeedTask(restriction);
 }
 QCoro::Task<Novels*> Piqi::FollowingNovelsFeedTask(QString restriction) {
     QUrl url(("https://app-api.pixiv.net/v1/novel/follow?restrict=" + restriction));
-    co_return (co_await SendGet<Novels>(url));
+    return PiqiInternal::SendGet<Novels>(url);
 }
 
 QCoro::QmlTask Piqi::LatestNovelsGlobal() { return LatestNovelsGlobalTask(); }
 QCoro::Task<Novels*> Piqi::LatestNovelsGlobalTask() {
-    co_return (co_await SendGet<Novels>(QUrl("https://app-api.pixiv.net/v1/novel/new")));
+    return PiqiInternal::SendGet<Novels>(QUrl("https://app-api.pixiv.net/v1/novel/new"));
 }
 
 QCoro::QmlTask Piqi::SearchNovelsPopularPreview(SearchRequest* params) {
@@ -511,7 +482,7 @@ QCoro::Task<Novels*> Piqi::SearchNovelsPopularPreviewTask(SearchRequest* params)
     }
 
     url.setQuery(query);
-    co_return (co_await SendGet<Novels>(url));
+    return PiqiInternal::SendGet<Novels>(url);
 }
 
 QCoro::QmlTask Piqi::SearchNovels(SearchRequest* params) {
@@ -560,7 +531,7 @@ QCoro::Task<NovelSearchResults*> Piqi::SearchNovelsTask(SearchRequest* params) {
 
     url.setQuery(query);
 
-    co_return (co_await SendGet<NovelSearchResults>(url));
+    return PiqiInternal::SendGet<NovelSearchResults>(url);
 }
 
 QCoro::QmlTask Piqi::UserNovels(User* user) {
@@ -572,12 +543,12 @@ QCoro::Task<Novels*> Piqi::UserNovelsTask(User* user) {
         {"user_id", QString::number(user->m_id)}
     };
     url.setQuery(query);
-    co_return (co_await SendGet<Novels>(url));
+    return PiqiInternal::SendGet<Novels>(url);
 }
 
 QCoro::QmlTask Piqi::FetchNovel(Novel* novel) { return FetchNovelTask(novel); }
 QCoro::Task<QString> Piqi::FetchNovelTask(Novel* novel) {
-    if (!(co_await IsLoggedIn()))
+    if (!(co_await PiqiInternal::IsLoggedIn()))
         co_return nullptr;
 
     QUrl url("https://app-api.pixiv.net/webview/v2/novel");
@@ -597,7 +568,7 @@ QCoro::Task<QString> Piqi::FetchNovelTask(Novel* novel) {
     };
     url.setQuery(query);
     QNetworkRequest request(url);
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setRawHeader("X-Requested-With", "jp.pxv.android"); // NECESSARY! Without this header the endpoint returns (probably random) binary data
     QNetworkReply *reply = co_await manager.get(request);
     co_return reply->readAll();
@@ -612,7 +583,7 @@ QCoro::Task<IllustSeries*> Piqi::IllustSeriesDetailsTask(Illustration* illust) {
         {"illust_id", QString::number(illust->m_id)}
     };
     url.setQuery(query);
-    co_return (co_await SendGet<IllustSeries>(url));
+    return PiqiInternal::SendGet<IllustSeries>(url);
 }
 
 QCoro::QmlTask Piqi::SeriesFeed(int id) {
@@ -624,7 +595,7 @@ QCoro::Task<Series*> Piqi::SeriesFeedTask(int id) {
         {"illust_series_id", QString::number(id)}
     };
     url.setQuery(query);
-    co_return (co_await SendGet<Series>(url));
+    return PiqiInternal::SendGet<Series>(url);
 }
 
 QCoro::QmlTask Piqi::UserSeries(User* user) {
@@ -636,22 +607,22 @@ QCoro::Task<SeriesDetails*> Piqi::UserSeriesTask(User* user) {
         {"user_id", QString::number(user->m_id)}
     };
     url.setQuery(query);
-    co_return (co_await SendGet<SeriesDetails>(url));
+    return PiqiInternal::SendGet<SeriesDetails>(url);
 }
 QCoro::QmlTask Piqi::WatchlistFeed() {
     return WatchlistFeedTask();
 }
 QCoro::Task<SeriesDetails*> Piqi::WatchlistFeedTask() {
-    QUrl url("https://app-api.pixiv.net/v1/watchlist/manga");
-    co_return (co_await SendGet<SeriesDetails>(url));
+    return PiqiInternal::SendGet<SeriesDetails>(QUrl("https://app-api.pixiv.net/v1/watchlist/manga"));
 }
 
 QCoro::QmlTask Piqi::WatchlistAdd(SeriesDetail* series, QString type) {
     return WatchlistAddTask(series, type);
 }
 QCoro::Task<> Piqi::WatchlistAddTask(SeriesDetail* series, QString type) {
+    Q_UNUSED(type);
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/add"));
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     QUrlQuery query{
         {"series_id", QString::number(series->m_id)},
@@ -662,8 +633,9 @@ QCoro::QmlTask Piqi::WatchlistDelete(SeriesDetail* series, QString type) {
     return WatchlistDeleteTask(series, type);
 }
 QCoro::Task<> Piqi::WatchlistDeleteTask(SeriesDetail* series, QString type) {
+    Q_UNUSED(type);
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/delete"));
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     QUrlQuery query{
         {"series_id", QString::number(series->m_id)},

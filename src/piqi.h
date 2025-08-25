@@ -32,11 +32,6 @@ class PIQI_EXPORT Piqi : public QObject
     QM_PROPERTY(QList<Account*>, otherUsers)
 
     QNetworkAccessManager manager;
-    QString accessToken = "", refreshToken = "";
-    QDateTime expiration;
-
-    template<class T> QCoro::Task<T*> SendGet(QUrl url, bool authenticated = true);
-    QCoro::Task<bool> IsLoggedIn();
 
 public:
     Piqi(QObject *parent = nullptr);
