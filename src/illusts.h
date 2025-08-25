@@ -3,7 +3,7 @@
 #include "privacypolicy.h"
 #include "illustration.h"
 #include "series.h"
-#include "workspace.h"
+#include <qcoroqmltask.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 #include <qtmetamacros.h>
@@ -16,29 +16,13 @@ class PIQI_EXPORT Illusts : public QAbstractListModel
     QM_PROPERTY(QList<Illustration*>, illusts)
     QM_PROPERTY(QString, nextUrl)
 
-protected:
-    QString accessToken, refreshToken;
-
 public:
-    // Illusts(QObject* parent = nullptr) : QAbstractListModel(parent) {};
-    Illusts(QObject* parent = nullptr, QString accessToken = "", QString refreshToken = "") : QAbstractListModel(parent) {
-        this->accessToken = accessToken;
-        this->refreshToken = refreshToken;
-    };
-    Illusts(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : QAbstractListModel(parent)
-    {
-        this->accessToken = accessToken;
-        this->refreshToken = refreshToken;
+    Illusts(QObject* parent);
+    Illusts(QObject* parent, QJsonObject data);
 
-        beginResetModel();
-        for (QJsonValue il : data["illusts"].toArray()) {
-            Illustration* illust = new Illustration(nullptr, il.toObject(), accessToken, refreshToken);
-            m_illusts.append(illust);
-        }
-        endResetModel();
-        if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
-        else m_nextUrl = "";
-    }
+    Q_SLOT QCoro::QmlTask NextFeed();
+    QCoro::Task<> NextFeedTask();
+
     Q_SLOT void Extend(Illusts* nextFeed) {
         m_nextUrl = nextFeed->m_nextUrl;
         Q_EMIT nextUrlChanged();
@@ -69,20 +53,20 @@ class PIQI_EXPORT Recommended : public Illusts
     QM_PROPERTY(Illusts*, ranking)
     QM_PROPERTY(bool, contestExists)
 
-        public:
-            Recommended(QObject* parent = nullptr) : Illusts(parent) {};
-            Recommended(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data, accessToken, refreshToken)
-            {
-                m_ranking = new Illusts(nullptr, accessToken, refreshToken);
+    public:
+        Recommended(QObject* parent = nullptr) : Illusts(parent) {};
+        Recommended(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data)
+        {
+            m_ranking = new Illusts(nullptr);
 
-                for (QJsonValue il : data["ranking_illusts"].toArray()) {
-                    Illustration* illust = new Illustration(nullptr, il.toObject());
-                    m_ranking->m_illusts.append(illust);
-                }
+            for (QJsonValue il : data["ranking_illusts"].toArray()) {
+                Illustration* illust = new Illustration(nullptr, il.toObject());
+                m_ranking->m_illusts.append(illust);
+            }
 
-                m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
-                m_contestExists = data["contest_exists"].toBool();
-            };
+            m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
+            m_contestExists = data["contest_exists"].toBool();
+        };
 };
 
 class PIQI_EXPORT SearchResults : public Illusts
@@ -94,7 +78,7 @@ class PIQI_EXPORT SearchResults : public Illusts
 
     public:
         SearchResults(QObject* parent = nullptr) : Illusts(parent) {};
-        SearchResults(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data, accessToken, refreshToken)
+        SearchResults(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
             m_showAi = data["show_ai"].toBool();
         };
@@ -110,9 +94,9 @@ class PIQI_EXPORT Series : public Illusts
 
     public:
         Series(QObject* parent = nullptr) : Illusts(parent) {};
-        Series(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data, accessToken, refreshToken)
+        Series(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
-            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject(), accessToken, refreshToken);
+            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject());
             m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_first_illust"].toObject());
         };
 };

@@ -54,14 +54,8 @@ QCoro::Task<bool> Piqi::LoginTask(QString refreshToken) {
 
 QCoro::QmlTask Piqi::Walkthrough() { return WalkthroughTask(); }
 QCoro::Task<Illusts *> Piqi::WalkthroughTask() {
-    co_return (co_await SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts"), false));
-}
+    return PiqiInternal::SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts"), false);
 
-QCoro::QmlTask Piqi::FetchNextFeed(Illusts* feed) {
-    return FetchNextFeedTask(feed);
-}
-QCoro::Task<Illusts*> Piqi::FetchNextFeedTask(Illusts* feed) {
-    co_return (co_await SendGet<Illusts>(QUrl(feed->m_nextUrl)));
 }
 
 QCoro::QmlTask Piqi::RecommendedFeed(QString type, bool includeRanking, bool includePrivacyPolicy) {
@@ -99,39 +93,6 @@ QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString restriction)
     return PiqiInternal::SendGet<Illusts>(url);
 }
 
-QCoro::QmlTask Piqi::AddBookmark(Illustration *illust, bool isPrivate) { return AddBookmarkTask(illust, isPrivate); }
-QCoro::Task<void> Piqi::AddBookmarkTask(Illustration *illust, bool isPrivate)
-{
-    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v2/illust/bookmark/add"));
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    QUrlQuery query{{"illust_id", QString::number(illust->m_id)}, {"restrict", (isPrivate ? "private" : "public")}};
-    if (illust->m_isBookmarked == 0) {
-        illust->m_totalBookmarks++;
-        Q_EMIT illust->totalBookmarksChanged();
-    }
-    illust->m_isBookmarked = (isPrivate ? 2 : 1);
-    Q_EMIT illust->isBookmarkedChanged();
-    co_await manager.post(request, query.toString().toUtf8());
-}
-QCoro::QmlTask Piqi::RemoveBookmark(Illustration *illust)
-{
-    return RemoveBookmarkTask(illust);
-}
-QCoro::Task<void> Piqi::RemoveBookmarkTask(Illustration *illust)
-{
-    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/illust/bookmark/delete"));
-    request.setRawHeader("Authorization", ("Bearer " + accessToken).toUtf8());
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    QUrlQuery query{
-        {"illust_id", QString::number(illust->m_id)},
-    };
-    illust->m_isBookmarked = 0;
-    Q_EMIT illust->isBookmarkedChanged();
-    illust->m_totalBookmarks--;
-    Q_EMIT illust->totalBookmarksChanged();
-    co_await manager.post(request, query.toString().toUtf8());
-}
 
 QCoro::QmlTask Piqi::UserIllusts(User* user, QString type) { return UserIllustsTask(user, type); }
 QCoro::Task<Illusts*> Piqi::UserIllustsTask(User* user, QString type)
@@ -151,14 +112,6 @@ QCoro::Task<Illusts*> Piqi::UserIllustsTask(User* user, QString type)
     return PiqiInternal::SendGet<Illusts>(url);
 }
 
-QCoro::QmlTask Piqi::IllustComments(Illustration *illust) { return IllustCommentsTask(illust); }
-QCoro::Task<Comments*> Piqi::IllustCommentsTask(Illustration *illust)
-{
-    QUrl url("https://app-api.pixiv.net/v3/illust/comments");
-    QUrlQuery query{{"illust_id", QString::number(illust->m_id)}};
-    url.setQuery(query);
-    co_return (co_await SendGet<Comments>(url));
-}
 QCoro::QmlTask Piqi::CommentReplies(Comment* comment) { return CommentRepliesTask(comment); }
 QCoro::Task<Comments*> Piqi::CommentRepliesTask(Comment* comment) {
     QUrl url("https://app-api.pixiv.net/v2/illust/comment/replies");
@@ -168,14 +121,6 @@ QCoro::Task<Comments*> Piqi::CommentRepliesTask(Comment* comment) {
     co_return (co_await SendGet<Comments>(url));
 }
 
-QCoro::QmlTask Piqi::BookmarkDetail(Illustration *illust) { return BookmarkDetailTask(illust); }
-QCoro::Task<BookmarkDetails *> Piqi::BookmarkDetailTask(Illustration *illust)
-{
-    QUrl url("https://app-api.pixiv.net/v2/illust/bookmark/detail");
-    QUrlQuery query{{"illust_id", QString::number(illust->m_id)}};
-    url.setQuery(query);
-    co_return (co_await SendGet<BookmarkDetails>(url));
-}
 
 QCoro::QmlTask Piqi::Follow(User *user, bool privateFollow) { return FollowTask(user, privateFollow); }
 QCoro::Task<void> Piqi::FollowTask(User *user, bool privateFollow)

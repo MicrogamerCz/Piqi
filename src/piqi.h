@@ -38,11 +38,7 @@ public:
 
     // Other methods
     QCoro::Task<bool> LoginTask(QString refreshToken);
-    QCoro::Task<void> AddBookmarkTask(Illustration *illust, bool isPrivate = false);
-    QCoro::Task<void> RemoveBookmarkTask(Illustration *illust);
-    QCoro::Task<Comments*> IllustCommentsTask(Illustration* illust);
     QCoro::Task<Comments*> CommentRepliesTask(Comment* comment);
-    QCoro::Task<BookmarkDetails*> BookmarkDetailTask(Illustration* illust);
     QCoro::Task<void> FollowTask(User* user, bool privateFollow = false);
     QCoro::Task<void> RemoveFollowTask(User* user);
     QCoro::Task<FollowDetails*> FollowDetailTask(User* user);
@@ -53,7 +49,6 @@ public:
     QCoro::Task<IllustSeries*> IllustSeriesDetailsTask(Illustration* illust);
 
     // Feed methods
-    QCoro::Task<Illusts *> FetchNextFeedTask(Illusts* feed);
     QCoro::Task<Illusts *> WalkthroughTask();
     QCoro::Task<Recommended *> RecommendedFeedTask(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::Task<RecommendedNovels *> RecommendedNovelsFeedTask(bool includeRanking = false, bool includePrivacyPolicy = false);
@@ -84,16 +79,11 @@ public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
     QCoro::QmlTask Login(QString refreshToken);
     QCoro::QmlTask Walkthrough();
-    QCoro::QmlTask FetchNextFeed(Illusts* feed);
     QCoro::QmlTask RecommendedFeed(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::QmlTask RecommendedNovelsFeed(bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::QmlTask FollowingFeed(QString restriction);
-    QCoro::QmlTask AddBookmark(Illustration *illust, bool isPrivate = false);
-    QCoro::QmlTask RemoveBookmark(Illustration *illust);
     QCoro::QmlTask UserIllusts(User* user, QString type);
-    QCoro::QmlTask IllustComments(Illustration* illust);
     QCoro::QmlTask CommentReplies(Comment* comment);
-    QCoro::QmlTask BookmarkDetail(Illustration* illust);
     QCoro::QmlTask Follow(User* user, bool privateFollow = false);
     QCoro::QmlTask RemoveFollow(User* user);
     QCoro::QmlTask FollowDetail(User* user);

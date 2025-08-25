@@ -22,6 +22,9 @@ SeriesDetail::SeriesDetail(QObject* parent, QJsonObject data, QString accessToke
     if (data.contains("last_published_content_datetime")) m_lastPublishedContentDatetime = QDateTime::fromString(data["last_published_content_datetime"].toString(), Qt::ISODateWithMs);
     if (data.contains("latest_content_id")) m_latestContentId = data["latest_content_id"].toInt();
 }
+const QString SeriesDetail::type() {
+    return "";
+}
 
 IllustSeriesContext::IllustSeriesContext(QObject* parent) : QObject(parent) {}
 IllustSeriesContext::IllustSeriesContext(QObject* parent, QJsonObject data) : QObject(parent)

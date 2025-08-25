@@ -27,6 +27,8 @@ class PIQI_EXPORT SeriesDetail : public Work
     QM_PROPERTY(QDateTime, lastPublishedContentDatetime)
     QM_PROPERTY(int, latestContentId)
 
+protected:
+    const QString type() override;
 
 public:
     SeriesDetail(QObject* parent = nullptr);
