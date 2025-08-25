@@ -32,7 +32,7 @@ protected:
 
 public:
     SeriesDetail(QObject* parent = nullptr);
-    SeriesDetail(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+    SeriesDetail(QObject* parent, QJsonObject data);
 };
 
 class PIQI_EXPORT IllustSeriesContext : public QObject {
@@ -58,7 +58,7 @@ class PIQI_EXPORT IllustSeries : public QObject
 
     public:
         IllustSeries(QObject* parent = nullptr);
-        IllustSeries(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+        IllustSeries(QObject* parent, QJsonObject data);
 };
 
 class PIQI_EXPORT SeriesDetails : public QAbstractListModel
@@ -71,14 +71,14 @@ class PIQI_EXPORT SeriesDetails : public QAbstractListModel
 
 public:
     SeriesDetails(QObject* parent = nullptr) : QAbstractListModel(parent) {};
-    SeriesDetails(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : QAbstractListModel(parent)
+    SeriesDetails(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
     {
         QJsonArray feed;
         if (data.contains("illust_series_details")) feed = data["illust_series_details"].toArray();
         else if (data.contains("series")) feed = data["series"].toArray();
         beginResetModel();
         for (QJsonValue sr : feed) {
-            SeriesDetail* series = new SeriesDetail(nullptr, sr.toObject(), accessToken, refreshToken);
+            SeriesDetail* series = new SeriesDetail(nullptr, sr.toObject());
             m_series.append(series);
         }
         endResetModel();

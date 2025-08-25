@@ -33,7 +33,7 @@ protected:
 
 public:
     Illustration(QObject *parent = nullptr);
-    Illustration(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+    Illustration(QObject *parent, QJsonObject data);
 
     QCoro::Task<Comments*> FetchCommentsTask();
     QCoro::QmlTask FetchComments();

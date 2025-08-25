@@ -1,9 +1,7 @@
 #pragma once
-#include "imageurls.h"
 #include "novel.h"
 #include "piqi_export.h"
 #include "privacypolicy.h"
-#include "tag.h"
 #include <qabstractitemmodel.h>
 #include <qjsonobject.h>
 #include <qobject.h>
@@ -20,7 +18,7 @@ class PIQI_EXPORT Novels : public QAbstractListModel
 
     public:
         Novels(QObject* parent = nullptr);
-        Novels(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+        Novels(QObject* parent, QJsonObject data);
 
         Q_SLOT void Extend(Novels* nextFeed);
 
@@ -44,7 +42,7 @@ class PIQI_EXPORT RecommendedNovels : public Novels
 
     public:
         RecommendedNovels(QObject* parent = nullptr);
-        RecommendedNovels(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+        RecommendedNovels(QObject* parent, QJsonObject data);
 };
 
 class NovelSearchResults : public Novels
@@ -56,5 +54,5 @@ class NovelSearchResults : public Novels
 
     public:
         NovelSearchResults(QObject* parent = nullptr);
-        NovelSearchResults(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+        NovelSearchResults(QObject* parent, QJsonObject data);
 };

@@ -1,8 +1,6 @@
 #pragma once
-#include "imageurls.h"
 #include "piqi_export.h"
 #include "tag.h"
-#include "user.h"
 #include "work.h"
 #include <qjsonobject.h>
 #include <qlist.h>

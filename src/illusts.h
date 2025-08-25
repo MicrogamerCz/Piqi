@@ -55,7 +55,7 @@ class PIQI_EXPORT Recommended : public Illusts
 
     public:
         Recommended(QObject* parent = nullptr) : Illusts(parent) {};
-        Recommended(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "") : Illusts(parent, data)
+        Recommended(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
             m_ranking = new Illusts(nullptr);
 

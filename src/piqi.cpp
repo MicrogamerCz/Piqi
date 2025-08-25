@@ -118,7 +118,6 @@ QCoro::Task<Comments*> Piqi::CommentRepliesTask(Comment* comment) {
     QUrlQuery query{{"comment_id", QString::number(comment->m_id)}};
     url.setQuery(query);
     return PiqiInternal::SendGet<Comments>(url);
-    co_return (co_await SendGet<Comments>(url));
 }
 
 
