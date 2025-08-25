@@ -1,12 +1,10 @@
 #include "novel.h"
-#include "imageurls.h"
-#include "tag.h"
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 #include <qobject.h>
 
 Novel::Novel(QObject* parent) : Work(parent) { }
-Novel::Novel(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : Work(parent, data, accessToken, refreshToken) {
+Novel::Novel(QObject* parent, QJsonObject data) : Work(parent, data) {
     m_isOriginal = data["is_original"].toBool();
     m_textLength = data["text_length"].toInt();
     // series

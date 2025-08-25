@@ -24,7 +24,10 @@ class PIQI_EXPORT Novel : public Work
     QM_PROPERTY(int, novelAiType)
     // request
 
+    protected:
+        const QString type() override;
+
     public:
         Novel(QObject* parent = nullptr);
-        Novel(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+        Novel(QObject* parent, QJsonObject data);
 };
