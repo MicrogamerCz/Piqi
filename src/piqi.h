@@ -39,9 +39,6 @@ public:
     // Other methods
     QCoro::Task<bool> LoginTask(QString refreshToken);
     QCoro::Task<Comments*> CommentRepliesTask(Comment* comment);
-    QCoro::Task<void> FollowTask(User* user, bool privateFollow = false);
-    QCoro::Task<void> RemoveFollowTask(User* user);
-    QCoro::Task<FollowDetails*> FollowDetailTask(User* user);
     QCoro::Task<UserDetails*> DetailsTask(User* user);
     QCoro::Task<Tags*> BookmarkTagsTask(QString type = "illust", bool restricted = false);
     QCoro::Task<Illustration*> IllustDetailTask(int id);
@@ -69,11 +66,6 @@ public:
 
     // Search methods
     QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
-    QCoro::Task<Illusts*> SearchPopularPreviewTask(SearchRequest* params);
-    QCoro::Task<Novels*> SearchNovelsPopularPreviewTask(SearchRequest* params);
-    QCoro::Task<SearchResults*> SearchTask(SearchRequest* params);
-    QCoro::Task<NovelSearchResults*> SearchNovelsTask(SearchRequest* params);
-
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
@@ -84,13 +76,8 @@ public Q_SLOTS:
     QCoro::QmlTask FollowingFeed(QString restriction);
     QCoro::QmlTask UserIllusts(User* user, QString type);
     QCoro::QmlTask CommentReplies(Comment* comment);
-    QCoro::QmlTask Follow(User* user, bool privateFollow = false);
-    QCoro::QmlTask RemoveFollow(User* user);
-    QCoro::QmlTask FollowDetail(User* user);
     QCoro::QmlTask RelatedIllusts(Illustration* illust);
     QCoro::QmlTask SearchAutocomplete(QString query);
-    QCoro::QmlTask SearchPopularPreview(SearchRequest* params);
-    QCoro::QmlTask Search(SearchRequest* params);
     QCoro::QmlTask LatestGlobal(QString type);
     QCoro::QmlTask BookmarksFeed(User* user = nullptr, bool restricted = false, QString tag = ""); // Add back user with nullptr value by default
     QCoro::QmlTask Details(User* user);
@@ -99,8 +86,6 @@ public Q_SLOTS:
     QCoro::QmlTask NovelsBookmarksFeed(User* user = nullptr, bool restricted = false, QString tag = ""); // Same as with normal BookmarksFeed
     QCoro::QmlTask FollowingNovelsFeed(QString restriction);
     QCoro::QmlTask LatestNovelsGlobal();
-    QCoro::QmlTask SearchNovelsPopularPreview(SearchRequest* params);
-    QCoro::QmlTask SearchNovels(SearchRequest* params);
     QCoro::QmlTask UserNovels(User* user);
     QCoro::QmlTask FetchNovel(Novel* novel); // TODO: optional parameters
     QCoro::QmlTask IllustSeriesDetails(Illustration* illust);
