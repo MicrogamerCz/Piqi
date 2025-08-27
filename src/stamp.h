@@ -1,5 +1,4 @@
 #pragma once
-#include <QtQmlIntegration>
 #include <QJsonObject>
 #include "qepr.h"
 #include "piqi_export.h"

@@ -1,25 +1,11 @@
 #pragma once
-#include "comments.h"
-#include "illustration.h"
-#include "illusts.h"
-#include "novel.h"
-#include "novels.h"
+#include <QNetworkAccessManager>
 #include "piqi_export.h"
-#include <QCoro>
-#include <QCoroQmlTask>
-#include <QObject>
-#include <QQmlEngine>
-#include <qcontainerfwd.h>
-#include <qcoroprocess.h>
-#include <qcoroqmltask.h>
-#include <qdatetime.h>
-#include <qnetworkaccessmanager.h>
-#include <qstringview.h>
-#include <qtmetamacros.h>
-#include "series.h"
-#include "tag.h"
-#include "tags.h"
+#include "comments.h"
 #include "userdetails.h"
+#include "tags.h"
+#include "illusts.h"
+#include "novels.h"
 
 class PIQI_EXPORT Piqi : public QObject
 {

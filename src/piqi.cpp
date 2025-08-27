@@ -1,34 +1,5 @@
 #include "piqi.h"
-#include "comments.h"
-#include "illustration.h"
-#include "illusts.h"
-#include "novel.h"
-#include "novels.h"
-#include "series.h"
-#include "tag.h"
-#include "userdetails.h"
 #include "requestworker.h"
-#include <QJsonDocument>
-#include <QUrlQuery>
-#include <qcborvalue.h>
-#include <qcontainerfwd.h>
-#include <qcoroqmltask.h>
-#include <qcorotask.h>
-#include <qdatetime.h>
-#include <qjsonarray.h>
-#include <qjsondocument.h>
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-#include <qlist.h>
-#include <qlogging.h>
-#include <qnetworkreply.h>
-#include <qnetworkrequest.h>
-#include <qstringview.h>
-#include <qtmetamacros.h>
-#include <qtpreprocessorsupport.h>
-#include <qtypes.h>
-#include <qurl.h>
-#include <qurlquery.h>
 
 Piqi::Piqi(QObject *parent)
     : QObject(parent)
@@ -53,7 +24,6 @@ QCoro::Task<bool> Piqi::LoginTask(QString refreshToken) {
 QCoro::QmlTask Piqi::Walkthrough() { return WalkthroughTask(); }
 QCoro::Task<Illusts *> Piqi::WalkthroughTask() {
     return PiqiInternal::SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts"), false);
-
 }
 
 QCoro::QmlTask Piqi::RecommendedFeed(QString type, bool includeRanking, bool includePrivacyPolicy) {
@@ -90,7 +60,6 @@ QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString restriction)
     QUrl url(("https://app-api.pixiv.net/v2/illust/follow?restrict=" + restriction));
     return PiqiInternal::SendGet<Illusts>(url);
 }
-
 
 QCoro::QmlTask Piqi::UserIllusts(User* user, QString type) { return UserIllustsTask(user, type); }
 QCoro::Task<Illusts*> Piqi::UserIllustsTask(User* user, QString type)

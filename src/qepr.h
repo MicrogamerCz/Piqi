@@ -1,4 +1,5 @@
 #include <QObject>
+#include <QtQmlIntegration>
 #include <qtmetamacros.h>
 
 #define QM_PROPERTY(type, name) \

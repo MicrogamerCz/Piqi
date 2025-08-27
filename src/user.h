@@ -1,10 +1,8 @@
 #pragma once
-#include <QtQmlIntegration>
-#include <qcoroqmltask.h>
-#include <qcorotask.h>
+#include <QCoro/QCoroQmlTask>
+#include <QCoro/Task>
 #include "bookmarkdetails.h"
 #include "imageurls.h"
-#include "piqi_export.h"
 
 class PIQI_EXPORT User : public QObject
 {

@@ -1,12 +1,7 @@
 #pragma once
-#include "piqi_export.h"
 #include "profile.h"
-#include "qepr.h"
 #include "user.h"
 #include "workspace.h"
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
 
 class PIQI_EXPORT UserDetails : public QObject {
     Q_OBJECT

@@ -1,6 +1,4 @@
 #pragma once
-#include <QJsonArray>
-#include "piqi_export.h"
 #include "tag.h"
 
 class PIQI_EXPORT BookmarkDetails : public QObject
