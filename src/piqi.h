@@ -65,29 +65,32 @@ public:
 
 public Q_SLOTS:
     void SetLogin(QString accessToken, QString refreshToken);
+
     QCoro::QmlTask Login(QString refreshToken);
+    QCoro::QmlTask CommentReplies(Comment* comment);
+    QCoro::QmlTask Details(User* user);
+    QCoro::QmlTask BookmarkTags(QString type = "illust", bool restricted = false);
+    QCoro::QmlTask IllustDetail(int id);
+    QCoro::QmlTask FetchNovel(Novel* novel); // TODO: optional parameters
+    QCoro::QmlTask IllustSeriesDetails(Illustration* illust);
+
     QCoro::QmlTask Walkthrough();
     QCoro::QmlTask RecommendedFeed(QString type, bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::QmlTask RecommendedNovelsFeed(bool includeRanking = false, bool includePrivacyPolicy = false);
     QCoro::QmlTask FollowingFeed(QString restriction);
     QCoro::QmlTask UserIllusts(User* user, QString type);
-    QCoro::QmlTask CommentReplies(Comment* comment);
     QCoro::QmlTask RelatedIllusts(Illustration* illust);
-    QCoro::QmlTask SearchAutocomplete(QString query);
     QCoro::QmlTask LatestGlobal(QString type);
     QCoro::QmlTask BookmarksFeed(User* user = nullptr, bool restricted = false, QString tag = ""); // Add back user with nullptr value by default
-    QCoro::QmlTask Details(User* user);
-    QCoro::QmlTask BookmarkTags(QString type = "illust", bool restricted = false);
-    QCoro::QmlTask IllustDetail(int id);
     QCoro::QmlTask NovelsBookmarksFeed(User* user = nullptr, bool restricted = false, QString tag = ""); // Same as with normal BookmarksFeed
     QCoro::QmlTask FollowingNovelsFeed(QString restriction);
     QCoro::QmlTask LatestNovelsGlobal();
     QCoro::QmlTask UserNovels(User* user);
-    QCoro::QmlTask FetchNovel(Novel* novel); // TODO: optional parameters
-    QCoro::QmlTask IllustSeriesDetails(Illustration* illust);
     QCoro::QmlTask SeriesFeed(int id);
     QCoro::QmlTask UserSeries(User* user);
     QCoro::QmlTask WatchlistFeed();
+
+    QCoro::QmlTask SearchAutocomplete(QString query);
 };
 
 /*
