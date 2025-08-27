@@ -1,12 +1,10 @@
 #pragma once
-#include "bookmarkdetails.h"
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
 #include "novel.h"
 #include "novels.h"
 #include "piqi_export.h"
-#include "searchrequest.h"
 #include <QCoro>
 #include <QCoroQmlTask>
 #include <QObject>
@@ -61,8 +59,6 @@ public:
     QCoro::Task<Series*> SeriesFeedTask(int id);
     QCoro::Task<SeriesDetails*> UserSeriesTask(User* user);
     QCoro::Task<SeriesDetails*> WatchlistFeedTask();
-    QCoro::Task<> WatchlistAddTask(SeriesDetail* series, QString type);
-    QCoro::Task<> WatchlistDeleteTask(SeriesDetail* series, QString type);
 
     // Search methods
     QCoro::Task<QList<Tag*>> SearchAutocompleteTask(QString query);
@@ -92,8 +88,6 @@ public Q_SLOTS:
     QCoro::QmlTask SeriesFeed(int id);
     QCoro::QmlTask UserSeries(User* user);
     QCoro::QmlTask WatchlistFeed();
-    QCoro::QmlTask WatchlistAdd(SeriesDetail* series, QString type);
-    QCoro::QmlTask WatchlistDelete(SeriesDetail* series, QString type);
 };
 
 /*

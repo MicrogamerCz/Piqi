@@ -33,6 +33,12 @@ protected:
 public:
     SeriesDetail(QObject* parent = nullptr);
     SeriesDetail(QObject* parent, QJsonObject data);
+
+    QCoro::Task<> WatchlistAddTask();
+    QCoro::Task<> WatchlistDeleteTask();
+
+    Q_SLOT QCoro::QmlTask WatchlistAdd();
+    Q_SLOT QCoro::QmlTask WatchlistDelete();
 };
 
 class PIQI_EXPORT IllustSeriesContext : public QObject {

@@ -1,11 +1,9 @@
 #include "piqi.h"
-#include "bookmarkdetails.h"
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
 #include "novel.h"
 #include "novels.h"
-#include "searchrequest.h"
 #include "series.h"
 #include "tag.h"
 #include "userdetails.h"
@@ -334,31 +332,4 @@ QCoro::QmlTask Piqi::WatchlistFeed() {
 }
 QCoro::Task<SeriesDetails*> Piqi::WatchlistFeedTask() {
     return PiqiInternal::SendGet<SeriesDetails>(QUrl("https://app-api.pixiv.net/v1/watchlist/manga"));
-}
-
-QCoro::QmlTask Piqi::WatchlistAdd(SeriesDetail* series, QString type) {
-    return WatchlistAddTask(series, type);
-}
-QCoro::Task<> Piqi::WatchlistAddTask(SeriesDetail* series, QString type) {
-    Q_UNUSED(type);
-    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/add"));
-    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    QUrlQuery query{
-        {"series_id", QString::number(series->m_id)},
-    };
-    co_await manager.post(request, query.toString().toUtf8());
-}
-QCoro::QmlTask Piqi::WatchlistDelete(SeriesDetail* series, QString type) {
-    return WatchlistDeleteTask(series, type);
-}
-QCoro::Task<> Piqi::WatchlistDeleteTask(SeriesDetail* series, QString type) {
-    Q_UNUSED(type);
-    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/delete"));
-    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    QUrlQuery query{
-        {"series_id", QString::number(series->m_id)},
-    };
-    co_await manager.post(request, query.toString().toUtf8());
 }
