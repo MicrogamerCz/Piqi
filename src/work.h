@@ -1,8 +1,12 @@
 #pragma once
+#include "bookmarkdetails.h"
 #include "imageurls.h"
 #include "piqi_export.h"
 #include "tag.h"
 #include "user.h"
+#include <qcoroqmltask.h>
+#include <qcorotask.h>
+#include <qtmetamacros.h>
 
 class PIQI_EXPORT WorkPrimitive : public QObject
 {
@@ -38,7 +42,19 @@ class PIQI_EXPORT Work : public QObject
     QM_PROPERTY(int, totalBookmarks)
     QM_PROPERTY(int, totalView)
 
+    protected:
+        virtual const QString type() = 0;
+
 public:
     Work(QObject *parent = nullptr);
     Work(QObject *parent, QJsonObject data);
+
+    QCoro::Task<void> AddBookmarkTask(bool isPrivate = false);
+    QCoro::Task<void> RemoveBookmarkTask();
+    QCoro::Task<BookmarkDetails*> BookmarkDetailTask();
+
+public Q_SLOTS:
+    QCoro::QmlTask AddBookmark(bool isPrivate = false);
+    QCoro::QmlTask RemoveBookmark();
+    QCoro::QmlTask BookmarkDetail();
 };

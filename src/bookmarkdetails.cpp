@@ -1,8 +1,12 @@
 #include "bookmarkdetails.h"
+#include <qtpreprocessorsupport.h>
 
 BookmarkDetails::BookmarkDetails(QObject *parent) : QObject(parent) { }
-BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data) : QObject(parent)
+BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken) : QObject(parent)
 {
+    Q_UNUSED(accessToken);
+    Q_UNUSED(refreshToken);
+
     m_isBookmarked = data["is_bookmarked"].toBool();
     for (QJsonValue com : data["tags"].toArray()) {
         m_tags.append(new BookmarkTag(nullptr, com.toObject()));

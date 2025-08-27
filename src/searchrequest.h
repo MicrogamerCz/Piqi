@@ -5,6 +5,8 @@
 #include <qdatetime.h>
 #include <qqmlintegration.h>
 #include <qtmetamacros.h>
+#include "illusts.h"
+#include "novels.h"
 #include "piqi_export.h"
 #include "qepr.h"
 #include "tag.h"
@@ -32,4 +34,16 @@ class PIQI_EXPORT SearchRequest : public QObject
 
         SearchRequest(QObject* parent = nullptr);
         Q_SLOT void SetTags(QAbstractListModel* tags);
+
+        QCoro::QmlTask Search();
+        QCoro::Task<SearchResults*> SearchTask();
+
+        QCoro::QmlTask SearchNovels();
+        QCoro::Task<NovelSearchResults*> SearchNovelsTask();
+
+        QCoro::QmlTask SearchPopularPreview();
+        QCoro::Task<Illusts*> SearchPopularPreviewTask();
+
+        QCoro::QmlTask SearchNovelsPopularPreview();
+        QCoro::Task<Novels*> SearchNovelsPopularPreviewTask();
 };

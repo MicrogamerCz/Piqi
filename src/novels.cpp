@@ -4,9 +4,11 @@
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 #include <qobject.h>
+#include <qtpreprocessorsupport.h>
 
 Novels::Novels(QObject* parent) : QAbstractListModel(parent) { }
-Novels::Novels(QObject* parent, QJsonObject data) : QAbstractListModel(parent) {
+Novels::Novels(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
+{
     beginResetModel();
     for (QJsonValue nl : data["novels"].toArray()) {
         Novel* novel = new Novel(nullptr, nl.toObject());
@@ -31,6 +33,8 @@ int Novels::rowCount(const QModelIndex &parent) const
 }
 QVariant Novels::data(const QModelIndex &index, int role) const
 {
+    Q_UNUSED(role)
+
     const auto novel = m_novels[index.row()];
     return QVariant::fromValue(novel);
 }

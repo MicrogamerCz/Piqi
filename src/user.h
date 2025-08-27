@@ -1,7 +1,8 @@
 #pragma once
-#include <QtQmlIntegration>
+#include <QCoro/QCoroQmlTask>
+#include <QCoro/Task>
+#include "bookmarkdetails.h"
 #include "imageurls.h"
-#include "piqi_export.h"
 
 class PIQI_EXPORT User : public QObject
 {
@@ -19,6 +20,15 @@ class PIQI_EXPORT User : public QObject
 public:
     User(QObject* parent = nullptr);
     User(QObject* parent, QJsonObject data);
+
+    Q_SLOT QCoro::QmlTask Follow(bool privateFollow = false);
+    QCoro::Task<> FollowTask(bool privateFollow = false);
+
+    Q_SLOT QCoro::QmlTask RemoveFollow();
+    QCoro::Task<> RemoveFollowTask();
+
+    QCoro::QmlTask FollowDetail();
+    QCoro::Task<FollowDetails*> FollowDetailTask();
 };
 
 class PIQI_EXPORT Account : public User

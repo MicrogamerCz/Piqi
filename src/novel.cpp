@@ -1,9 +1,5 @@
 #include "novel.h"
-#include "imageurls.h"
-#include "tag.h"
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-#include <qobject.h>
+#include <QJsonObject>
 
 Novel::Novel(QObject* parent) : Work(parent) { }
 Novel::Novel(QObject* parent, QJsonObject data) : Work(parent, data) {
@@ -15,4 +11,8 @@ Novel::Novel(QObject* parent, QJsonObject data) : Work(parent, data) {
     m_isXRestricted = data["is_x_restricted"].toBool();
     m_novelAiType = data["novel_ai_type"].toInt();
     // request
+}
+
+const QString Novel::type() {
+    return "novel";
 }

@@ -14,5 +14,5 @@ class PIQI_EXPORT Comments : public QObject
 
 public:
     Comments(QObject *parent = nullptr);
-    Comments(QObject *parent, QJsonObject data);
+    Comments(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 };

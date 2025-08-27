@@ -1,11 +1,10 @@
 #pragma once
+#include "comments.h"
 #include "piqi_export.h"
-#include "tag.h"
-#include "user.h"
 #include "work.h"
 #include "workspace.h"
 #include <QStringList>
-#include <qcontainerfwd.h>
+#include <QCoro/QCoroQmlTask>
 
 class PIQI_EXPORT Illustration : public Work
 {
@@ -29,7 +28,13 @@ class PIQI_EXPORT Illustration : public Work
     QM_PROPERTY(int, commentAccessControl)
     QM_PROPERTY(int, totalComments)
 
+protected:
+    const QString type() override;
+
 public:
     Illustration(QObject *parent = nullptr);
     Illustration(QObject *parent, QJsonObject data);
+
+    QCoro::Task<Comments*> FetchCommentsTask();
+    QCoro::QmlTask FetchComments();
 };

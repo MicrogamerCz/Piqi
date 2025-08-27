@@ -3,7 +3,7 @@
 #include "privacypolicy.h"
 #include "illustration.h"
 #include "series.h"
-#include "workspace.h"
+#include <qcoroqmltask.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 #include <qtmetamacros.h>
@@ -17,18 +17,12 @@ class PIQI_EXPORT Illusts : public QAbstractListModel
     QM_PROPERTY(QString, nextUrl)
 
 public:
-    Illusts(QObject* parent = nullptr) : QAbstractListModel(parent) {};
-    Illusts(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
-    {
-        beginResetModel();
-        for (QJsonValue il : data["illusts"].toArray()) {
-            Illustration* illust = new Illustration(nullptr, il.toObject());
-            m_illusts.append(illust);
-        }
-        endResetModel();
-        if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
-        else m_nextUrl = "";
-    }
+    Illusts(QObject* parent);
+    Illusts(QObject* parent, QJsonObject data);
+
+    Q_SLOT QCoro::QmlTask NextFeed();
+    QCoro::Task<> NextFeedTask();
+
     Q_SLOT void Extend(Illusts* nextFeed) {
         m_nextUrl = nextFeed->m_nextUrl;
         Q_EMIT nextUrlChanged();
@@ -59,19 +53,20 @@ class PIQI_EXPORT Recommended : public Illusts
     QM_PROPERTY(Illusts*, ranking)
     QM_PROPERTY(bool, contestExists)
 
-        public:
-            Recommended(QObject* parent = nullptr) : Illusts(parent) {};
-            Recommended(QObject* parent, QJsonObject data) : Illusts(parent, data)
-            {
-                m_ranking = new Illusts;
-                for (QJsonValue il : data["ranking_illusts"].toArray()) {
-                    Illustration* illust = new Illustration(nullptr, il.toObject());
-                    m_ranking->m_illusts.append(illust);
-                }
+    public:
+        Recommended(QObject* parent = nullptr) : Illusts(parent) {};
+        Recommended(QObject* parent, QJsonObject data) : Illusts(parent, data)
+        {
+            m_ranking = new Illusts(nullptr);
 
-                m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
-                m_contestExists = data["contest_exists"].toBool();
-            };
+            for (QJsonValue il : data["ranking_illusts"].toArray()) {
+                Illustration* illust = new Illustration(nullptr, il.toObject());
+                m_ranking->m_illusts.append(illust);
+            }
+
+            m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
+            m_contestExists = data["contest_exists"].toBool();
+        };
 };
 
 class PIQI_EXPORT SearchResults : public Illusts
@@ -102,6 +97,6 @@ class PIQI_EXPORT Series : public Illusts
         Series(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
             m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject());
-        m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_first_illust"].toObject());
+            m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_first_illust"].toObject());
         };
 };

@@ -1,6 +1,4 @@
 #pragma once
-#include <QJsonArray>
-#include "piqi_export.h"
 #include "tag.h"
 
 class PIQI_EXPORT BookmarkDetails : public QObject
@@ -14,7 +12,7 @@ class PIQI_EXPORT BookmarkDetails : public QObject
 
 public:
     BookmarkDetails(QObject *parent = nullptr);
-    BookmarkDetails(QObject *parent, QJsonObject data);
+    BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
 };
 class FollowDetails : public QObject
 {

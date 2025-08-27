@@ -1,10 +1,12 @@
 #include "illustration.h"
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-#include <qobject.h>
+#include "requestworker.h"
+#include <QCoro/Task>
+#include <QCoro/QCoroTask>
+#include <QJsonObject>
 
 Illustration::Illustration(QObject* parent) : Work(parent) { }
-Illustration::Illustration(QObject* parent, QJsonObject data) : Work(parent, data) {
+Illustration::Illustration(QObject* parent, QJsonObject data)
+    : Work(parent, data) {
     for (QJsonValue tool : data["tools"].toArray())
         m_tools.append(tool.toString());
     m_pageCount = data["page_count"].toInt();
@@ -28,4 +30,16 @@ Illustration::Illustration(QObject* parent, QJsonObject data) : Work(parent, dat
     if (data.contains("comment_access_control"))
         m_commentAccessControl = data["comment_access_control"].toInt();
     m_totalComments = data["total_comments"].toInt();
+}
+
+const QString Illustration::type() {
+    return "illust";
+}
+
+QCoro::QmlTask Illustration::FetchComments() { return FetchCommentsTask(); }
+QCoro::Task<Comments*> Illustration::FetchCommentsTask() {
+    QUrl url("https://app-api.pixiv.net/v3/illust/comments");
+    QUrlQuery query{{"illust_id", QString::number(m_id)}};
+    url.setQuery(query);
+    return PiqiInternal::SendGet<Comments>(url);
 }

@@ -1,9 +1,7 @@
 #pragma once
-#include "imageurls.h"
 #include "novel.h"
 #include "piqi_export.h"
 #include "privacypolicy.h"
-#include "tag.h"
 #include <qabstractitemmodel.h>
 #include <qjsonobject.h>
 #include <qobject.h>

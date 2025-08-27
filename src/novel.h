@@ -1,8 +1,6 @@
 #pragma once
-#include "imageurls.h"
 #include "piqi_export.h"
 #include "tag.h"
-#include "user.h"
 #include "work.h"
 #include <qjsonobject.h>
 #include <qlist.h>
@@ -23,6 +21,9 @@ class PIQI_EXPORT Novel : public Work
     QM_PROPERTY(bool, isXRestricted)
     QM_PROPERTY(int, novelAiType)
     // request
+
+    protected:
+        const QString type() override;
 
     public:
         Novel(QObject* parent = nullptr);

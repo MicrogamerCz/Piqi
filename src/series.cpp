@@ -1,6 +1,7 @@
 #include "series.h"
 #include "illustration.h"
 #include "imageurls.h"
+#include "requestworker.h"
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 #include <qobject.h>
@@ -22,6 +23,35 @@ SeriesDetail::SeriesDetail(QObject* parent, QJsonObject data) : Work(parent, dat
     if (data.contains("last_published_content_datetime")) m_lastPublishedContentDatetime = QDateTime::fromString(data["last_published_content_datetime"].toString(), Qt::ISODateWithMs);
     if (data.contains("latest_content_id")) m_latestContentId = data["latest_content_id"].toInt();
 }
+const QString SeriesDetail::type() {
+    return "manga"; // default for now
+}
+
+QCoro::QmlTask SeriesDetail::WatchlistAdd() {
+    return WatchlistAddTask();
+}
+QCoro::Task<> SeriesDetail::WatchlistAddTask() {
+    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/add"));
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    QUrlQuery query{
+        {"series_id", QString::number(m_id)},
+    };
+    co_await PiqiInternal::manager.post(request, query.toString().toUtf8());
+}
+QCoro::QmlTask SeriesDetail::WatchlistDelete() {
+    return WatchlistDeleteTask();
+}
+QCoro::Task<> SeriesDetail::WatchlistDeleteTask() {
+    QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/delete"));
+    request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    QUrlQuery query{
+        {"series_id", QString::number(m_id)},
+    };
+    co_await PiqiInternal::manager.post(request, query.toString().toUtf8());
+}
+
 
 IllustSeriesContext::IllustSeriesContext(QObject* parent) : QObject(parent) {}
 IllustSeriesContext::IllustSeriesContext(QObject* parent, QJsonObject data) : QObject(parent)

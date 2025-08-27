@@ -3,7 +3,10 @@
 #include "workspace.h"
 
 UserDetails::UserDetails(QObject* parent) : QObject(parent) {}
-UserDetails::UserDetails(QObject* parent, QJsonObject data) : QObject(parent) {
+UserDetails::UserDetails(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : QObject(parent) {
+    Q_UNUSED(accessToken);
+    Q_UNUSED(refreshToken);
+
     m_user = new User(nullptr, data["user"].toObject());
     m_profile = new Profile(nullptr, data["profile"].toObject());
     // profile_publicity
