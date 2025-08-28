@@ -10,6 +10,7 @@ qt_add_library(piqi SHARED
     piqi.cpp
     requestworker.cpp
     requestworker.h
+    piqiresponse.cpp
 
     bookmarkdetails.cpp
     comment.cpp
@@ -53,6 +54,7 @@ ecm_generate_headers(piqi_HEADERS
         Novel
         Novels
         Piqi
+        PiqiResponse
         PrivacyPolicy
         Profile
         QEPR

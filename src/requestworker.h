@@ -1,5 +1,6 @@
 #pragma once
 #include "user.h"
+#include "piqiresponse.h"
 #include <QNetworkAccessManager>
 #include <QDateTime>
 #include <QCoro>
@@ -10,7 +11,7 @@ namespace PiqiInternal {
     inline QString accessToken, refreshToken;
     inline QDateTime expiration;
 
-    QCoro::Task<Account*> LoginTask(QString refreshToken = "");
+    QCoro::Task<PiqiResponse*> LoginTask(QString refreshToken = "");
     QCoro::Task<bool> IsLoggedIn();
 
     template<class T> QCoro::Task<T*> SendGet(QUrl url, bool authenticated = true) {

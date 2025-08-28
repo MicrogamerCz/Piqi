@@ -14,7 +14,7 @@ QCoro::Task<bool> PiqiInternal::IsLoggedIn()
     co_return result;
 }
 
-QCoro::Task<Account*> PiqiInternal::LoginTask(QString refreshToken)
+QCoro::Task<PiqiResponse*> PiqiInternal::LoginTask(QString refreshToken)
 {
     QNetworkRequest request(QUrl("https://oauth.secure.pixiv.net/auth/token"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -25,11 +25,11 @@ QCoro::Task<Account*> PiqiInternal::LoginTask(QString refreshToken)
 
     QNetworkReply *reply = co_await manager.post(request, obj.toString().toUtf8());
     if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200)
-        co_return nullptr;
+        co_return new PiqiResponse(nullptr, reply);
 
     QJsonObject data = QJsonDocument::fromJson(reply->readAll()).object();
     accessToken = data["access_token"].toString();
     refreshToken = data["refresh_token"].toString();
     expiration = QDateTime::currentDateTime().addSecs(3600);
-    co_return (new Account(nullptr, data["user"].toObject()));
+    co_return new PiqiResponse(new Account(nullptr, data["user"].toObject()), reply);
 }

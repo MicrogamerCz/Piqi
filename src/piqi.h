@@ -6,6 +6,7 @@
 #include "tags.h"
 #include "illusts.h"
 #include "novels.h"
+#include "piqiresponse.h"
 
 class PIQI_EXPORT Piqi : public QObject
 {
@@ -21,7 +22,7 @@ public:
     Piqi(QObject *parent = nullptr);
 
     // Other methods
-    QCoro::Task<bool> LoginTask(QString refreshToken);
+    QCoro::Task<PiqiResponse*> LoginTask(QString refreshToken);
     QCoro::Task<Comments*> CommentRepliesTask(Comment* comment);
     QCoro::Task<UserDetails*> DetailsTask(User* user);
     QCoro::Task<Tags*> BookmarkTagsTask(QString type = "illust", bool restricted = false);

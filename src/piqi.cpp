@@ -16,9 +16,10 @@ void Piqi::SetLogin(QString accessToken, QString refreshToken)
 }
 
 QCoro::QmlTask Piqi::Login(QString refreshToken) { return LoginTask(refreshToken); }
-QCoro::Task<bool> Piqi::LoginTask(QString refreshToken) {
-    m_user = co_await PiqiInternal::LoginTask(refreshToken);
-    co_return (m_user != nullptr);
+QCoro::Task<PiqiResponse*> Piqi::LoginTask(QString refreshToken) {
+    PiqiResponse* response = co_await PiqiInternal::LoginTask(refreshToken);
+    m_user = qobject_cast<Account*>(response->getData());
+    co_return response;
 }
 
 QCoro::QmlTask Piqi::Walkthrough() { return WalkthroughTask(); }
