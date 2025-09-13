@@ -35,15 +35,15 @@ class PIQI_EXPORT SearchRequest : public QObject
         SearchRequest(QObject* parent = nullptr);
         Q_SLOT void SetTags(QAbstractListModel* tags);
 
-        QCoro::QmlTask Search();
+        Q_SLOT QCoro::QmlTask Search();
         QCoro::Task<SearchResults*> SearchTask();
 
-        QCoro::QmlTask SearchNovels();
+        Q_SLOT QCoro::QmlTask SearchNovels();
         QCoro::Task<NovelSearchResults*> SearchNovelsTask();
 
-        QCoro::QmlTask SearchPopularPreview();
+        Q_SLOT QCoro::QmlTask SearchPopularPreview();
         QCoro::Task<Illusts*> SearchPopularPreviewTask();
 
-        QCoro::QmlTask SearchNovelsPopularPreview();
+        Q_SLOT QCoro::QmlTask SearchNovelsPopularPreview();
         QCoro::Task<Novels*> SearchNovelsPopularPreviewTask();
 };

@@ -1,3 +1,4 @@
+#include <QUrlQuery>
 #include "piqi.h"
 #include "requestworker.h"
 
@@ -19,6 +20,7 @@ QCoro::QmlTask Piqi::Login(QString refreshToken) { return LoginTask(refreshToken
 QCoro::Task<PiqiResponse*> Piqi::LoginTask(QString refreshToken) {
     PiqiResponse* response = co_await PiqiInternal::LoginTask(refreshToken);
     m_user = qobject_cast<Account*>(response->getData());
+    Q_EMIT userChanged();
     co_return response;
 }
 
