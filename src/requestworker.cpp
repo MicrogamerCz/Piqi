@@ -18,6 +18,7 @@ QCoro::Task<PiqiResponse*> PiqiInternal::LoginTask(QString refreshToken)
 {
     QNetworkRequest request(QUrl("https://oauth.secure.pixiv.net/auth/token"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    request.setHeader(QNetworkRequest::UserAgentHeader, "PixivAndroidApp/6.183.0 (Android 13; WayDroid x86_64 Device)");
     QUrlQuery obj{{"client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"},
                   {"client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"},
                   {"grant_type", "refresh_token"},
