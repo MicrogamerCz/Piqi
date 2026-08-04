@@ -20,6 +20,7 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMGenerateExportHeader)
 include(ECMGenerateHeaders)
 include(CMakePackageConfigHelpers)
+remove_definitions(-DQT_NO_CAST_TO_ASCII -DQT_NO_CAST_FROM_ASCII)
 
 set(PIQI_INSTALL_CMAKEDIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/Piqi"
     CACHE STRING "Install path for example CMake package files")

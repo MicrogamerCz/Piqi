@@ -7,6 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 qt_add_library(piqi SHARED
+    qjobject.cpp
     piqi.cpp
     requestworker.cpp
     requestworker.h
