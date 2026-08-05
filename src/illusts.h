@@ -17,22 +17,22 @@ class PIQI_EXPORT Illusts : public QAbstractListModel
     QM_PROPERTY(QString, nextUrl)
 
 public:
-    Illusts(QObject* parent);
-    Illusts(QObject* parent, QJsonObject data);
+  Illusts(QObject *parent = nullptr);
+  Illusts(QObject *parent, QJsonObject data);
 
-    Q_SLOT QCoro::QmlTask NextFeed();
-    QCoro::Task<> NextFeedTask();
+  Q_SLOT QCoro::QmlTask NextFeed();
+  QCoro::Task<> NextFeedTask();
 
-    Q_SLOT void Extend(Illusts* nextFeed) {
-        m_nextUrl = nextFeed->m_nextUrl;
-        Q_EMIT nextUrlChanged();
+  Q_SLOT void Extend(Illusts *nextFeed) {
+      m_nextUrl = nextFeed->m_nextUrl;
+      Q_EMIT nextUrlChanged();
 
-        beginInsertRows({}, m_illusts.count(), m_illusts.count() + nextFeed->m_illusts.count() - 1);
-        m_illusts.append(nextFeed->m_illusts);
-        endInsertRows();
+      beginInsertRows({}, m_illusts.count(), m_illusts.count() + nextFeed->m_illusts.count() - 1);
+      m_illusts.append(nextFeed->m_illusts);
+      endInsertRows();
 
-        Q_EMIT illustsChanged();
-    }
+      Q_EMIT illustsChanged();
+  }
 
     enum CustomRoles {
         IllustRole = Qt::UserRole,

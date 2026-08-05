@@ -1,10 +1,10 @@
 #pragma once
-#include <QJsonObject>
-#include "qepr.h"
 #include "piqi_export.h"
+#include "qepr.h"
+#include "qjobject.h"
+#include <QJsonObject>
 
-class PIQI_EXPORT ImageUrls : public QObject
-{
+class PIQI_EXPORT ImageUrls : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
@@ -16,8 +16,11 @@ class PIQI_EXPORT ImageUrls : public QObject
     QM_PROPERTY(QString, px50)
     QM_PROPERTY(QString, px170)
 
-public:
+  public:
     ImageUrls(QObject* parent = nullptr);
     ImageUrls(QObject* parent, QJsonObject data);
     ~ImageUrls() override;
+
+  private:
+    void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };

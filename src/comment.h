@@ -3,8 +3,7 @@
 #include "stamp.h"
 #include "user.h"
 
-class PIQI_EXPORT Comment : public QObject
-{
+class PIQI_EXPORT Comment : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
@@ -15,7 +14,10 @@ class PIQI_EXPORT Comment : public QObject
     QM_PROPERTY(bool, hasReplies)
     QM_PROPERTY(Stamp *, stamp)
 
-public:
+  public:
     Comment(QObject *parent = nullptr);
     Comment(QObject *parent, QJsonObject data);
+
+  private:
+    void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };

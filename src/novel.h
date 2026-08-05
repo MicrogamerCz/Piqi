@@ -23,7 +23,7 @@ class PIQI_EXPORT Novel : public Work
     // request
 
     protected:
-        const QString type() override;
+      const QString type() const override;
 
     public:
         Novel(QObject* parent = nullptr);

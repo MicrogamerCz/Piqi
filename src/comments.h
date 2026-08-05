@@ -3,8 +3,7 @@
 #include "piqi_export.h"
 #include "qepr.h"
 
-class PIQI_EXPORT Comments : public QObject
-{
+class PIQI_EXPORT Comments : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
@@ -12,7 +11,10 @@ class PIQI_EXPORT Comments : public QObject
     QM_PROPERTY(QString, nextUrl)
     QM_PROPERTY(int, commentAccessControl)
 
-public:
+  public:
     Comments(QObject *parent = nullptr);
     Comments(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+
+  private:
+    void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };

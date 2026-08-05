@@ -1,5 +1,5 @@
 #include <QObject>
-#include <QtQmlIntegration>
+#include <QtQml/qqmlregistration.h> // clazy:exclude=no-module-include
 #include <qtmetamacros.h>
 
 #define QM_PROPERTY(type, name) \

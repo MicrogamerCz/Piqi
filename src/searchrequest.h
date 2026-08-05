@@ -19,31 +19,36 @@ class PIQI_EXPORT SearchRequest : public QObject
     QML_ELEMENT
 
     public:
-        enum class SearchTarget {
-            PartialTagsMatch = 0,
-            ExactTagsMatch = 1,
-            TitleAndDescription = 2
-        };
-        Q_ENUM(SearchTarget)
+      enum class SearchTarget {
+          PartialTagsMatch = 0,
+          ExactTagsMatch = 1,
+          TitleAndDescription = 2
+      };
 
-        QM_PROPERTY(QList<Tag*>, tags)
-        QM_PROPERTY(SearchTarget, searchTarget) // SearchTarget should be used in practice
-        QM_PROPERTY(bool, sortAscending) // false by default
-        QM_PROPERTY(QDate*, start_date) // if this date is nullptr, it's set to current date
-        QM_PROPERTY(QDate*, end_date) // if this date is nullptr, both date parameters are ignored in the request
+      QM_PROPERTY(QList<Tag *>, tags)
+      QM_PROPERTY(SearchTarget,
+                  searchTarget)        // SearchTarget should be used in practice
+      QM_PROPERTY(bool, sortAscending) // false by default
+      QM_PROPERTY(QDate *,
+                  start_date)        // if this date is nullptr, it's set to current date
+      QM_PROPERTY(QDate *, end_date) // if this date is nullptr, both date
+                                     // parameters are ignored in the request
 
-        SearchRequest(QObject* parent = nullptr);
-        Q_SLOT void SetTags(QAbstractListModel* tags);
+    public:
+      Q_ENUM(SearchTarget)
 
-        QCoro::QmlTask Search();
-        QCoro::Task<SearchResults*> SearchTask();
+      Q_INVOKABLE SearchRequest(QObject *parent = nullptr);
+      Q_SLOT void SetTags(QAbstractListModel *tags);
 
-        QCoro::QmlTask SearchNovels();
-        QCoro::Task<NovelSearchResults*> SearchNovelsTask();
+      QCoro::QmlTask Search();
+      QCoro::Task<SearchResults *> SearchTask();
 
-        QCoro::QmlTask SearchPopularPreview();
-        QCoro::Task<Illusts*> SearchPopularPreviewTask();
+      QCoro::QmlTask SearchNovels();
+      QCoro::Task<NovelSearchResults *> SearchNovelsTask();
 
-        QCoro::QmlTask SearchNovelsPopularPreview();
-        QCoro::Task<Novels*> SearchNovelsPopularPreviewTask();
+      QCoro::QmlTask SearchPopularPreview();
+      QCoro::Task<Illusts *> SearchPopularPreviewTask();
+
+      QCoro::QmlTask SearchNovelsPopularPreview();
+      QCoro::Task<Novels *> SearchNovelsPopularPreviewTask();
 };

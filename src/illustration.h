@@ -29,7 +29,7 @@ class PIQI_EXPORT Illustration : public Work
     QM_PROPERTY(int, totalComments)
 
 protected:
-    const QString type() override;
+  virtual const QString type() const override;
 
 public:
     Illustration(QObject *parent = nullptr);
@@ -37,4 +37,8 @@ public:
 
     QCoro::Task<Comments*> FetchCommentsTask();
     QCoro::QmlTask FetchComments();
+
+  private:
+    const QStringList properties = {"tools", "series", "metaSinglePage", "metaPages", "restrictionAttributes"};
+    void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };

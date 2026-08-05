@@ -1,29 +1,17 @@
 #include "series.h"
 #include "illustration.h"
 #include "imageurls.h"
+#include "qjobject.h"
 #include "requestworker.h"
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 #include <qobject.h>
+#include <qtmetamacros.h>
 
 SeriesDetail::SeriesDetail(QObject* parent) : Work(parent) {}
-SeriesDetail::SeriesDetail(QObject* parent, QJsonObject data) : Work(parent, data)
-{
-    if (data.contains("cover_image_urls")) m_coverImageUrls = new ImageUrls(this, data["cover_image_urls"].toObject());
-    else {
-        m_coverImageUrls = new ImageUrls;
-        m_coverImageUrls->m_medium = data["url"].toString(); // why, pixiv, why?
-    }
-    if (data.contains("series_work_count")) m_seriesWorkCount = data["series_work_count"].toInt();
-    else if (data.contains("published_content_count")) m_seriesWorkCount = data["published_content_count"].toInt();
-    if (data.contains("width")) m_width = data["width"].toInt();
-    if (data.contains("height")) m_height = data["height"].toInt();
-    if (data.contains("watchlist_added")) m_watchlistAdded = data["watchlist_added"].toBool();
-
-    if (data.contains("last_published_content_datetime")) m_lastPublishedContentDatetime = QDateTime::fromString(data["last_published_content_datetime"].toString(), Qt::ISODateWithMs);
-    if (data.contains("latest_content_id")) m_latestContentId = data["latest_content_id"].toInt();
+SeriesDetail::SeriesDetail(QObject *parent, QJsonObject data) : Work(parent, data) {
 }
-const QString SeriesDetail::type() {
+const QString SeriesDetail::type() const {
     return "manga"; // default for now
 }
 
@@ -52,17 +40,44 @@ QCoro::Task<> SeriesDetail::WatchlistDeleteTask() {
     co_await PiqiInternal::manager.post(request, query.toString().toUtf8());
 }
 
+void SeriesDetail::assignProperty(const QString &propertyName, const QJsonValue &data) {
+    switch (properties.indexOf(propertyName)) {
+    case 0: // coverImageUrls
+        m_coverImageUrls = new ImageUrls(this, data.toObject());
+        Q_EMIT coverImageUrlsChanged();
+        break;
+    case 1: // url
+        m_coverImageUrls = new ImageUrls;
+        m_coverImageUrls->m_medium = data.toString(); // why, pixiv, why?
+        Q_EMIT coverImageUrlsChanged();
+        break;
+    case 2: // publishedContentCount
+        m_seriesWorkCount = data.toInt();
+        Q_EMIT seriesWorkCountChanged();
+        break;
+    case 3: // lastPublishedContentDatetime
+        m_lastPublishedContentDatetime = QDateTime::fromString(data.toString(), Qt::ISODateWithMs);
+        Q_EMIT lastPublishedContentDatetimeChanged();
+        break;
+    default:
+        Work::assignProperty(propertyName, data);
+    }
+}
 
-IllustSeriesContext::IllustSeriesContext(QObject* parent) : QObject(parent) {}
-IllustSeriesContext::IllustSeriesContext(QObject* parent, QJsonObject data) : QObject(parent)
-{
-    m_contentOrder = data["content_order"].toInt();
-    QJsonValue prev = data["prev"],
-               next = data["next"];
-    if (!prev.isNull()) m_prev = new Illustration(nullptr, prev.toObject());
-    else m_prev = nullptr;
-    if (!next.isNull()) m_next = new Illustration(nullptr, next.toObject());
-    else m_next = nullptr;
+IllustSeriesContext::IllustSeriesContext(QObject *parent) : QJObject(parent) {
+}
+IllustSeriesContext::IllustSeriesContext(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+}
+
+void IllustSeriesContext::assignProperty(const QString &propertyName, const QJsonValue &data) {
+    if (propertyName == "prev") {
+        m_prev = new Illustration(nullptr, data.toObject());
+        Q_EMIT prevChanged();
+    } else if (propertyName == "next") {
+        m_next = new Illustration(nullptr, data.toObject());
+        Q_EMIT nextChanged();
+    } else
+        QJObject::assignProperty(propertyName, data);
 }
 
 IllustSeries::IllustSeries(QObject* parent) : QObject(parent) {}

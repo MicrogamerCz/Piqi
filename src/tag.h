@@ -1,20 +1,20 @@
 #pragma once
-#include <QJsonObject>
-#include "qepr.h"
 #include "piqi_export.h"
+#include "qepr.h"
+#include "qjobject.h"
+#include <QJsonObject>
 
-class PIQI_EXPORT Tag : public QObject
-{
+class PIQI_EXPORT Tag : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
     QM_PROPERTY(QString, name)
-    QM_PROPERTY(QString, translatedName) // optional
+    QM_PROPERTY(QString, translatedName)   // optional
     QM_PROPERTY(bool, addedByUploadedUser) // optional
 
-    public:
-        Tag(QObject* parent = nullptr);
-        Tag(QObject* parent, QJsonObject data);
+  public:
+    Tag(QObject *parent = nullptr);
+    Tag(QObject *parent, QJsonObject data);
 };
 
 class PIQI_EXPORT BookmarkTag : public Tag

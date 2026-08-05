@@ -1,15 +1,22 @@
 #include "comments.h"
+#include "qjobject.h"
 
-Comments::Comments(QObject *parent) : QObject(parent) { };
-Comments::Comments(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken) : QObject(parent)
-{
+Comments::Comments(QObject *parent) : QJObject(parent) {};
+Comments::Comments(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken)
+    : QJObject(data, parent) {
     Q_UNUSED(accessToken);
     Q_UNUSED(refreshToken);
+}
 
-    for (QJsonValue com : data["comments"].toArray()) {
-        m_comments.append(new Comment(nullptr, com.toObject()));
-    }
-    m_nextUrl = data["next"].toString();
-    if (data.keys().contains("comment_access_control")) m_commentAccessControl = data["comment_access_control"].toInt();
-    else m_commentAccessControl = 0;
+void Comments::assignProperty(const QString &propertyName, const QJsonValue &data) {
+    if (propertyName == "comments") {
+        for (QJsonValue com : data["comments"].toArray()) {
+            m_comments.append(new Comment(nullptr, com.toObject()));
+        }
+        Q_EMIT commentsChanged();
+    } else if (propertyName == "next") {
+        m_nextUrl = data.toString();
+        Q_EMIT nextUrlChanged();
+    } else
+        QJObject::assignProperty(propertyName, data);
 }

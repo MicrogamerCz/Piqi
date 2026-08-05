@@ -5,7 +5,7 @@
 #include "piqi_export.h"
 #include <QJsonObject>
 #include <QRegularExpression>
-#include <QtQmlIntegration>
+#include <QtQmlIntegration> // clazy:exclude=no-module-include
 #include <qjsonvalue.h>
 
 // TODO: automatic property assignment for descending objects
