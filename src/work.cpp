@@ -12,7 +12,8 @@
 WorkPrimitive::WorkPrimitive(QObject *parent) : QJObject(parent) {
 }
 
-WorkPrimitive::WorkPrimitive(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+WorkPrimitive::WorkPrimitive(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }
 void WorkPrimitive::assignProperty(const QString &propertyName, const QJsonValue &data) {
     QJObject::assignProperty(propertyName, data);
@@ -20,7 +21,8 @@ void WorkPrimitive::assignProperty(const QString &propertyName, const QJsonValue
 
 Work::Work(QObject *parent) : WorkPrimitive(parent) {
 }
-Work::Work(QObject *parent, QJsonObject data) : WorkPrimitive(parent, data) {
+Work::Work(QObject *parent, QJsonObject data) : WorkPrimitive(parent) {
+    deserialize(data);
 }
 
 QCoro::QmlTask Work::AddBookmark(bool isPrivate) { return AddBookmarkTask(isPrivate); }

@@ -2,5 +2,6 @@
 
 Workspace::Workspace(QObject *parent) : QJObject(parent) {
 }
-Workspace::Workspace(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+Workspace::Workspace(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }

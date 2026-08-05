@@ -38,8 +38,9 @@ class PIQI_EXPORT QJObject : public QObject {
 
 public:
   QJObject(QObject *parent = nullptr);
-  QJObject(const QJsonObject &data, QObject *parent = nullptr);
   virtual ~QJObject() = default;
+
+  void deserialize(const QJsonObject &data);
 
 protected:
   static const QRegularExpression regex;

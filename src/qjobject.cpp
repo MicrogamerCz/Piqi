@@ -7,7 +7,8 @@
 const QRegularExpression QJObject::regex("_(.)");
 
 QJObject::QJObject(QObject *parent) : QObject(parent) {}
-QJObject::QJObject(const QJsonObject &data, QObject *parent) : QObject(parent) {
+
+void QJObject::deserialize(const QJsonObject &data) {
     // TODO: add and handle required properties
     for (QString key : data.keys()) {
         QString propertyName = capitalizeSnakeFirstLetters(key).replace(regex, "\\1");

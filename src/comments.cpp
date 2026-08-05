@@ -3,9 +3,10 @@
 
 Comments::Comments(QObject *parent) : QJObject(parent) {};
 Comments::Comments(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken)
-    : QJObject(data, parent) {
+    : QJObject(parent) {
     Q_UNUSED(accessToken);
     Q_UNUSED(refreshToken);
+    deserialize(data);
 }
 
 void Comments::assignProperty(const QString &propertyName, const QJsonValue &data) {

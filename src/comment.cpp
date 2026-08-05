@@ -4,7 +4,8 @@
 Comment::Comment(QObject *parent) : QJObject(parent) {
 }
 
-Comment::Comment(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+Comment::Comment(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }
 
 void Comment::assignProperty(const QString &propertyName, const QJsonValue &data) {

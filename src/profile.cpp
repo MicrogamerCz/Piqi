@@ -5,5 +5,6 @@
 
 Profile::Profile(QObject *parent) : QJObject(parent) {
 }
-Profile::Profile(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+Profile::Profile(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }

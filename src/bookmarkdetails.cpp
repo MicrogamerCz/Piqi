@@ -5,9 +5,10 @@
 BookmarkDetails::BookmarkDetails(QObject *parent) : QJObject(parent) {
 }
 BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken)
-    : QJObject(data, parent) {
+    : QJObject(parent) {
     Q_UNUSED(accessToken);
     Q_UNUSED(refreshToken);
+    deserialize(data);
 }
 
 void BookmarkDetails::assignProperty(const QString &propertyName, const QJsonValue &data) {
@@ -22,5 +23,6 @@ void BookmarkDetails::assignProperty(const QString &propertyName, const QJsonVal
 
 FollowDetails::FollowDetails(QObject *parent) : QJObject(parent) {
 }
-FollowDetails::FollowDetails(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+FollowDetails::FollowDetails(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }

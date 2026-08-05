@@ -5,7 +5,8 @@ ImageUrls::ImageUrls(QObject *parent) : QJObject(parent) {
 }
 ImageUrls::~ImageUrls() = default;
 
-ImageUrls::ImageUrls(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+ImageUrls::ImageUrls(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }
 
 void ImageUrls::assignProperty(const QString &propertyName, const QJsonValue &data) {

@@ -5,7 +5,8 @@
 #include <QJsonObject>
 
 Illustration::Illustration(QObject* parent) : Work(parent) { }
-Illustration::Illustration(QObject *parent, QJsonObject data) : Work(parent, data) {
+Illustration::Illustration(QObject *parent, QJsonObject data) : Work(parent) {
+    deserialize(data);
 }
 
 const QString Illustration::type() const {

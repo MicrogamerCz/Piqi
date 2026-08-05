@@ -7,7 +7,8 @@
 User::User(QObject *parent) : QJObject(parent) {
 }
 
-User::User(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+User::User(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
     // m_isFollowed = data["is_followed"].toBool(); // 0 - not followed, 1 -
     // publicly followed, 2 - privately followed // ?
 }

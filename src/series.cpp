@@ -9,7 +9,8 @@
 #include <qtmetamacros.h>
 
 SeriesDetail::SeriesDetail(QObject* parent) : Work(parent) {}
-SeriesDetail::SeriesDetail(QObject *parent, QJsonObject data) : Work(parent, data) {
+SeriesDetail::SeriesDetail(QObject *parent, QJsonObject data) : Work(parent) {
+    deserialize(data);
 }
 const QString SeriesDetail::type() const {
     return "manga"; // default for now
@@ -66,7 +67,8 @@ void SeriesDetail::assignProperty(const QString &propertyName, const QJsonValue 
 
 IllustSeriesContext::IllustSeriesContext(QObject *parent) : QJObject(parent) {
 }
-IllustSeriesContext::IllustSeriesContext(QObject *parent, QJsonObject data) : QJObject(data, parent) {
+IllustSeriesContext::IllustSeriesContext(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }
 
 void IllustSeriesContext::assignProperty(const QString &propertyName, const QJsonValue &data) {
