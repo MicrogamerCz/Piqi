@@ -46,4 +46,7 @@ protected:
 
   // Use this virtual method to assign custom objects or arrays into properties
   virtual void assignProperty(const QString &propertyName, const QJsonValue &data);
+
+private:
+  QString capitalizeSnakeFirstLetters(QString string) const;
 };
