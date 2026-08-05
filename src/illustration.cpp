@@ -1,8 +1,5 @@
 #include "illustration.h"
 #include "requestworker.h"
-#include <QCoro/Task>
-#include <QCoro/QCoroTask>
-#include <QJsonObject>
 
 Illustration::Illustration(QObject* parent) : Work(parent) { }
 Illustration::Illustration(QObject *parent, QJsonObject data) : Work(parent) {

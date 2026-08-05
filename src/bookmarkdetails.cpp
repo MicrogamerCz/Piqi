@@ -1,6 +1,4 @@
 #include "bookmarkdetails.h"
-#include "qjobject.h"
-#include <qtpreprocessorsupport.h>
 
 BookmarkDetails::BookmarkDetails(QObject *parent) : QJObject(parent) {
 }

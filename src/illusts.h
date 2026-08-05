@@ -1,12 +1,7 @@
 #pragma once
-#include "piqi_export.h"
 #include "privacypolicy.h"
-#include "illustration.h"
 #include "series.h"
-#include <qcoroqmltask.h>
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
+#include <QCoro>
 
 class PIQI_EXPORT Illusts : public QAbstractListModel
 {

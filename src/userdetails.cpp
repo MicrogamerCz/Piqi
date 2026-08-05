@@ -1,8 +1,4 @@
 #include "userdetails.h"
-#include "qjobject.h"
-#include "user.h"
-#include "workspace.h"
-#include <qtmetamacros.h>
 
 UserDetails::UserDetails(QObject *parent) : QJObject(parent) {
 }

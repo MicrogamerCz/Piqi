@@ -2,7 +2,6 @@
 #include "profile.h"
 #include "user.h"
 #include "workspace.h"
-#include <qobject.h>
 
 class PIQI_EXPORT UserDetails : public QJObject {
     Q_OBJECT

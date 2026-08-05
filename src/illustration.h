@@ -1,10 +1,8 @@
 #pragma once
 #include "comments.h"
-#include "piqi_export.h"
 #include "work.h"
 #include "workspace.h"
-#include <QStringList>
-#include <QCoro/QCoroQmlTask>
+#include <QCoro>
 
 class PIQI_EXPORT Illustration : public Work
 {

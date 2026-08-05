@@ -1,8 +1,5 @@
 #include "requestworker.h"
 #include "user.h"
-#include <qjsondocument.h>
-#include <qjsonobject.h>
-#include <qurlquery.h>
 
 QCoro::Task<bool> PiqiInternal::IsLoggedIn()
 {

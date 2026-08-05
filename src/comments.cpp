@@ -1,5 +1,4 @@
 #include "comments.h"
-#include "qjobject.h"
 
 Comments::Comments(QObject *parent) : QJObject(parent) {};
 Comments::Comments(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken)

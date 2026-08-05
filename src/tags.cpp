@@ -1,9 +1,4 @@
 #include "tags.h"
-#include "tag.h"
-#include <qabstractitemmodel.h>
-#include <qjsonobject.h>
-#include <qobject.h>
-#include <qtpreprocessorsupport.h>
 
 Tags::Tags(QObject* parent) : QAbstractListModel(parent) {}
 Tags::Tags(QObject* parent, QJsonObject data, QString accessToken, QString refreshToken) : QAbstractListModel(parent) {

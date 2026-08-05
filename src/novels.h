@@ -1,12 +1,7 @@
 #pragma once
 #include "novel.h"
-#include "piqi_export.h"
 #include "privacypolicy.h"
-#include <qabstractitemmodel.h>
-#include <qjsonobject.h>
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
+#include <QAbstractItemModel>
 
 class PIQI_EXPORT Novels : public QAbstractListModel
 {

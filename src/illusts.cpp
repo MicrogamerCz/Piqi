@@ -3,9 +3,6 @@
 
 #include "illusts.h"
 #include "requestworker.h"
-#include <qabstractitemmodel.h>
-#include <qcoroqmltask.h>
-#include <qsharedpointer.h>
 
 Illusts::Illusts(QObject* parent)
     : QAbstractListModel(parent) {}

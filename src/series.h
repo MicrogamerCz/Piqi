@@ -1,15 +1,5 @@
 #pragma once
-#include <QtQmlIntegration>
-#include <QJsonObject>
-#include <qjsonarray.h>
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
 #include "illustration.h"
-#include "imageurls.h"
-#include "qepr.h"
-#include "piqi_export.h"
-#include "work.h"
 
 class PIQI_EXPORT SeriesDetail : public Work
 {

@@ -1,7 +1,5 @@
 #pragma once
 #include "comment.h"
-#include "piqi_export.h"
-#include "qepr.h"
 
 class PIQI_EXPORT Comments : public QJObject {
     Q_OBJECT

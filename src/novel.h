@@ -1,12 +1,5 @@
 #pragma once
-#include "piqi_export.h"
-#include "tag.h"
 #include "work.h"
-#include <qjsonobject.h>
-#include <qlist.h>
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
 
 class PIQI_EXPORT Novel : public Work
 {

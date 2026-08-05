@@ -1,9 +1,6 @@
 #pragma once
-#include "piqi_export.h"
 #include "qepr.h"
 #include "qjobject.h"
-#include <QJsonObject>
-#include <QtQmlIntegration>
 
 class PIQI_EXPORT PrivacyPolicy : public QJObject {
     Q_OBJECT

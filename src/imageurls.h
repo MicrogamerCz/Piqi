@@ -2,7 +2,6 @@
 #include "piqi_export.h"
 #include "qepr.h"
 #include "qjobject.h"
-#include <QJsonObject>
 
 class PIQI_EXPORT ImageUrls : public QJObject {
     Q_OBJECT

@@ -1,10 +1,7 @@
 #pragma once
-#include "user.h"
 #include "piqiresponse.h"
-#include <QNetworkAccessManager>
-#include <QDateTime>
 #include <QCoro>
-#include <qcorotask.h>
+#include <QJsonObject>
 
 namespace PiqiInternal {
     inline QNetworkAccessManager manager;

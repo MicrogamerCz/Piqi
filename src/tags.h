@@ -1,13 +1,7 @@
 #pragma once
-#include "imageurls.h"
 #include "piqi_export.h"
 #include "tag.h"
-#include <qabstractitemmodel.h>
-#include <qjsonobject.h>
-#include <qnamespace.h>
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
+#include <QAbstractItemModel>
 
 class PIQI_EXPORT Tags : public QAbstractListModel
 {

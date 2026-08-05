@@ -1,5 +1,4 @@
 #include "imageurls.h"
-#include "qjobject.h"
 
 ImageUrls::ImageUrls(QObject *parent) : QJObject(parent) {
 }

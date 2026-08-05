@@ -3,12 +3,8 @@
 #include "imageurls.h"
 #include "piqi_export.h"
 #include "qjobject.h"
-#include "tag.h"
 #include "user.h"
-#include <qcontainerfwd.h>
-#include <qcoroqmltask.h>
-#include <qcorotask.h>
-#include <qtmetamacros.h>
+#include <QCoro>
 
 class PIQI_EXPORT WorkPrimitive : public QJObject {
     Q_OBJECT

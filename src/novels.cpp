@@ -1,10 +1,4 @@
 #include "novels.h"
-#include "novel.h"
-#include <qabstractitemmodel.h>
-#include <qjsonarray.h>
-#include <qjsonobject.h>
-#include <qobject.h>
-#include <qtpreprocessorsupport.h>
 
 Novels::Novels(QObject* parent) : QAbstractListModel(parent) { }
 Novels::Novels(QObject* parent, QJsonObject data) : QAbstractListModel(parent)

@@ -1,15 +1,9 @@
 #pragma once
 #include <QJsonObject>
-#include <QtQmlIntegration>
 #include <QAbstractListModel>
-#include <qdatetime.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
 #include "illusts.h"
 #include "novels.h"
 #include "piqi_export.h"
-#include "qepr.h"
-#include "tag.h"
 
 // Purely a helper class as Pixiv search requests have quite a few parameters.
 // Some optional, others not. This is the better solution imo

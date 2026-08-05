@@ -1,12 +1,5 @@
 #include "series.h"
-#include "illustration.h"
-#include "imageurls.h"
-#include "qjobject.h"
 #include "requestworker.h"
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-#include <qobject.h>
-#include <qtmetamacros.h>
 
 SeriesDetail::SeriesDetail(QObject* parent) : Work(parent) {}
 SeriesDetail::SeriesDetail(QObject *parent, QJsonObject data) : Work(parent) {
