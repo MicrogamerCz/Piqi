@@ -1,48 +1,47 @@
 #pragma once
-#include <QJsonObject>
-#include <QAbstractListModel>
 #include "illusts.h"
 #include "novels.h"
 #include "piqi_export.h"
+#include <QAbstractListModel>
+#include <QJsonObject>
 
 // Purely a helper class as Pixiv search requests have quite a few parameters.
 // Some optional, others not. This is the better solution imo
-class PIQI_EXPORT SearchRequest : public QObject
-{
+class PIQI_EXPORT SearchRequest : public QObject {
     Q_OBJECT
     QML_ELEMENT
 
-    public:
-      enum class SearchTarget {
-          PartialTagsMatch = 0,
-          ExactTagsMatch = 1,
-          TitleAndDescription = 2
-      };
+  public:
+    enum class SearchTarget {
+        PartialTagsMatch = 0,
+        ExactTagsMatch = 1,
+        TitleAndDescription = 2
+    };
 
-      QM_PROPERTY(QList<Tag *>, tags)
-      QM_PROPERTY(SearchTarget,
-                  searchTarget)        // SearchTarget should be used in practice
-      QM_PROPERTY(bool, sortAscending) // false by default
-      QM_PROPERTY(QDate *,
-                  start_date)        // if this date is nullptr, it's set to current date
-      QM_PROPERTY(QDate *, end_date) // if this date is nullptr, both date
-                                     // parameters are ignored in the request
+    QM_PROPERTY(QList<Tag *>, tags)
+    QM_PROPERTY(SearchTarget,
+                searchTarget)        // SearchTarget should be used in practice
+    QM_PROPERTY(bool, sortAscending) // false by default
+    QM_PROPERTY(QDate *,
+                start_date)        // if this date is nullptr, it's set to current date
+    QM_PROPERTY(QDate *, end_date) // if this date is nullptr, both date
+                                   // parameters are ignored in the request
 
-    public:
-      Q_ENUM(SearchTarget)
+  public:
+    Q_ENUM(SearchTarget)
 
-      Q_INVOKABLE SearchRequest(QObject *parent = nullptr);
-      Q_SLOT void SetTags(QAbstractListModel *tags);
+    Q_INVOKABLE SearchRequest(QObject *parent = nullptr);
+    Q_SLOT void SetTags(QAbstractListModel *tags);
 
-      QCoro::QmlTask Search();
-      QCoro::Task<SearchResults *> SearchTask();
+    QCoro::QmlTask Search();
+    QCoro::Task<SearchResults *> SearchTask();
 
-      QCoro::QmlTask SearchNovels();
-      QCoro::Task<NovelSearchResults *> SearchNovelsTask();
+    QCoro::QmlTask SearchNovels();
+    QCoro::Task<NovelSearchResults *> SearchNovelsTask();
 
-      QCoro::QmlTask SearchPopularPreview();
-      QCoro::Task<Illusts *> SearchPopularPreviewTask();
+    QCoro::QmlTask SearchPopularPreview();
+    QCoro::Task<Illusts *> SearchPopularPreviewTask();
 
-      QCoro::QmlTask SearchNovelsPopularPreview();
-      QCoro::Task<Novels *> SearchNovelsPopularPreviewTask();
+    QCoro::QmlTask SearchNovelsPopularPreview();
+    QCoro::Task<Novels *> SearchNovelsPopularPreviewTask();
 };

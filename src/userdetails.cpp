@@ -5,7 +5,6 @@ UserDetails::UserDetails(QObject *parent) : QJObject(parent) {
 UserDetails::UserDetails(QObject *parent, QJsonObject data) : QJObject(parent) {
     deserialize(data);
 }
-
 void UserDetails::assignProperty(const QString &propertyName, const QJsonValue &data) {
     // TODO: add profile_publicity
     switch (properties.indexOf(propertyName)) {

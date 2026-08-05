@@ -4,43 +4,37 @@
 #include "illusts.h"
 #include "requestworker.h"
 
-Illusts::Illusts(QObject* parent)
-    : QAbstractListModel(parent) {}
-Illusts::Illusts(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
-{
+Illusts::Illusts(QObject *parent) : QAbstractListModel(parent) {
+}
+Illusts::Illusts(QObject *parent, QJsonObject data) : QAbstractListModel(parent) {
     beginResetModel();
     for (QJsonValue il : data["illusts"].toArray())
         m_illusts.append(new Illustration(this, il.toObject()));
     endResetModel();
-    if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
-    else m_nextUrl = "";
+    if (data.keys().contains("next_url"))
+        m_nextUrl = data["next_url"].toString();
+    else
+        m_nextUrl = "";
 }
-
 QCoro::QmlTask Illusts::NextFeed() {
     return NextFeedTask();
 }
 QCoro::Task<> Illusts::NextFeedTask() {
-    Illusts* feed = co_await PiqiInternal::SendGet<Illusts>(QUrl(m_nextUrl));
+    Illusts *feed = co_await PiqiInternal::SendGet<Illusts>(QUrl(m_nextUrl));
     Extend(feed);
 }
-
-int Illusts::rowCount(const QModelIndex &parent) const
-{
+int Illusts::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
     return m_illusts.count();
 }
-
-QVariant Illusts::data(const QModelIndex &index, int role) const
-{
+QVariant Illusts::data(const QModelIndex &index, int role) const {
     const auto illustration = m_illusts[index.row()];
     if (role == CustomRoles::IllustRole) {
         return QVariant::fromValue(illustration);
     }
     return {};
 }
-
-QHash<int, QByteArray> Illusts::roleNames() const
-{
+QHash<int, QByteArray> Illusts::roleNames() const {
     return {
         {CustomRoles::IllustRole, QByteArrayLiteral("illust")},
     };

@@ -1,13 +1,11 @@
-#include <qobject.h>
 #include "comment.h"
+#include <qobject.h>
 
 Comment::Comment(QObject *parent) : QJObject(parent) {
 }
-
 Comment::Comment(QObject *parent, QJsonObject data) : QJObject(parent) {
     deserialize(data);
 }
-
 void Comment::assignProperty(const QString &propertyName, const QJsonValue &data) {
     if (propertyName == "date") {
         m_date = QDateTime::fromString(data.toString(), Qt::ISODate);

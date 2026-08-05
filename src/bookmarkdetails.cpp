@@ -2,11 +2,9 @@
 
 BookmarkDetails::BookmarkDetails(QObject *parent) : QJObject(parent) {
 }
-BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data)
-    : QJObject(parent) {
+BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data) : QJObject(parent) {
     deserialize(data);
 }
-
 void BookmarkDetails::assignProperty(const QString &propertyName, const QJsonValue &data) {
     if (propertyName == "tags") {
         for (const QJsonValue &com : data.toArray())

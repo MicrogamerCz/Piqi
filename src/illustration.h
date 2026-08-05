@@ -4,8 +4,7 @@
 #include "workspace.h"
 #include <QCoro>
 
-class PIQI_EXPORT Illustration : public Work
-{
+class PIQI_EXPORT Illustration : public Work {
     Q_OBJECT
     QML_ELEMENT
 
@@ -26,14 +25,14 @@ class PIQI_EXPORT Illustration : public Work
     QM_PROPERTY(int, commentAccessControl)
     QM_PROPERTY(int, totalComments)
 
-protected:
-  virtual const QString type() const override;
+  protected:
+    virtual const QString type() const override;
 
-public:
+  public:
     Illustration(QObject *parent = nullptr);
     Illustration(QObject *parent, QJsonObject data);
 
-    QCoro::Task<Comments*> FetchCommentsTask();
+    QCoro::Task<Comments *> FetchCommentsTask();
     QCoro::QmlTask FetchComments();
 
   private:

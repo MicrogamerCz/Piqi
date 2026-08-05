@@ -1,17 +1,10 @@
 #include "work.h"
-#include "bookmarkdetails.h"
-#include "qjobject.h"
 #include "requestworker.h"
 #include <QCoro/QCoroCore>
 #include <QNetworkReply>
-#include <qjsonobject.h>
-#include <qnetworkaccessmanager.h>
-#include <qnetworkrequest.h>
-#include <qtmetamacros.h>
 
 WorkPrimitive::WorkPrimitive(QObject *parent) : QJObject(parent) {
 }
-
 WorkPrimitive::WorkPrimitive(QObject *parent, QJsonObject data) : QJObject(parent) {
     deserialize(data);
 }
@@ -24,8 +17,9 @@ Work::Work(QObject *parent) : WorkPrimitive(parent) {
 Work::Work(QObject *parent, QJsonObject data) : WorkPrimitive(parent) {
     deserialize(data);
 }
-
-QCoro::QmlTask Work::AddBookmark(bool isPrivate) { return AddBookmarkTask(isPrivate); }
+QCoro::QmlTask Work::AddBookmark(bool isPrivate) {
+    return AddBookmarkTask(isPrivate);
+}
 QCoro::Task<> Work::AddBookmarkTask(bool isPrivate) {
     QNetworkAccessManager manager;
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v2/illust/bookmark/add"));
@@ -53,7 +47,9 @@ QCoro::Task<> Work::AddBookmarkTask(bool isPrivate) {
     m_totalBookmarks = totalBookmarksCache;
     Q_EMIT totalBookmarksChanged();
 }
-QCoro::QmlTask Work::RemoveBookmark() { return RemoveBookmarkTask(); }
+QCoro::QmlTask Work::RemoveBookmark() {
+    return RemoveBookmarkTask();
+}
 QCoro::Task<> Work::RemoveBookmarkTask() {
     QNetworkAccessManager manager;
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/" + type() + "/bookmark/delete"));
@@ -82,8 +78,10 @@ QCoro::Task<> Work::RemoveBookmarkTask() {
     m_totalBookmarks = totalBookmarksCache;
     Q_EMIT totalBookmarksChanged();
 }
-QCoro::QmlTask Work::BookmarkDetail() { return BookmarkDetailTask(); }
-QCoro::Task<BookmarkDetails*> Work::BookmarkDetailTask() {
+QCoro::QmlTask Work::BookmarkDetail() {
+    return BookmarkDetailTask();
+}
+QCoro::Task<BookmarkDetails *> Work::BookmarkDetailTask() {
     QNetworkAccessManager manager;
     QUrl url("https://app-api.pixiv.net/v2/" + type() + "/bookmark/detail");
     QUrlQuery query{{"illust_id", QString::number(m_id)}};
@@ -91,14 +89,13 @@ QCoro::Task<BookmarkDetails*> Work::BookmarkDetailTask() {
 
     QNetworkRequest request(url);
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
-    QNetworkReply* reply = manager.get(request);
+    QNetworkReply *reply = manager.get(request);
 
     co_await qCoro(&manager, &QNetworkAccessManager::finished);
 
     QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
     co_return new BookmarkDetails(nullptr, json); // * check where it's used
 }
-
 void Work::assignProperty(const QString &propertyName, const QJsonValue &data) {
     switch (properties.indexOf(propertyName)) {
     case 0: // imageUrls

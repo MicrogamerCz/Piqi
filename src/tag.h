@@ -1,5 +1,4 @@
 #pragma once
-#include "piqi_export.h"
 #include "qepr.h"
 #include "qjobject.h"
 
@@ -16,15 +15,14 @@ class PIQI_EXPORT Tag : public QJObject {
     Tag(QObject *parent, QJsonObject data);
 };
 
-class PIQI_EXPORT BookmarkTag : public Tag
-{
+class PIQI_EXPORT BookmarkTag : public Tag {
     Q_OBJECT
     QML_ELEMENT
 
     QM_PROPERTY(bool, isRegistered) // optional
-    QM_PROPERTY(int, count) // optional
+    QM_PROPERTY(int, count)         // optional
 
-    public:
-        BookmarkTag(QObject* parent = nullptr);
-        BookmarkTag(QObject* parent, QJsonObject data);
+  public:
+    BookmarkTag(QObject *parent = nullptr);
+    BookmarkTag(QObject *parent, QJsonObject data);
 };

@@ -16,6 +16,7 @@ class PIQI_EXPORT BookmarkDetails : public QJObject {
   private:
     void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };
+
 class PIQI_EXPORT FollowDetails : public QJObject {
     Q_OBJECT
     QML_ELEMENT

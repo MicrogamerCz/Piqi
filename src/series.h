@@ -1,12 +1,11 @@
 #pragma once
 #include "illustration.h"
 
-class PIQI_EXPORT SeriesDetail : public Work
-{
+class PIQI_EXPORT SeriesDetail : public Work {
     Q_OBJECT
     QML_ELEMENT
 
-    QM_PROPERTY(ImageUrls*, coverImageUrls)
+    QM_PROPERTY(ImageUrls *, coverImageUrls)
     QM_PROPERTY(int, seriesWorkCount) // shared with 'published_content_count'
     QM_PROPERTY(int, width)
     QM_PROPERTY(int, height)
@@ -17,18 +16,18 @@ class PIQI_EXPORT SeriesDetail : public Work
     QM_PROPERTY(QDateTime, lastPublishedContentDatetime)
     QM_PROPERTY(int, latestContentId)
 
-protected:
-  const QString type() const override;
-
-public:
-    SeriesDetail(QObject* parent = nullptr);
-    SeriesDetail(QObject* parent, QJsonObject data);
+  public:
+    SeriesDetail(QObject *parent = nullptr);
+    SeriesDetail(QObject *parent, QJsonObject data);
 
     QCoro::Task<> WatchlistAddTask();
     QCoro::Task<> WatchlistDeleteTask();
 
     Q_SLOT QCoro::QmlTask WatchlistAdd();
     Q_SLOT QCoro::QmlTask WatchlistDelete();
+
+  protected:
+    const QString type() const override;
 
   private:
     const QStringList properties = {"coverImageUrls", "url", "publishedContentCount", "lastPublishedContentDatetime"};
@@ -65,29 +64,31 @@ class PIQI_EXPORT IllustSeries : public QObject // TODO: move to QJObject
     IllustSeries(QObject *parent, QJsonObject data);
 };
 
-class PIQI_EXPORT SeriesDetails : public QAbstractListModel
-{
+class PIQI_EXPORT SeriesDetails : public QAbstractListModel {
     Q_OBJECT
     QML_ELEMENT
 
-    QM_PROPERTY(QList<SeriesDetail*>, series)
+    QM_PROPERTY(QList<SeriesDetail *>, series)
     QM_PROPERTY(QString, nextUrl)
 
-public:
-    SeriesDetails(QObject* parent = nullptr) : QAbstractListModel(parent) {};
-    SeriesDetails(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
-    {
+  public:
+    SeriesDetails(QObject *parent = nullptr) : QAbstractListModel(parent) {};
+    SeriesDetails(QObject *parent, QJsonObject data) : QAbstractListModel(parent) {
         QJsonArray feed;
-        if (data.contains("illust_series_details")) feed = data["illust_series_details"].toArray();
-        else if (data.contains("series")) feed = data["series"].toArray();
+        if (data.contains("illust_series_details"))
+            feed = data["illust_series_details"].toArray();
+        else if (data.contains("series"))
+            feed = data["series"].toArray();
         beginResetModel();
         for (const QJsonValue &sr : feed)
             m_series.append(new SeriesDetail(this, sr.toObject()));
         endResetModel();
-        if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
-        else m_nextUrl = "";
+        if (data.keys().contains("next_url"))
+            m_nextUrl = data["next_url"].toString();
+        else
+            m_nextUrl = "";
     }
-    Q_SLOT void Extend(SeriesDetails* nextFeed) {
+    Q_SLOT void Extend(SeriesDetails *nextFeed) {
         m_nextUrl = nextFeed->m_nextUrl;
         Q_EMIT nextUrlChanged();
 

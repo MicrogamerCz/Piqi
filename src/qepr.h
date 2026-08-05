@@ -2,8 +2,8 @@
 #include <QtQml/qqmlregistration.h> // clazy:exclude=no-module-include
 #include <qtmetamacros.h>
 
-#define QM_PROPERTY(type, name) \
-    public: \
-    Q_PROPERTY(type name MEMBER m_##name NOTIFY name##Changed) \
-    type m_##name; \
+#define QM_PROPERTY(type, name)                                                                                        \
+  public:                                                                                                              \
+    Q_PROPERTY(type name MEMBER m_##name NOTIFY name##Changed)                                                         \
+    type m_##name;                                                                                                     \
     Q_SIGNAL void name##Changed();

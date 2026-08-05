@@ -14,10 +14,10 @@ class PIQI_EXPORT WorkPrimitive : public QJObject {
     QM_PROPERTY(QString, title)
 
   public:
-    WorkPrimitive(QObject* parent = nullptr);
-    WorkPrimitive(QObject* parent, QJsonObject data);
+    WorkPrimitive(QObject *parent = nullptr);
+    WorkPrimitive(QObject *parent, QJsonObject data);
 
-protected:
+  protected:
     virtual void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };
 
@@ -45,9 +45,9 @@ class PIQI_EXPORT Work : public WorkPrimitive {
 
     QCoro::Task<> AddBookmarkTask(bool isPrivate = false);
     QCoro::Task<> RemoveBookmarkTask();
-    QCoro::Task<BookmarkDetails*> BookmarkDetailTask();
+    QCoro::Task<BookmarkDetails *> BookmarkDetailTask();
 
-public Q_SLOTS:
+  public Q_SLOTS:
     QCoro::QmlTask AddBookmark(bool isPrivate = false);
     QCoro::QmlTask RemoveBookmark();
     QCoro::QmlTask BookmarkDetail();

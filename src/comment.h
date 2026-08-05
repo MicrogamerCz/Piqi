@@ -1,5 +1,4 @@
 #pragma once
-#include "piqi_export.h"
 #include "stamp.h"
 #include "user.h"
 

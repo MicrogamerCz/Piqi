@@ -6,7 +6,8 @@
 
 const QRegularExpression QJObject::regex("_(.)");
 
-QJObject::QJObject(QObject *parent) : QObject(parent) {}
+QJObject::QJObject(QObject *parent) : QObject(parent) {
+}
 
 void QJObject::deserialize(const QJsonObject &data) {
     // TODO: add and handle required properties

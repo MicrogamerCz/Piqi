@@ -1,30 +1,31 @@
-#include <QUrlQuery>
 #include "piqi.h"
 #include "requestworker.h"
+#include <QUrlQuery>
 
-Piqi::Piqi(QObject *parent)
-    : QObject(parent)
-{
+Piqi::Piqi(QObject *parent) : QObject(parent) {
     m_user = nullptr;
     Q_EMIT userChanged();
 }
 
-void Piqi::SetLogin(QString accessToken, QString refreshToken)
-{
+void Piqi::SetLogin(QString accessToken, QString refreshToken) {
     PiqiInternal::accessToken = accessToken;
     PiqiInternal::refreshToken = refreshToken;
     PiqiInternal::expiration = QDateTime::currentDateTime().addSecs(3600);
 }
 
-QCoro::QmlTask Piqi::Login(QString refreshToken) { return LoginTask(refreshToken); }
-QCoro::Task<PiqiResponse*> Piqi::LoginTask(QString refreshToken) {
-    PiqiResponse* response = co_await PiqiInternal::LoginTask(refreshToken);
-    m_user = qobject_cast<Account*>(response->getData());
+QCoro::QmlTask Piqi::Login(QString refreshToken) {
+    return LoginTask(refreshToken);
+}
+QCoro::Task<PiqiResponse *> Piqi::LoginTask(QString refreshToken) {
+    PiqiResponse *response = co_await PiqiInternal::LoginTask(refreshToken);
+    m_user = qobject_cast<Account *>(response->getData());
     Q_EMIT userChanged();
     co_return response;
 }
 
-QCoro::QmlTask Piqi::Walkthrough() { return WalkthroughTask(); }
+QCoro::QmlTask Piqi::Walkthrough() {
+    return WalkthroughTask();
+}
 QCoro::Task<Illusts *> Piqi::WalkthroughTask() {
     return PiqiInternal::SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts"), false);
 }
@@ -32,41 +33,39 @@ QCoro::Task<Illusts *> Piqi::WalkthroughTask() {
 QCoro::QmlTask Piqi::RecommendedFeed(QString type, bool includeRanking, bool includePrivacyPolicy) {
     return RecommendedFeedTask(type, includeRanking, includePrivacyPolicy);
 }
-QCoro::Task<Recommended *> Piqi::RecommendedFeedTask(QString type, bool includeRanking, bool includePrivacyPolicy)
-{
-    if (type == "novel") co_return nullptr;
+QCoro::Task<Recommended *> Piqi::RecommendedFeedTask(QString type, bool includeRanking, bool includePrivacyPolicy) {
+    if (type == "novel")
+        co_return nullptr;
 
     QUrl url("https://app-api.pixiv.net/v1/" + type + "/recommended");
-    QUrlQuery query{
-        {"include_ranking_illusts", includeRanking ? "true" : "false"},
-        {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}
-    };
+    QUrlQuery query{{"include_ranking_illusts", includeRanking ? "true" : "false"},
+                    {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}};
     url.setQuery(query);
     co_return (co_await PiqiInternal::SendGet<Recommended>(url));
 }
 QCoro::QmlTask Piqi::RecommendedNovelsFeed(bool includeRanking, bool includePrivacyPolicy) {
     return RecommendedNovelsFeedTask(includeRanking, includePrivacyPolicy);
 }
-QCoro::Task<RecommendedNovels*> Piqi::RecommendedNovelsFeedTask(bool includeRanking, bool includePrivacyPolicy) {
+QCoro::Task<RecommendedNovels *> Piqi::RecommendedNovelsFeedTask(bool includeRanking, bool includePrivacyPolicy) {
     QUrl url("https://app-api.pixiv.net/v1/novel/recommended");
-    QUrlQuery query{
-        {"include_ranking_novels", includeRanking ? "true" : "false"},
-        {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}
-    };
+    QUrlQuery query{{"include_ranking_novels", includeRanking ? "true" : "false"},
+                    {"include_privacy_policy", includePrivacyPolicy ? "true" : "false"}};
     url.setQuery(query);
     return PiqiInternal::SendGet<RecommendedNovels>(url);
 }
 
-QCoro::QmlTask Piqi::FollowingFeed(QString restriction) { return FollowingFeedTask(restriction); }
-QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString restriction)
-{
+QCoro::QmlTask Piqi::FollowingFeed(QString restriction) {
+    return FollowingFeedTask(restriction);
+}
+QCoro::Task<Illusts *> Piqi::FollowingFeedTask(QString restriction) {
     QUrl url(("https://app-api.pixiv.net/v2/illust/follow?restrict=" + restriction));
     return PiqiInternal::SendGet<Illusts>(url);
 }
 
-QCoro::QmlTask Piqi::UserIllusts(User* user, QString type) { return UserIllustsTask(user, type); }
-QCoro::Task<Illusts*> Piqi::UserIllustsTask(User* user, QString type)
-{
+QCoro::QmlTask Piqi::UserIllusts(User *user, QString type) {
+    return UserIllustsTask(user, type);
+}
+QCoro::Task<Illusts *> Piqi::UserIllustsTask(User *user, QString type) {
     // In intercepted requests from the official pixiv App, this endpoint returned <6 illusts,
     // usually the showcase ones when profile is opened, or the three suggested ones under an illust.
     // For some reason though, the returned number of illustrations is... more. One run returned 3,
@@ -74,49 +73,48 @@ QCoro::Task<Illusts*> Piqi::UserIllustsTask(User* user, QString type)
     // For anyone who cares, I do the HTTP intercepting locally, using Http Toolkit (with Frida) and
     // Waydroid instance. really convenient.
     QUrl url("https://app-api.pixiv.net/v1/user/illusts");
-    QUrlQuery query{
-        {"user_id", QString::number(user->m_id)},
-        {"type", type}
-    };
+    QUrlQuery query{{"user_id", QString::number(user->m_id)}, {"type", type}};
     url.setQuery(query);
     return PiqiInternal::SendGet<Illusts>(url);
 }
 
-QCoro::QmlTask Piqi::CommentReplies(Comment* comment) { return CommentRepliesTask(comment); }
-QCoro::Task<Comments*> Piqi::CommentRepliesTask(Comment* comment) {
+QCoro::QmlTask Piqi::CommentReplies(Comment *comment) {
+    return CommentRepliesTask(comment);
+}
+QCoro::Task<Comments *> Piqi::CommentRepliesTask(Comment *comment) {
     QUrl url("https://app-api.pixiv.net/v2/illust/comment/replies");
     QUrlQuery query{{"comment_id", QString::number(comment->m_id)}};
     url.setQuery(query);
     return PiqiInternal::SendGet<Comments>(url);
 }
 
-QCoro::QmlTask Piqi::RelatedIllusts(Illustration *illust) { return RelatedIllustsTask(illust); }
-QCoro::Task<Illusts *> Piqi::RelatedIllustsTask(Illustration *illust)
-{
+QCoro::QmlTask Piqi::RelatedIllusts(Illustration *illust) {
+    return RelatedIllustsTask(illust);
+}
+QCoro::Task<Illusts *> Piqi::RelatedIllustsTask(Illustration *illust) {
     QUrl url("https://app-api.pixiv.net/v2/illust/related");
     QUrlQuery query{{"illust_id", QString::number(illust->m_id)}};
     url.setQuery(query);
     return PiqiInternal::SendGet<Illusts>(url);
 }
 
-QCoro::QmlTask Piqi::SearchAutocomplete(QString query) { return SearchAutocompleteTask(query); }
-QCoro::Task<QList<Tag*>> Piqi::SearchAutocompleteTask(QString query) {
+QCoro::QmlTask Piqi::SearchAutocomplete(QString query) {
+    return SearchAutocompleteTask(query);
+}
+QCoro::Task<QList<Tag *>> Piqi::SearchAutocompleteTask(QString query) {
     QUrl url("https://app-api.pixiv.net/v2/search/autocomplete");
-    QUrlQuery params {
-        { "merge_plain_keyword_results", "true" },
-        { "word", query }
-    };
+    QUrlQuery params{{"merge_plain_keyword_results", "true"}, {"word", query}};
     url.setQuery(params);
 
     QNetworkRequest request(url);
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
 
-    QNetworkReply* reply = co_await manager.get(request);
+    QNetworkReply *reply = co_await manager.get(request);
     QJsonObject obj = QJsonDocument::fromJson(reply->readAll()).object();
 
-    QList<Tag*> tags;
+    QList<Tag *> tags;
     for (QJsonValue val : obj["tags"].toArray()) {
-        Tag* tag = new Tag(nullptr, val.toObject());
+        Tag *tag = new Tag(nullptr, val.toObject());
         tags.append(tag);
     }
 
@@ -126,35 +124,34 @@ QCoro::Task<QList<Tag*>> Piqi::SearchAutocompleteTask(QString query) {
 QCoro::QmlTask Piqi::LatestGlobal(QString type) {
     return LatestGlobalTask(type);
 }
-QCoro::Task<Illusts*> Piqi::LatestGlobalTask(QString type) {
-    if (type == "novel") co_return nullptr;
-    co_return co_await PiqiInternal::SendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type));
+QCoro::Task<Illusts *> Piqi::LatestGlobalTask(QString type) {
+    if (type == "novel")
+        co_return nullptr;
+    co_return co_await PiqiInternal::SendGet<Illusts>(
+        QUrl("https://app-api.pixiv.net/v1/illust/new?filter=for_android&content_type=" + type));
 }
 
-QCoro::QmlTask Piqi::BookmarksFeed(User* user, bool restricted, QString tag) {
+QCoro::QmlTask Piqi::BookmarksFeed(User *user, bool restricted, QString tag) {
     return BookmarksFeedTask(user, restricted, tag);
 }
-QCoro::Task<Illusts*> Piqi::BookmarksFeedTask(User* user, bool restricted, QString tag) {
-    if (!user) user = m_user;
+QCoro::Task<Illusts *> Piqi::BookmarksFeedTask(User *user, bool restricted, QString tag) {
+    if (!user)
+        user = m_user;
     QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/illust");
-    QUrlQuery query {
-        { "user_id", QString::number(user->m_id) },
-        { "restrict", restricted ? "private" : "public" }
-    };
-    if (tag != "") query.addQueryItem("tag", tag);
+    QUrlQuery query{{"user_id", QString::number(user->m_id)}, {"restrict", restricted ? "private" : "public"}};
+    if (tag != "")
+        query.addQueryItem("tag", tag);
     url.setQuery(query);
 
     return PiqiInternal::SendGet<Illusts>(url);
 }
 
-QCoro::QmlTask Piqi::Details(User* user) {
+QCoro::QmlTask Piqi::Details(User *user) {
     return DetailsTask(user);
 }
-QCoro::Task<UserDetails*> Piqi::DetailsTask(User* user) {
+QCoro::Task<UserDetails *> Piqi::DetailsTask(User *user) {
     QUrl url("https://app-api.pixiv.net/v2/user/detail");
-    QUrlQuery query {
-        { "user_id", QString::number(user->m_id) }
-    };
+    QUrlQuery query{{"user_id", QString::number(user->m_id)}};
     url.setQuery(query);
 
     return PiqiInternal::SendGet<UserDetails>(url);
@@ -163,13 +160,10 @@ QCoro::Task<UserDetails*> Piqi::DetailsTask(User* user) {
 QCoro::QmlTask Piqi::BookmarkTags(QString type, bool restricted) {
     return BookmarkTagsTask(type, restricted);
 }
-QCoro::Task<Tags*> Piqi::BookmarkTagsTask(QString type, bool restricted) {
+QCoro::Task<Tags *> Piqi::BookmarkTagsTask(QString type, bool restricted) {
     Q_UNUSED(type)
     QUrl url("https://app-api.pixiv.net/v1/user/bookmark-tags/illust");
-    QUrlQuery query {
-        { "user_id", QString::number(m_user->m_id) },
-        { "restrict", restricted ? "private" : "public" }
-    };
+    QUrlQuery query{{"user_id", QString::number(m_user->m_id)}, {"restrict", restricted ? "private" : "public"}};
     url.setQuery(query);
 
     return PiqiInternal::SendGet<Tags>(url);
@@ -178,11 +172,9 @@ QCoro::Task<Tags*> Piqi::BookmarkTagsTask(QString type, bool restricted) {
 QCoro::QmlTask Piqi::IllustDetail(int id) {
     return IllustDetailTask(id);
 }
-QCoro::Task<Illustration*> Piqi::IllustDetailTask(int id) {
+QCoro::Task<Illustration *> Piqi::IllustDetailTask(int id) {
     QUrl url("https://app-api.pixiv.net/v1/illust/detail");
-    QUrlQuery query {
-        { "illust_id", QString::number(id) }
-    };
+    QUrlQuery query{{"illust_id", QString::number(id)}};
     url.setQuery(query);
 
     if (!(co_await PiqiInternal::IsLoggedIn()))
@@ -196,17 +188,16 @@ QCoro::Task<Illustration*> Piqi::IllustDetailTask(int id) {
     co_return new Illustration(nullptr, json["illust"].toObject());
 }
 
-QCoro::QmlTask Piqi::NovelsBookmarksFeed(User* user, bool restricted, QString tag) {
+QCoro::QmlTask Piqi::NovelsBookmarksFeed(User *user, bool restricted, QString tag) {
     return NovelsBookmarksFeedTask(user, restricted, tag);
 }
-QCoro::Task<Novels*> Piqi::NovelsBookmarksFeedTask(User* user, bool restricted, QString tag) {
-    if (!user) user = m_user;
+QCoro::Task<Novels *> Piqi::NovelsBookmarksFeedTask(User *user, bool restricted, QString tag) {
+    if (!user)
+        user = m_user;
     QUrl url("https://app-api.pixiv.net/v1/user/bookmarks/novel");
-    QUrlQuery query {
-        { "user_id", QString::number(user->m_id) },
-        { "restrict", restricted ? "private" : "public" }
-    };
-    if (tag != "") query.addQueryItem("tag", tag);
+    QUrlQuery query{{"user_id", QString::number(user->m_id)}, {"restrict", restricted ? "private" : "public"}};
+    if (tag != "")
+        query.addQueryItem("tag", tag);
     url.setQuery(query);
 
     return PiqiInternal::SendGet<Novels>(url);
@@ -214,64 +205,67 @@ QCoro::Task<Novels*> Piqi::NovelsBookmarksFeedTask(User* user, bool restricted, 
 QCoro::QmlTask Piqi::FollowingNovelsFeed(QString restriction) {
     return FollowingNovelsFeedTask(restriction);
 }
-QCoro::Task<Novels*> Piqi::FollowingNovelsFeedTask(QString restriction) {
+QCoro::Task<Novels *> Piqi::FollowingNovelsFeedTask(QString restriction) {
     QUrl url(("https://app-api.pixiv.net/v1/novel/follow?restrict=" + restriction));
     return PiqiInternal::SendGet<Novels>(url);
 }
 
-QCoro::QmlTask Piqi::LatestNovelsGlobal() { return LatestNovelsGlobalTask(); }
-QCoro::Task<Novels*> Piqi::LatestNovelsGlobalTask() {
+QCoro::QmlTask Piqi::LatestNovelsGlobal() {
+    return LatestNovelsGlobalTask();
+}
+QCoro::Task<Novels *> Piqi::LatestNovelsGlobalTask() {
     return PiqiInternal::SendGet<Novels>(QUrl("https://app-api.pixiv.net/v1/novel/new"));
 }
 
-QCoro::QmlTask Piqi::UserNovels(User* user) {
+QCoro::QmlTask Piqi::UserNovels(User *user) {
     return UserNovelsTask(user);
 }
-QCoro::Task<Novels*> Piqi::UserNovelsTask(User* user) {
+QCoro::Task<Novels *> Piqi::UserNovelsTask(User *user) {
     QUrl url("https://app-api.pixiv.net/v1/user/novels");
-    QUrlQuery query{
-        {"user_id", QString::number(user->m_id)}
-    };
+    QUrlQuery query{{"user_id", QString::number(user->m_id)}};
     url.setQuery(query);
     return PiqiInternal::SendGet<Novels>(url);
 }
 
-QCoro::QmlTask Piqi::FetchNovel(Novel* novel) { return FetchNovelTask(novel); }
-QCoro::Task<QString> Piqi::FetchNovelTask(Novel* novel) {
+QCoro::QmlTask Piqi::FetchNovel(Novel *novel) {
+    return FetchNovelTask(novel);
+}
+QCoro::Task<QString> Piqi::FetchNovelTask(Novel *novel) {
     if (!(co_await PiqiInternal::IsLoggedIn()))
         co_return nullptr;
 
     QUrl url("https://app-api.pixiv.net/webview/v2/novel");
-    QUrlQuery query { // TODO: optional parameters, parameters other than id are based on the default settings
-        {"id",QString::number(novel->m_id)},
-        {"font","default"},
-        {"font_size","16.0px"},
-        {"line_height","1.75"},
-        {"color","#B7B7B7"},
-        {"background_color","#1F1F1F"},
-        {"margin_top","56px"},
-        {"margin_bottom","53px"},
-        {"theme","dark"},
-        {"use_bloc","true"},
-        {"viewer_version","20250616_seasonal_effect"},
-        {"restricted_mode","false"},
+    QUrlQuery query{
+        // TODO: optional parameters, parameters other than id are based on the default settings
+        {"id", QString::number(novel->m_id)},
+        {"font", "default"},
+        {"font_size", "16.0px"},
+        {"line_height", "1.75"},
+        {"color", "#B7B7B7"},
+        {"background_color", "#1F1F1F"},
+        {"margin_top", "56px"},
+        {"margin_bottom", "53px"},
+        {"theme", "dark"},
+        {"use_bloc", "true"},
+        {"viewer_version", "20250616_seasonal_effect"},
+        {"restricted_mode", "false"},
     };
     url.setQuery(query);
     QNetworkRequest request(url);
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
-    request.setRawHeader("X-Requested-With", "jp.pxv.android"); // NECESSARY! Without this header the endpoint returns (probably random) binary data
+    request.setRawHeader(
+        "X-Requested-With",
+        "jp.pxv.android"); // NECESSARY! Without this header the endpoint returns (probably random) binary data
     QNetworkReply *reply = co_await manager.get(request);
     co_return reply->readAll();
 }
 
-QCoro::QmlTask Piqi::IllustSeriesDetails(Illustration* illust) {
+QCoro::QmlTask Piqi::IllustSeriesDetails(Illustration *illust) {
     return IllustSeriesDetailsTask(illust);
 }
-QCoro::Task<IllustSeries*> Piqi::IllustSeriesDetailsTask(Illustration* illust) {
+QCoro::Task<IllustSeries *> Piqi::IllustSeriesDetailsTask(Illustration *illust) {
     QUrl url("https://app-api.pixiv.net/v1/illust-series/illust");
-    QUrlQuery query{
-        {"illust_id", QString::number(illust->m_id)}
-    };
+    QUrlQuery query{{"illust_id", QString::number(illust->m_id)}};
     url.setQuery(query);
     return PiqiInternal::SendGet<IllustSeries>(url);
 }
@@ -279,29 +273,25 @@ QCoro::Task<IllustSeries*> Piqi::IllustSeriesDetailsTask(Illustration* illust) {
 QCoro::QmlTask Piqi::SeriesFeed(int id) {
     return SeriesFeedTask(id);
 }
-QCoro::Task<Series*> Piqi::SeriesFeedTask(int id) {
+QCoro::Task<Series *> Piqi::SeriesFeedTask(int id) {
     QUrl url("https://app-api.pixiv.net/v1/illust/series");
-    QUrlQuery query {
-        {"illust_series_id", QString::number(id)}
-    };
+    QUrlQuery query{{"illust_series_id", QString::number(id)}};
     url.setQuery(query);
     return PiqiInternal::SendGet<Series>(url);
 }
 
-QCoro::QmlTask Piqi::UserSeries(User* user) {
+QCoro::QmlTask Piqi::UserSeries(User *user) {
     return UserSeriesTask(user);
 }
-QCoro::Task<SeriesDetails*> Piqi::UserSeriesTask(User* user) {
+QCoro::Task<SeriesDetails *> Piqi::UserSeriesTask(User *user) {
     QUrl url("https://app-api.pixiv.net/v1/user/illust-series");
-    QUrlQuery query{
-        {"user_id", QString::number(user->m_id)}
-    };
+    QUrlQuery query{{"user_id", QString::number(user->m_id)}};
     url.setQuery(query);
     return PiqiInternal::SendGet<SeriesDetails>(url);
 }
 QCoro::QmlTask Piqi::WatchlistFeed() {
     return WatchlistFeedTask();
 }
-QCoro::Task<SeriesDetails*> Piqi::WatchlistFeedTask() {
+QCoro::Task<SeriesDetails *> Piqi::WatchlistFeedTask() {
     return PiqiInternal::SendGet<SeriesDetails>(QUrl("https://app-api.pixiv.net/v1/watchlist/manga"));
 }

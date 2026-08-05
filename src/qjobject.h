@@ -13,8 +13,8 @@
     QM_PROPERTY(type *, name) \
     Q_INVOKABLE type *create_##name(const QJsonObject &data) { \
         return new type(data, this);\
-    }
-#define QJM_ARRAY(type, name) \
+    }*/
+/*#define QJM_ARRAY(type, name) \
     QM_PROPERTY(QList<type *>, name) \
     Q_INVOKABLE type *create_##name(const QJsonObject &data) { \
         return new type(data, this);\
@@ -29,25 +29,25 @@
  * Property names must follow camelCase, json properties must follow snake_case
  */
 class PIQI_EXPORT QJObject : public QObject {
-  Q_OBJECT
-  QML_ELEMENT
+    Q_OBJECT
+    QML_ELEMENT
 
-  // ? wanted to use this for something
-  // static constexpr std::string_view QJKEY = "QJsonSerializable";
-  // Q_CLASSINFO("QJsonSerializable", "true")
+    // ? wanted to use this for something
+    // static constexpr std::string_view QJKEY = "QJsonSerializable";
+    // Q_CLASSINFO("QJsonSerializable", "true")
 
-public:
-  QJObject(QObject *parent = nullptr);
-  virtual ~QJObject() = default;
+  public:
+    QJObject(QObject *parent = nullptr);
+    virtual ~QJObject() = default;
 
-  void deserialize(const QJsonObject &data);
+    void deserialize(const QJsonObject &data);
 
-protected:
-  static const QRegularExpression regex;
+  protected:
+    static const QRegularExpression regex;
 
-  // Use this virtual method to assign custom objects or arrays into properties
-  virtual void assignProperty(const QString &propertyName, const QJsonValue &data);
+    // Use this virtual method to assign custom objects or arrays into properties
+    virtual void assignProperty(const QString &propertyName, const QJsonValue &data);
 
-private:
-  QString capitalizeSnakeFirstLetters(QString string) const;
+  private:
+    QString capitalizeSnakeFirstLetters(QString string) const;
 };

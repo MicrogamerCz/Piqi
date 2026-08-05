@@ -1,9 +1,7 @@
 #pragma once
 #include "bookmarkdetails.h"
 #include "imageurls.h"
-#include "qjobject.h"
-#include <QCoro/QCoroQmlTask>
-#include <QCoro/Task>
+#include <QCoroQml>
 
 class PIQI_EXPORT User : public QJObject {
     Q_OBJECT
@@ -18,8 +16,8 @@ class PIQI_EXPORT User : public QJObject {
     QM_PROPERTY(bool, isAcceptRequest)
 
   public:
-    User(QObject* parent = nullptr);
-    User(QObject* parent, QJsonObject data);
+    User(QObject *parent = nullptr);
+    User(QObject *parent, QJsonObject data);
 
     Q_SLOT QCoro::QmlTask Follow(bool privateFollow = false);
     QCoro::Task<> FollowTask(bool privateFollow = false);
@@ -28,14 +26,13 @@ class PIQI_EXPORT User : public QJObject {
     QCoro::Task<> RemoveFollowTask();
 
     QCoro::QmlTask FollowDetail();
-    QCoro::Task<FollowDetails*> FollowDetailTask();
+    QCoro::Task<FollowDetails *> FollowDetailTask();
 
   private:
     void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };
 
-class PIQI_EXPORT Account : public User
-{
+class PIQI_EXPORT Account : public User {
     Q_OBJECT
     QML_ELEMENT
 
@@ -45,7 +42,7 @@ class PIQI_EXPORT Account : public User
     QM_PROPERTY(bool, requirePolicyAgreement)
     QM_PROPERTY(int, xRestrict)
 
-public:
-    Account(QObject* parent = nullptr);
-    Account(QObject* parent, QJsonObject data);
+  public:
+    Account(QObject *parent = nullptr);
+    Account(QObject *parent, QJsonObject data);
 };

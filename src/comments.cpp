@@ -1,8 +1,7 @@
 #include "comments.h"
 
 Comments::Comments(QObject *parent) : QJObject(parent) {};
-Comments::Comments(QObject *parent, QJsonObject data)
-    : QJObject(parent) {
+Comments::Comments(QObject *parent, QJsonObject data) : QJObject(parent) {
     deserialize(data);
 }
 

@@ -1,8 +1,7 @@
 #pragma once
 #include "work.h"
 
-class PIQI_EXPORT Novel : public Work
-{
+class PIQI_EXPORT Novel : public Work {
     Q_OBJECT
     QML_ELEMENT
 
@@ -15,10 +14,10 @@ class PIQI_EXPORT Novel : public Work
     QM_PROPERTY(int, novelAiType)
     // request
 
-    protected:
-      const QString type() const override;
+  public:
+    Novel(QObject *parent = nullptr);
+    Novel(QObject *parent, QJsonObject data);
 
-    public:
-        Novel(QObject* parent = nullptr);
-        Novel(QObject* parent, QJsonObject data);
+  protected:
+    const QString type() const override;
 };
