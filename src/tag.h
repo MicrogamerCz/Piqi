@@ -11,8 +11,8 @@ class PIQI_EXPORT Tag : public QJObject {
     QM_PROPERTY(bool, addedByUploadedUser) // optional
 
   public:
-    Tag(QObject *parent = nullptr);
-    Tag(QObject *parent, QJsonObject data);
+    Q_INVOKABLE Tag(QObject *parent = nullptr);
+    Q_INVOKABLE Tag(QObject *parent, QJsonObject data);
 };
 
 class PIQI_EXPORT BookmarkTag : public Tag {
