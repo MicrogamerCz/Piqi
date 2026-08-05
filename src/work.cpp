@@ -96,22 +96,22 @@ QCoro::Task<BookmarkDetails*> Work::BookmarkDetailTask() {
     co_await qCoro(&manager, &QNetworkAccessManager::finished);
 
     QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
-    co_return new BookmarkDetails(nullptr, json);
+    co_return new BookmarkDetails(nullptr, json); // * check where it's used
 }
 
 void Work::assignProperty(const QString &propertyName, const QJsonValue &data) {
     switch (properties.indexOf(propertyName)) {
     case 0: // imageUrls
-        m_imageUrls = new ImageUrls(nullptr, data.toObject());
+        m_imageUrls = new ImageUrls(this, data.toObject());
         Q_EMIT imageUrlsChanged();
         break;
     case 1: // user
-        m_user = new User(nullptr, data.toObject());
+        m_user = new User(this, data.toObject());
         Q_EMIT userChanged();
         break;
     case 2: // tags
         for (QJsonValue tag : data.toArray())
-            m_tags.append(new Tag(nullptr, tag.toObject()));
+            m_tags.append(new Tag(this, tag.toObject()));
         Q_EMIT tagsChanged();
         break;
     case 3: // createDate

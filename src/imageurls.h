@@ -18,7 +18,6 @@ class PIQI_EXPORT ImageUrls : public QJObject {
   public:
     ImageUrls(QObject* parent = nullptr);
     ImageUrls(QObject* parent, QJsonObject data);
-    ~ImageUrls() override;
 
   private:
     void assignProperty(const QString &propertyName, const QJsonValue &data) override;

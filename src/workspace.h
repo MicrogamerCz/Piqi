@@ -27,5 +27,4 @@ class PIQI_EXPORT Workspace : public QJObject {
   public:
     Workspace(QObject *parent = nullptr);
     Workspace(QObject *parent, QJsonObject data);
-    ~Workspace() = default;
 };

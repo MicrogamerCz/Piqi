@@ -2,10 +2,8 @@
 
 BookmarkDetails::BookmarkDetails(QObject *parent) : QJObject(parent) {
 }
-BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken)
+BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data)
     : QJObject(parent) {
-    Q_UNUSED(accessToken);
-    Q_UNUSED(refreshToken);
     deserialize(data);
 }
 

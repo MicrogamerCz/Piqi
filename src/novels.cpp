@@ -4,10 +4,8 @@ Novels::Novels(QObject* parent) : QAbstractListModel(parent) { }
 Novels::Novels(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
 {
     beginResetModel();
-    for (QJsonValue nl : data["novels"].toArray()) {
-        Novel* novel = new Novel(nullptr, nl.toObject());
-        m_novels.append(novel);
-    }
+    for (QJsonValue nl : data["novels"].toArray())
+        m_novels.append(new Novel(this, nl.toObject()));
     endResetModel();
     if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
     else m_nextUrl = "";
@@ -42,11 +40,9 @@ QHash<int, QByteArray> Novels::roleNames() const
 RecommendedNovels::RecommendedNovels(QObject* parent) : Novels(parent) { }
 RecommendedNovels::RecommendedNovels(QObject* parent, QJsonObject data) : Novels(parent, data) {
     m_ranking = new Novels;
-    for (QJsonValue nl : data["ranking_novels"].toArray()) {
-        Novel* novel = new Novel(nullptr, nl.toObject());
-        m_ranking->m_novels.append(novel);
-    }
-    m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
+    for (QJsonValue nl : data["ranking_novels"].toArray())
+        m_ranking->m_novels.append(new Novel(this, nl.toObject()));
+    m_privacyPolicy = new PrivacyPolicy(this, data["privacy_policy"].toObject());
     m_contestExists = data["contest_exists"].toBool();
 }
 

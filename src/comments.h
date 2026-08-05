@@ -11,7 +11,7 @@ class PIQI_EXPORT Comments : public QJObject {
 
   public:
     Comments(QObject *parent = nullptr);
-    Comments(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+    Comments(QObject *parent, QJsonObject data);
 
   private:
     void assignProperty(const QString &propertyName, const QJsonValue &data) override;

@@ -41,12 +41,12 @@ void SeriesDetail::assignProperty(const QString &propertyName, const QJsonValue 
         Q_EMIT coverImageUrlsChanged();
         break;
     case 1: // url
-        m_coverImageUrls = new ImageUrls;
+        m_coverImageUrls = new ImageUrls(this);
         m_coverImageUrls->m_medium = data.toString(); // why, pixiv, why?
         Q_EMIT coverImageUrlsChanged();
         break;
     case 2: // publishedContentCount
-        m_seriesWorkCount = data.toInt();
+        m_seriesWorkCount = data.toInt(); // TODO: add property aliases to QJObject
         Q_EMIT seriesWorkCountChanged();
         break;
     case 3: // lastPublishedContentDatetime
@@ -66,10 +66,10 @@ IllustSeriesContext::IllustSeriesContext(QObject *parent, QJsonObject data) : QJ
 
 void IllustSeriesContext::assignProperty(const QString &propertyName, const QJsonValue &data) {
     if (propertyName == "prev") {
-        m_prev = new Illustration(nullptr, data.toObject());
+        m_prev = new Illustration(this, data.toObject());
         Q_EMIT prevChanged();
     } else if (propertyName == "next") {
-        m_next = new Illustration(nullptr, data.toObject());
+        m_next = new Illustration(this, data.toObject());
         Q_EMIT nextChanged();
     } else
         QJObject::assignProperty(propertyName, data);
@@ -78,8 +78,8 @@ void IllustSeriesContext::assignProperty(const QString &propertyName, const QJso
 IllustSeries::IllustSeries(QObject* parent) : QObject(parent) {}
 IllustSeries::IllustSeries(QObject* parent, QJsonObject data) : QObject(parent)
 {
-    m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject());
-    m_illustSeriesContext = new IllustSeriesContext(nullptr, data["illust_series_context"].toObject());
+    m_illustSeriesDetail = new SeriesDetail(this, data["illust_series_detail"].toObject());
+    m_illustSeriesContext = new IllustSeriesContext(this, data["illust_series_context"].toObject());
 }
 
 int SeriesDetails::rowCount(const QModelIndex &parent) const

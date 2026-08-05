@@ -13,7 +13,7 @@ class PIQI_EXPORT Tags : public QAbstractListModel
 
     public:
         Tags(QObject* parent = nullptr);
-        Tags(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+        Tags(QObject* parent, QJsonObject data);
 
         int rowCount(const QModelIndex &parent) const override;
         QVariant data(const QModelIndex &index, int role = Qt::UserRole) const override;

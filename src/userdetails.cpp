@@ -10,15 +10,15 @@ void UserDetails::assignProperty(const QString &propertyName, const QJsonValue &
     // TODO: add profile_publicity
     switch (properties.indexOf(propertyName)) {
     case 0: // user
-        m_user = new User(nullptr, data.toObject());
+        m_user = new User(this, data.toObject());
         Q_EMIT userChanged();
         break;
     case 1: // profile
-        m_profile = new Profile(nullptr, data.toObject());
+        m_profile = new Profile(this, data.toObject());
         Q_EMIT profileChanged();
         break;
     case 2:
-        m_workspace = new Workspace(nullptr, data.toObject());
+        m_workspace = new Workspace(this, data.toObject());
         Q_EMIT workspaceChanged();
         break;
     default:

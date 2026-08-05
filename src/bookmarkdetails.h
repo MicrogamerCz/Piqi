@@ -11,7 +11,7 @@ class PIQI_EXPORT BookmarkDetails : public QJObject {
 
   public:
     BookmarkDetails(QObject *parent = nullptr);
-    BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");
+    BookmarkDetails(QObject *parent, QJsonObject data);
 
   private:
     void assignProperty(const QString &propertyName, const QJsonValue &data) override;

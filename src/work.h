@@ -39,9 +39,6 @@ class PIQI_EXPORT Work : public WorkPrimitive {
     QM_PROPERTY(int, totalBookmarks)
     QM_PROPERTY(int, totalView)
 
-  protected:
-    virtual const QString type() const = 0;
-
   public:
     Work(QObject *parent = nullptr);
     Work(QObject *parent, QJsonObject data);
@@ -56,6 +53,7 @@ public Q_SLOTS:
     QCoro::QmlTask BookmarkDetail();
 
   protected:
+    virtual const QString type() const = 0;
     virtual void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 
   private:

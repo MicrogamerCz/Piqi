@@ -81,10 +81,8 @@ public:
         if (data.contains("illust_series_details")) feed = data["illust_series_details"].toArray();
         else if (data.contains("series")) feed = data["series"].toArray();
         beginResetModel();
-        for (QJsonValue sr : feed) {
-            SeriesDetail* series = new SeriesDetail(nullptr, sr.toObject());
-            m_series.append(series);
-        }
+        for (const QJsonValue &sr : feed)
+            m_series.append(new SeriesDetail(this, sr.toObject()));
         endResetModel();
         if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
         else m_nextUrl = "";

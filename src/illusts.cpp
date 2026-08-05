@@ -9,10 +9,8 @@ Illusts::Illusts(QObject* parent)
 Illusts::Illusts(QObject* parent, QJsonObject data) : QAbstractListModel(parent)
 {
     beginResetModel();
-    for (QJsonValue il : data["illusts"].toArray()) {
-        Illustration* illust = new Illustration(nullptr, il.toObject());
-        m_illusts.append(illust);
-    }
+    for (QJsonValue il : data["illusts"].toArray())
+        m_illusts.append(new Illustration(this, il.toObject()));
     endResetModel();
     if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
     else m_nextUrl = "";

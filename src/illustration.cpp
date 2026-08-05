@@ -25,14 +25,14 @@ void Illustration::assignProperty(const QString &propertyName, const QJsonValue 
             m_tools.append(tool.toString());
         break;
     case 1:
-        m_series = new WorkPrimitive(nullptr, data.toObject());
+        m_series = new WorkPrimitive(this, data.toObject());
         break;
     case 2:
         m_metaSinglePage = data.toObject()["original_image_url"].toString();
         break;
     case 3:
         for (QJsonValue metaPage : data.toArray())
-            m_metaPages.append(new ImageUrls(nullptr, metaPage.toObject()["image_urls"].toObject()));
+            m_metaPages.append(new ImageUrls(this, metaPage.toObject()["image_urls"].toObject()));
         Q_EMIT metaPagesChanged();
         break;
     case 4:

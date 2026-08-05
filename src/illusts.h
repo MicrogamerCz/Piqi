@@ -52,14 +52,12 @@ class PIQI_EXPORT Recommended : public Illusts
         Recommended(QObject* parent = nullptr) : Illusts(parent) {};
         Recommended(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
-            m_ranking = new Illusts(nullptr);
+            m_ranking = new Illusts(this);
 
-            for (QJsonValue il : data["ranking_illusts"].toArray()) {
-                Illustration* illust = new Illustration(nullptr, il.toObject());
-                m_ranking->m_illusts.append(illust);
-            }
+            for (const QJsonValue &il : data["ranking_illusts"].toArray())
+                m_ranking->m_illusts.append(new Illustration(this, il.toObject()));
 
-            m_privacyPolicy = new PrivacyPolicy(nullptr, data["privacy_policy"].toObject());
+            m_privacyPolicy = new PrivacyPolicy(this, data["privacy_policy"].toObject());
             m_contestExists = data["contest_exists"].toBool();
         };
 };
@@ -91,7 +89,7 @@ class PIQI_EXPORT Series : public Illusts
         Series(QObject* parent = nullptr) : Illusts(parent) {};
         Series(QObject* parent, QJsonObject data) : Illusts(parent, data)
         {
-            m_illustSeriesDetail = new SeriesDetail(nullptr, data["illust_series_detail"].toObject());
-            m_illustSeriesFirstIllust = new Illustration(nullptr, data["illust_series_first_illust"].toObject());
+            m_illustSeriesDetail = new SeriesDetail(this, data["illust_series_detail"].toObject());
+            m_illustSeriesFirstIllust = new Illustration(this, data["illust_series_first_illust"].toObject());
         };
 };

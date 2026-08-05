@@ -61,18 +61,18 @@ QCoro::Task<FollowDetails *> User::FollowDetailTask()
 
     QNetworkReply *reply = co_await PiqiInternal::manager.get(request);
     QJsonObject data = QJsonDocument::fromJson(reply->readAll()).object();
-    co_return new FollowDetails(nullptr, data["follow_detail"].toObject());
+    co_return new FollowDetails(nullptr, data["follow_detail"].toObject()); // * check where it's used
 }
 
 void User::assignProperty(const QString &propertyName, const QJsonValue &data) {
     if (propertyName == "profileImageUrls") {
-        m_profileImageUrls = new ImageUrls(nullptr, data.toObject());
+        m_profileImageUrls = new ImageUrls(this, data.toObject());
         Q_EMIT profileImageUrlsChanged();
     } else
         QJObject::assignProperty(propertyName, data);
 }
 
 Account::Account(QObject* parent) : User(parent) {}
-
-Account::Account(QObject *parent, QJsonObject data) : User(parent, data) {
+Account::Account(QObject *parent, QJsonObject data) : User(parent) {
+    deserialize(data);
 }
