@@ -14,6 +14,9 @@ WorkPrimitive::WorkPrimitive(QObject *parent) : QJObject(parent) {
 
 WorkPrimitive::WorkPrimitive(QObject *parent, QJsonObject data) : QJObject(data, parent) {
 }
+void WorkPrimitive::assignProperty(const QString &propertyName, const QJsonValue &data) {
+    QJObject::assignProperty(propertyName, data);
+}
 
 Work::Work(QObject *parent) : WorkPrimitive(parent) {
 }

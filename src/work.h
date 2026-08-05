@@ -20,6 +20,9 @@ class PIQI_EXPORT WorkPrimitive : public QJObject {
   public:
     WorkPrimitive(QObject* parent = nullptr);
     WorkPrimitive(QObject* parent, QJsonObject data);
+
+protected:
+    virtual void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };
 
 class PIQI_EXPORT Work : public WorkPrimitive {
