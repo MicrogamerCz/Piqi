@@ -21,6 +21,13 @@ class PIQI_EXPORT Tags : public QAbstractListModel {
     Q_SLOT void Extend(Tags *nextTags);
 
     enum Roles {
-        NameRole = Qt::UserRole + 1
+        NameRole = Qt::UserRole + 1,
+        TranslatedNameRole
+    };
+
+  private:
+    const QHash<int, QByteArray> roles = {
+        {Roles::NameRole, "name"},
+        {Roles::TranslatedNameRole, "translatedName"},
     };
 };
