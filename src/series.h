@@ -28,7 +28,7 @@ class PIQI_EXPORT SeriesDetail : public Work
     QM_PROPERTY(int, latestContentId)
 
 protected:
-    const QString type() override;
+  const QString type() const override;
 
 public:
     SeriesDetail(QObject* parent = nullptr);
@@ -39,32 +39,40 @@ public:
 
     Q_SLOT QCoro::QmlTask WatchlistAdd();
     Q_SLOT QCoro::QmlTask WatchlistDelete();
+
+  private:
+    const QStringList properties = {"coverImageUrls", "url", "publishedContentCount", "lastPublishedContentDatetime"};
+
+    void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };
 
-class PIQI_EXPORT IllustSeriesContext : public QObject {
+class PIQI_EXPORT IllustSeriesContext : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
     QM_PROPERTY(int, contentOrder)
-    QM_PROPERTY(Illustration*, prev)
-    QM_PROPERTY(Illustration*, next)
+    QM_PROPERTY(Illustration *, prev)
+    QM_PROPERTY(Illustration *, next)
 
-    public:
-        IllustSeriesContext(QObject* parent = nullptr);
-        IllustSeriesContext(QObject* parent, QJsonObject data);
+  public:
+    IllustSeriesContext(QObject *parent = nullptr);
+    IllustSeriesContext(QObject *parent, QJsonObject data);
+
+  private:
+    void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };
 
-class PIQI_EXPORT IllustSeries : public QObject
+class PIQI_EXPORT IllustSeries : public QObject // TODO: move to QJObject
 {
     Q_OBJECT
     QML_ELEMENT
 
-    QM_PROPERTY(SeriesDetail*, illustSeriesDetail)
-    QM_PROPERTY(IllustSeriesContext*, illustSeriesContext)
+    QM_PROPERTY(SeriesDetail *, illustSeriesDetail)
+    QM_PROPERTY(IllustSeriesContext *, illustSeriesContext)
 
-    public:
-        IllustSeries(QObject* parent = nullptr);
-        IllustSeries(QObject* parent, QJsonObject data);
+  public:
+    IllustSeries(QObject *parent = nullptr);
+    IllustSeries(QObject *parent, QJsonObject data);
 };
 
 class PIQI_EXPORT SeriesDetails : public QAbstractListModel

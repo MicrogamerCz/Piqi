@@ -1,12 +1,13 @@
 #pragma once
 #include "piqi_export.h"
 #include "qepr.h"
+#include "qjobject.h"
+#include <qjsonobject.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 #include <qtmetamacros.h>
-#include <qjsonobject.h>
 
-class PIQI_EXPORT Workspace : public QObject {
+class PIQI_EXPORT Workspace : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
@@ -23,7 +24,8 @@ class PIQI_EXPORT Workspace : public QObject {
     QM_PROPERTY(QString, chair)
     QM_PROPERTY(QString, comment)
 
-    public:
-        Workspace(QObject* parent = nullptr);
-        Workspace(QObject* parent, QJsonObject data);
+  public:
+    Workspace(QObject *parent = nullptr);
+    Workspace(QObject *parent, QJsonObject data);
+    ~Workspace() = default;
 };

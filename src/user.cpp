@@ -1,19 +1,16 @@
 #include "user.h"
+#include "qjobject.h"
 #include "requestworker.h"
+#include <qjsonvalue.h>
+#include <qvariant.h>
 
-User::User(QObject* parent) : QObject(parent) {}
+User::User(QObject *parent) : QJObject(parent) {
+}
 
-User::User(QObject* parent, QJsonObject data) : QObject(parent)
-{
-    auto id = data["id"];
-    if (id.isString()) m_id = data["id"].toString().toInt();
-    else m_id = data["id"].toInt();
-    m_name = data["name"].toString();
-    m_account = data["account"].toString();
-    if (data.contains("comment")) m_comment = data["comment"].toString();
-    m_profileImageUrls = new ImageUrls(nullptr, data["profile_image_urls"].toObject());
-    m_isFollowed = data["is_followed"].toBool(); // 0 - not followed, 1 - publicly followed, 2 - privately followed
-    m_isAcceptRequest = data["is_accept_request"].toBool();
+User::User(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
+    // m_isFollowed = data["is_followed"].toBool(); // 0 - not followed, 1 -
+    // publicly followed, 2 - privately followed // ?
 }
 
 Q_SLOT QCoro::QmlTask User::Follow(bool privateFollow) {
@@ -67,13 +64,15 @@ QCoro::Task<FollowDetails *> User::FollowDetailTask()
     co_return new FollowDetails(nullptr, data["follow_detail"].toObject());
 }
 
+void User::assignProperty(const QString &propertyName, const QJsonValue &data) {
+    if (propertyName == "profileImageUrls") {
+        m_profileImageUrls = new ImageUrls(nullptr, data.toObject());
+        Q_EMIT profileImageUrlsChanged();
+    } else
+        QJObject::assignProperty(propertyName, data);
+}
+
 Account::Account(QObject* parent) : User(parent) {}
 
-Account::Account(QObject* parent, QJsonObject data) : User(parent, data)
-{
-    m_isMailAuthorized = data["is_mail_authorized"].toInt();
-    m_isPremium = data["is_premium"].toBool();
-    m_mailAddress = data["mail_address"].toString();
-    m_requirePolicyAgreement = data["require_policy_agreement"].toBool();
-    m_xRestrict = data["x_restrict"].toBool();
+Account::Account(QObject *parent, QJsonObject data) : User(parent, data) {
 }

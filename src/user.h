@@ -1,11 +1,11 @@
 #pragma once
-#include <QCoro/QCoroQmlTask>
-#include <QCoro/Task>
 #include "bookmarkdetails.h"
 #include "imageurls.h"
+#include "qjobject.h"
+#include <QCoro/QCoroQmlTask>
+#include <QCoro/Task>
 
-class PIQI_EXPORT User : public QObject
-{
+class PIQI_EXPORT User : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
@@ -13,11 +13,11 @@ class PIQI_EXPORT User : public QObject
     QM_PROPERTY(QString, name)
     QM_PROPERTY(QString, account)
     QM_PROPERTY(QString, comment)
-    QM_PROPERTY(ImageUrls*, profileImageUrls)
+    QM_PROPERTY(ImageUrls *, profileImageUrls)
     QM_PROPERTY(int, isFollowed)
     QM_PROPERTY(bool, isAcceptRequest)
 
-public:
+  public:
     User(QObject* parent = nullptr);
     User(QObject* parent, QJsonObject data);
 
@@ -29,6 +29,9 @@ public:
 
     QCoro::QmlTask FollowDetail();
     QCoro::Task<FollowDetails*> FollowDetailTask();
+
+  private:
+    void assignProperty(const QString &propertyName, const QJsonValue &data) override;
 };
 
 class PIQI_EXPORT Account : public User

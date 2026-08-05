@@ -17,7 +17,6 @@ class PIQI_EXPORT Tags : public QAbstractListModel
     QM_PROPERTY(QString, nextUrl)
     QM_PROPERTY(QList<Tag*>, tags)
 
-
     public:
         Tags(QObject* parent = nullptr);
         Tags(QObject* parent, QJsonObject data, QString accessToken = "", QString refreshToken = "");

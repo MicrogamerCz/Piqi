@@ -1,12 +1,13 @@
 #pragma once
 #include "piqi_export.h"
 #include "qepr.h"
+#include "qjobject.h"
 #include <qjsonobject.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 #include <qtmetamacros.h>
 
-class PIQI_EXPORT Profile : public QObject {
+class PIQI_EXPORT Profile : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
@@ -33,7 +34,7 @@ class PIQI_EXPORT Profile : public QObject {
     QM_PROPERTY(bool, isPremium)
     QM_PROPERTY(bool, isUsingCustomProfileImage)
 
-    public:
-        Profile(QObject* parent = nullptr);
-        Profile(QObject* parent, QJsonObject data);
+  public:
+    Profile(QObject *parent = nullptr);
+    Profile(QObject *parent, QJsonObject data);
 };

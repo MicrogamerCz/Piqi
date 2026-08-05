@@ -1,24 +1,28 @@
 #include "bookmarkdetails.h"
+#include "qjobject.h"
 #include <qtpreprocessorsupport.h>
 
-BookmarkDetails::BookmarkDetails(QObject *parent) : QObject(parent) { }
-BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken) : QObject(parent)
-{
+BookmarkDetails::BookmarkDetails(QObject *parent) : QJObject(parent) {
+}
+BookmarkDetails::BookmarkDetails(QObject *parent, QJsonObject data, QString accessToken, QString refreshToken)
+    : QJObject(parent) {
     Q_UNUSED(accessToken);
     Q_UNUSED(refreshToken);
-
-    m_isBookmarked = data["is_bookmarked"].toBool();
-    for (QJsonValue com : data["tags"].toArray()) {
-        m_tags.append(new BookmarkTag(nullptr, com.toObject()));
-    }
-    m_restriction = data["restrict"].toString();
-    Q_EMIT restrictionChanged();
+    deserialize(data);
 }
 
-FollowDetails::FollowDetails(QObject *parent) : QObject(parent) { }
-FollowDetails::FollowDetails(QObject *parent, QJsonObject data) : QObject(parent)
-{
-    m_isFollowed = data["is_followed"].toBool();
-    m_restriction = data["restrict"].toString();
-    Q_EMIT restrictionChanged();
+void BookmarkDetails::assignProperty(const QString &propertyName, const QJsonValue &data) {
+    if (propertyName == "tags") {
+        for (const QJsonValue &com : data.toArray())
+            m_tags.append(new BookmarkTag(nullptr, com.toObject()));
+
+        Q_EMIT tagsChanged();
+    } else
+        QJObject::assignProperty(propertyName, data);
+}
+
+FollowDetails::FollowDetails(QObject *parent) : QJObject(parent) {
+}
+FollowDetails::FollowDetails(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
 }

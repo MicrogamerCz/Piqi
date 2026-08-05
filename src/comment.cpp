@@ -1,16 +1,23 @@
 #include <qobject.h>
 #include "comment.h"
 
-Comment::Comment(QObject* parent) : QObject(parent) {}
+Comment::Comment(QObject *parent) : QJObject(parent) {
+}
 
-Comment::Comment(QObject *parent, QJsonObject data) : QObject(parent)
-{
-    m_id = data["id"].toInt();
-    m_comment = data["comment"].toString();
-    m_date = QDateTime::fromString(data["date"].toString(), Qt::ISODate);
-    m_user = new User(this, data["user"].toObject());
-    m_hasReplies = data["has_replies"].toBool();
+Comment::Comment(QObject *parent, QJsonObject data) : QJObject(parent) {
+    deserialize(data);
+}
 
-    QJsonObject stampObject = data["stamp"].toObject();
-    m_stamp = !stampObject.isEmpty() ? new Stamp(nullptr, stampObject) : nullptr;
+void Comment::assignProperty(const QString &propertyName, const QJsonValue &data) {
+    if (propertyName == "date") {
+        m_date = QDateTime::fromString(data.toString(), Qt::ISODate);
+        Q_EMIT dateChanged();
+    } else if (propertyName == "user") {
+        m_user = new User(this, data.toObject());
+        Q_EMIT userChanged();
+    } else if (propertyName == "stamp") {
+        m_stamp = new Stamp(nullptr, data.toObject());
+        Q_EMIT stampChanged();
+    } else
+        QJObject::assignProperty(propertyName, data);
 }

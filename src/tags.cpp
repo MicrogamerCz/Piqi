@@ -11,11 +11,12 @@ Tags::Tags(QObject* parent, QJsonObject data, QString accessToken, QString refre
     Q_UNUSED(refreshToken);
 
     beginResetModel();
-    for (QJsonValue il : data["bookmark_tags"].toArray()) {
-        BookmarkTag* tag = new BookmarkTag(nullptr, il.toObject());
+    for (const QJsonValue &il : data["bookmark_tags"].toArray()) {
+        BookmarkTag *tag = new BookmarkTag(nullptr, il.toObject());
         m_tags.append(tag);
     }
     endResetModel();
+
     if (data.keys().contains("next_url")) m_nextUrl = data["next_url"].toString();
     else m_nextUrl = "";
 }
