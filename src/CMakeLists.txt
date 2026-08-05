@@ -59,6 +59,7 @@ ecm_generate_headers(piqi_HEADERS
         PrivacyPolicy
         Profile
         QEPR
+        QJObject
         SearchRequest
         Series
         Stamp
