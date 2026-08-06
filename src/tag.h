@@ -13,6 +13,8 @@ class PIQI_EXPORT Tag : public QJObject {
   public:
     Q_INVOKABLE Tag(QObject *parent = nullptr);
     Q_INVOKABLE Tag(QObject *parent, QJsonObject data);
+
+    bool operator==(const Tag &other) const;
 };
 
 class PIQI_EXPORT BookmarkTag : public Tag {
