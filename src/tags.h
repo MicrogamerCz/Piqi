@@ -21,12 +21,14 @@ class PIQI_EXPORT Tags : public QAbstractListModel {
     Q_SLOT void Extend(Tags *nextTags);
 
     enum Roles {
-        NameRole = Qt::UserRole + 1,
+        TagRole = Qt::UserRole + 1,
+        NameRole,
         TranslatedNameRole
     };
 
   private:
     const QHash<int, QByteArray> roles = {
+        {Roles::TagRole, "tag"},
         {Roles::NameRole, "name"},
         {Roles::TranslatedNameRole, "translatedName"},
     };
