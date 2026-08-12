@@ -57,7 +57,8 @@ QCoro::Task<FollowDetails *> User::FollowDetailTask() {
 }
 void User::assignProperty(const QString &propertyName, const QJsonValue &data) {
     if (propertyName == "profileImageUrls") {
-        m_profileImageUrls = new ImageUrls(this, data.toObject());
+        if (!data.isNull())
+            m_profileImageUrls = new ImageUrls(this, data.toObject());
         Q_EMIT profileImageUrlsChanged();
     } else
         QJObject::assignProperty(propertyName, data);

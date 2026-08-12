@@ -99,11 +99,13 @@ QCoro::Task<BookmarkDetails *> Work::BookmarkDetailTask() {
 void Work::assignProperty(const QString &propertyName, const QJsonValue &data) {
     switch (properties.indexOf(propertyName)) {
     case 0: // imageUrls
-        m_imageUrls = new ImageUrls(this, data.toObject());
+        if (!data.isNull())
+            m_imageUrls = new ImageUrls(this, data.toObject());
         Q_EMIT imageUrlsChanged();
         break;
     case 1: // user
-        m_user = new User(this, data.toObject());
+        if (!data.isNull())
+            m_user = new User(this, data.toObject());
         Q_EMIT userChanged();
         break;
     case 2: // tags

@@ -1,5 +1,6 @@
 #include "illustration.h"
 #include "requestworker.h"
+#include <qjsonobject.h>
 
 Illustration::Illustration(QObject *parent) : Work(parent) {
 }
@@ -28,9 +29,12 @@ void Illustration::assignProperty(const QString &propertyName, const QJsonValue 
         if (!data.isNull())
             m_series = new WorkPrimitive(this, data.toObject());
         break;
-    case 2:
-        m_metaSinglePage = data.toObject()["original_image_url"].toString();
+    case 2: {
+        const QJsonObject metaSinglePageObject = data.toObject();
+        if (metaSinglePageObject.contains("original_image_url"))
+            m_metaSinglePage = metaSinglePageObject["original_image_url"].toString();
         break;
+    }
     case 3:
         for (QJsonValue metaPage : data.toArray())
             m_metaPages.append(new ImageUrls(this, metaPage.toObject()["image_urls"].toObject()));

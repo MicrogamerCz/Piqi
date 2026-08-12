@@ -49,7 +49,8 @@ void SeriesDetail::assignProperty(const QString &propertyName, const QJsonValue 
         Q_EMIT seriesWorkCountChanged();
         break;
     case 3: // lastPublishedContentDatetime
-        m_lastPublishedContentDatetime = QDateTime::fromString(data.toString(), Qt::ISODateWithMs);
+        if (!data.isNull())
+            m_lastPublishedContentDatetime = QDateTime::fromString(data.toString(), Qt::ISODateWithMs);
         Q_EMIT lastPublishedContentDatetimeChanged();
         break;
     default:
