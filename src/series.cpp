@@ -1,9 +1,9 @@
 #include "series.h"
 #include "requestworker.h"
 
-SeriesDetail::SeriesDetail(QObject *parent) : Work(parent) {
+SeriesDetail::SeriesDetail(QObject *parent) : Work(parent), m_coverImageUrls(nullptr) {
 }
-SeriesDetail::SeriesDetail(QObject *parent, QJsonObject data) : Work(parent) {
+SeriesDetail::SeriesDetail(QObject *parent, QJsonObject data) : Work(parent), m_coverImageUrls(nullptr) {
     deserialize(data);
 }
 const QString SeriesDetail::type() const {
@@ -58,9 +58,9 @@ void SeriesDetail::assignProperty(const QString &propertyName, const QJsonValue 
     }
 }
 
-IllustSeriesContext::IllustSeriesContext(QObject *parent) : QJObject(parent) {
+IllustSeriesContext::IllustSeriesContext(QObject *parent) : QJObject(parent), m_prev(nullptr), m_next(nullptr) {
 }
-IllustSeriesContext::IllustSeriesContext(QObject *parent, QJsonObject data) : QJObject(parent) {
+IllustSeriesContext::IllustSeriesContext(QObject *parent, QJsonObject data) : QJObject(parent), m_prev(nullptr), m_next(nullptr) {
     deserialize(data);
 }
 void IllustSeriesContext::assignProperty(const QString &propertyName, const QJsonValue &data) {
@@ -74,9 +74,9 @@ void IllustSeriesContext::assignProperty(const QString &propertyName, const QJso
         QJObject::assignProperty(propertyName, data);
 }
 
-IllustSeries::IllustSeries(QObject *parent) : QObject(parent) {
+IllustSeries::IllustSeries(QObject *parent) : QObject(parent), m_illustSeriesDetail(nullptr), m_illustSeriesContext(nullptr) {
 }
-IllustSeries::IllustSeries(QObject *parent, QJsonObject data) : QObject(parent) {
+IllustSeries::IllustSeries(QObject *parent, QJsonObject data) : QObject(parent), m_illustSeriesDetail(nullptr), m_illustSeriesContext(nullptr) {
     m_illustSeriesDetail = new SeriesDetail(this, data["illust_series_detail"].toObject());
     m_illustSeriesContext = new IllustSeriesContext(this, data["illust_series_context"].toObject());
 }

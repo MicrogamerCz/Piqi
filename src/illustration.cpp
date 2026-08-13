@@ -2,9 +2,9 @@
 #include "requestworker.h"
 #include <qjsonobject.h>
 
-Illustration::Illustration(QObject *parent) : Work(parent) {
+Illustration::Illustration(QObject *parent) : Work(parent), m_series(nullptr) {
 }
-Illustration::Illustration(QObject *parent, QJsonObject data) : Work(parent) {
+Illustration::Illustration(QObject *parent, QJsonObject data) : Work(parent), m_series(nullptr) {
     deserialize(data);
 }
 const QString Illustration::type() const {

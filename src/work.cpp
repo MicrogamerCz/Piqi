@@ -12,9 +12,9 @@ void WorkPrimitive::assignProperty(const QString &propertyName, const QJsonValue
     QJObject::assignProperty(propertyName, data);
 }
 
-Work::Work(QObject *parent) : WorkPrimitive(parent) {
+Work::Work(QObject *parent) : WorkPrimitive(parent), m_imageUrls(nullptr), m_user(nullptr) {
 }
-Work::Work(QObject *parent, QJsonObject data) : WorkPrimitive(parent) {
+Work::Work(QObject *parent, QJsonObject data) : WorkPrimitive(parent), m_imageUrls(nullptr), m_user(nullptr) {
     deserialize(data);
 }
 QCoro::QmlTask Work::AddBookmark(bool isPrivate) {

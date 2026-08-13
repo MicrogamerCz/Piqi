@@ -1,8 +1,8 @@
 #include "userdetails.h"
 
-UserDetails::UserDetails(QObject *parent) : QJObject(parent) {
+UserDetails::UserDetails(QObject *parent) : QJObject(parent), m_user(nullptr), m_profile(nullptr), m_workspace(nullptr) {
 }
-UserDetails::UserDetails(QObject *parent, QJsonObject data) : QJObject(parent) {
+UserDetails::UserDetails(QObject *parent, QJsonObject data) : QJObject(parent), m_user(nullptr), m_profile(nullptr), m_workspace(nullptr) {
     deserialize(data);
 }
 void UserDetails::assignProperty(const QString &propertyName, const QJsonValue &data) {

@@ -36,9 +36,9 @@ QHash<int, QByteArray> Novels::roleNames() const {
     };
 }
 
-RecommendedNovels::RecommendedNovels(QObject *parent) : Novels(parent) {
+RecommendedNovels::RecommendedNovels(QObject *parent) : Novels(parent), m_privacyPolicy(nullptr), m_ranking(nullptr) {
 }
-RecommendedNovels::RecommendedNovels(QObject *parent, QJsonObject data) : Novels(parent, data) {
+RecommendedNovels::RecommendedNovels(QObject *parent, QJsonObject data) : Novels(parent), m_privacyPolicy(nullptr), m_ranking(nullptr) {
     m_ranking = new Novels;
     for (QJsonValue nl : data["ranking_novels"].toArray())
         m_ranking->m_novels.append(new Novel(this, nl.toObject()));

@@ -47,7 +47,7 @@ class PIQI_EXPORT Recommended : public Illusts {
     QM_PROPERTY(bool, contestExists)
 
   public:
-    Recommended(QObject *parent = nullptr) : Illusts(parent) {};
+    Recommended(QObject *parent = nullptr) : Illusts(parent), m_privacyPolicy(nullptr), m_ranking(nullptr) {};
     Recommended(QObject *parent, QJsonObject data) : Illusts(parent, data) {
         m_ranking = new Illusts(this);
 
@@ -80,7 +80,7 @@ class PIQI_EXPORT Series : public Illusts {
     QM_PROPERTY(Illustration *, illustSeriesFirstIllust)
 
   public:
-    Series(QObject *parent = nullptr) : Illusts(parent) {};
+    Series(QObject *parent = nullptr) : Illusts(parent), m_illustSeriesDetail(nullptr), m_illustSeriesFirstIllust(nullptr) {};
     Series(QObject *parent, QJsonObject data) : Illusts(parent, data) {
         m_illustSeriesDetail = new SeriesDetail(this, data["illust_series_detail"].toObject());
         m_illustSeriesFirstIllust = new Illustration(this, data["illust_series_first_illust"].toObject());

@@ -1,10 +1,10 @@
 #include "user.h"
 #include "requestworker.h"
 
-User::User(QObject *parent) : QJObject(parent) {
+User::User(QObject *parent) : QJObject(parent), m_profileImageUrls(nullptr) {
 }
 
-User::User(QObject *parent, QJsonObject data) : QJObject(parent) {
+User::User(QObject *parent, QJsonObject data) : QJObject(parent), m_profileImageUrls(nullptr) {
     deserialize(data);
     // m_isFollowed = data["is_followed"].toBool(); // 0 - not followed, 1 -
     // publicly followed, 2 - privately followed // ?
