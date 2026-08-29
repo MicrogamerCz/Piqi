@@ -35,7 +35,6 @@ class PIQI_EXPORT Illustration : public Work {
 
     Q_INVOKABLE QCoro::QmlTask FetchComments();
     QCoro::Task<Comments *> FetchCommentsTask();
-    QCoro::QmlTask FetchComments();
 
   private:
     const QStringList properties = {"tools", "series", "metaSinglePage", "metaPages", "restrictionAttributes"};
