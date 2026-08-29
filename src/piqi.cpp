@@ -2,10 +2,37 @@
 #include "requestworker.h"
 #include <QUrlQuery>
 
-Piqi::Piqi(QObject *parent) : QObject(parent) {
-    m_user = nullptr;
-    Q_EMIT userChanged();
+Piqi::Piqi(QObject *parent) : QObject(parent), m_user(nullptr) {
 }
+
+
+QCoro::Task<QNetworkRequest> Piqi::createRequest(const QUrl &url, bool authenticated) const {
+    QNetworkRequest request(url);
+    if (authenticated) {
+        if (QDateTime::currentDateTime().msecsTo(PiqiInternal::expiration) < 0)
+            co_await PiqiInternal::LoginTask(PiqiInternal::refreshToken);
+
+        request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
+    }
+
+    request.setRawHeader("Connection", "Keep-Alive");
+    request.setHeader(QNetworkRequest::UserAgentHeader, "PixivAndroidApp/6.183.0 (Android 13; WayDroid x86_64 Device)");
+    request.setRawHeader("Host", "app-api.pixiv.net");
+
+    co_return request;
+}
+template<typename T>
+QCoro::Task<PiqiResponse *> Piqi::sendGet(const QUrl &url, bool authenticated) {
+    QNetworkRequest request = co_await createRequest(url, authenticated);
+    co_return co_await sendGet<T>(request);
+}
+template<typename T>
+QCoro::Task<PiqiResponse *> Piqi::sendGet(const QNetworkRequest &request) {
+    QNetworkReply *reply = co_await manager.get(request);
+    co_return PiqiResponse::buildResponse<T>(*reply);
+}
+
+// Old unchecked code ↓ ↓ ↓
 
 void Piqi::SetLogin(QString accessToken, QString refreshToken) {
     PiqiInternal::accessToken = accessToken;

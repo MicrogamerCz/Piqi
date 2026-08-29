@@ -15,8 +15,6 @@ class PIQI_EXPORT Piqi : public QObject {
     QM_PROPERTY(Account *, user)
     QM_PROPERTY(QList<Account *>, otherUsers)
 
-    QNetworkAccessManager manager;
-
   public:
     Piqi(QObject *parent = nullptr);
 
@@ -83,6 +81,17 @@ class PIQI_EXPORT Piqi : public QObject {
     QCoro::QmlTask WatchlistFeed();
 
     QCoro::QmlTask SearchAutocomplete(QString query);
+
+    // Old unchecked code ↑ ↑ ↑
+
+  private:
+    QNetworkAccessManager manager;
+
+    QCoro::Task<QNetworkRequest> createRequest(const QUrl &url, bool authenticated = true) const;
+    template<typename T>
+    QCoro::Task<PiqiResponse *> sendGet(const QUrl &url, bool authenticated = true);
+    template<typename T>
+    QCoro::Task<PiqiResponse *> sendGet(const QNetworkRequest &request);
 };
 
 /*
