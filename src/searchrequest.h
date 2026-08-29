@@ -4,6 +4,7 @@
 #include "piqi_export.h"
 #include <QAbstractListModel>
 #include <QJsonObject>
+#include <qtmetamacros.h>
 
 // Purely a helper class as Pixiv search requests have quite a few parameters.
 // Some optional, others not. This is the better solution imo
@@ -31,17 +32,17 @@ class PIQI_EXPORT SearchRequest : public QObject {
     Q_ENUM(SearchTarget)
 
     Q_INVOKABLE SearchRequest(QObject *parent = nullptr);
-    Q_SLOT void SetTags(QAbstractListModel *tags);
+    Q_INVOKABLE void SetTags(QAbstractListModel *tags);
 
-    QCoro::QmlTask Search();
+    Q_INVOKABLE QCoro::QmlTask Search();
     QCoro::Task<SearchResults *> SearchTask();
 
-    QCoro::QmlTask SearchNovels();
+    Q_INVOKABLE QCoro::QmlTask SearchNovels();
     QCoro::Task<NovelSearchResults *> SearchNovelsTask();
 
-    QCoro::QmlTask SearchPopularPreview();
+    Q_INVOKABLE QCoro::QmlTask SearchPopularPreview();
     QCoro::Task<Illusts *> SearchPopularPreviewTask();
 
-    QCoro::QmlTask SearchNovelsPopularPreview();
+    Q_INVOKABLE QCoro::QmlTask SearchNovelsPopularPreview();
     QCoro::Task<Novels *> SearchNovelsPopularPreviewTask();
 };
