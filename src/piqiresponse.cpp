@@ -1,21 +1,21 @@
 #include "piqiresponse.h"
 #include <qnetworkreply.h>
 #include <qobject.h>
+#include <qvariant.h>
 
-PiqiResponse::PiqiResponse(QObject *parent) : QObject(parent) {
-}
-PiqiResponse::PiqiResponse(QObject *obj, QNetworkReply *reply) : QObject(nullptr), reply(reply), obj(obj) {
+PiqiResponse::PiqiResponse(QObject *obj, const QNetworkReply &reply)
+    : QObject(nullptr), reply(reply), obj(QVariant::fromValue(obj)) {
 }
 
-QObject *PiqiResponse::getData() {
+QVariant PiqiResponse::data() {
     return obj;
 }
-QString PiqiResponse::getResponse() {
-    return reply->errorString();
+QString PiqiResponse::response() {
+    return reply.errorString();
 }
-int PiqiResponse::getStatusCode() {
-    return reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+int PiqiResponse::statusCode() {
+    return reply.attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 }
-bool PiqiResponse::getIsSuccessful() {
-    return getStatusCode() == 200;
+bool PiqiResponse::isSuccessful() {
+    return statusCode() == 200;
 }

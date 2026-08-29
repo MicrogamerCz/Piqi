@@ -1,28 +1,24 @@
 #pragma once
 #include "piqi_export.h"
-#include <qnetworkreply.h>
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
+#include <QNetworkReply>
 
 class PIQI_EXPORT PiqiResponse : public QObject {
     Q_OBJECT
-    QML_ELEMENT
 
-    Q_PROPERTY(QObject *Data READ getData)
-    Q_PROPERTY(QString Response READ getResponse)
-    Q_PROPERTY(int StatusCode READ getStatusCode)
-    Q_PROPERTY(bool IsSuccessful READ getIsSuccessful)
-
-    QNetworkReply *reply;
-    QObject *obj;
+    Q_PROPERTY(QVariant data READ data)
+    Q_PROPERTY(QString response READ response)
+    Q_PROPERTY(int statusCode READ statusCode)
+    Q_PROPERTY(bool isSuccessful READ isSuccessful)
 
   public:
-    PiqiResponse(QObject *parent = nullptr);
-    PiqiResponse(QObject *obj, QNetworkReply *reply);
+    PiqiResponse(QObject *obj, const QNetworkReply &reply);
 
-    QObject *getData();
-    QString getResponse();
-    int getStatusCode();
-    bool getIsSuccessful();
+    QVariant data();
+    QString response();
+    int statusCode();
+    bool isSuccessful();
+
+  private:
+    const QNetworkReply &reply;
+    QVariant obj;
 };
