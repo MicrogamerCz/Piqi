@@ -7,7 +7,7 @@ Comments::Comments(QObject *parent, QJsonObject data) : QJObject(parent) {
 
 void Comments::assignProperty(const QString &propertyName, const QJsonValue &data) {
     if (propertyName == "comments") {
-        for (const QJsonValue &com : data["comments"].toArray())
+        for (const QJsonValue &com : data.toArray())
             m_comments.append(new Comment(this, com.toObject()));
         Q_EMIT commentsChanged();
     } else if (propertyName == "next") {
