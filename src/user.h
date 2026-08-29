@@ -2,6 +2,7 @@
 #include "bookmarkdetails.h"
 #include "imageurls.h"
 #include <QCoroQml>
+#include <qtmetamacros.h>
 
 class PIQI_EXPORT User : public QJObject {
     Q_OBJECT
@@ -19,13 +20,13 @@ class PIQI_EXPORT User : public QJObject {
     User(QObject *parent = nullptr);
     User(QObject *parent, QJsonObject data);
 
-    Q_SLOT QCoro::QmlTask Follow(bool privateFollow = false);
+    Q_INVOKABLE QCoro::QmlTask Follow(bool privateFollow = false);
     QCoro::Task<> FollowTask(bool privateFollow = false);
 
-    Q_SLOT QCoro::QmlTask RemoveFollow();
+    Q_INVOKABLE QCoro::QmlTask RemoveFollow();
     QCoro::Task<> RemoveFollowTask();
 
-    QCoro::QmlTask FollowDetail();
+    Q_INVOKABLE QCoro::QmlTask FollowDetail();
     QCoro::Task<FollowDetails *> FollowDetailTask();
 
   private:
