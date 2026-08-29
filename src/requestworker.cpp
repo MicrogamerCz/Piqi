@@ -21,11 +21,11 @@ QCoro::Task<PiqiResponse *> PiqiInternal::LoginTask(QString refreshToken) {
 
     QNetworkReply *reply = co_await manager.post(request, obj.toString().toUtf8());
     if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200)
-        co_return new PiqiResponse(nullptr, reply);
+        co_return new PiqiResponse(nullptr, *reply);
 
     QJsonObject data = QJsonDocument::fromJson(reply->readAll()).object();
     accessToken = data["access_token"].toString();
     refreshToken = data["refresh_token"].toString();
     expiration = QDateTime::currentDateTime().addSecs(3600);
-    co_return new PiqiResponse(new Account(nullptr, data["user"].toObject()), reply);
+    co_return new PiqiResponse(new Account(nullptr, data["user"].toObject()), *reply);
 }
