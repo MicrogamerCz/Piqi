@@ -9,11 +9,12 @@ class PIQI_EXPORT PiqiResponse : public QObject {
 
     Q_PROPERTY(QVariant data READ data)
     Q_PROPERTY(QString response READ response)
+    Q_PROPERTY(QJsonObject body READ body)
     Q_PROPERTY(int statusCode READ statusCode)
     Q_PROPERTY(bool isSuccessful READ isSuccessful)
 
   public:
-    PiqiResponse(QObject *obj, const QNetworkReply &reply);
+    PiqiResponse(QObject *obj, QNetworkReply &reply);
 
     template<typename T>
     static PiqiResponse *buildResponse(QNetworkReply &reply) {
@@ -29,12 +30,13 @@ class PIQI_EXPORT PiqiResponse : public QObject {
         return new PiqiResponse(obj, reply);
     }
 
-    QVariant data();
-    QString response();
-    int statusCode();
-    bool isSuccessful();
+    QVariant data() const;
+    QString response() const;
+    QJsonObject body() const;
+    int statusCode() const;
+    bool isSuccessful() const;
 
   private:
-    const QNetworkReply &reply;
+    QNetworkReply &reply;
     QVariant obj;
 };
