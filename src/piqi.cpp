@@ -151,6 +151,16 @@ QCoro::Task<PiqiResponse *> Piqi::watchlistFeedTask() {
     return sendGet<SeriesDetails>(QUrl("https://app-api.pixiv.net/v1/watchlist/manga"));
 }
 
+QCoro::QmlTask Piqi::fetchComments(Illustration *illustration) {
+    return fetchCommentsTask(illustration);
+}
+QCoro::Task<PiqiResponse *> Piqi::fetchCommentsTask(Illustration *illustration) {
+    QUrl url("https://app-api.pixiv.net/v3/illust/comments");
+    QUrlQuery query{{"illust_id", QString::number(illustration->m_id)}};
+    url.setQuery(query);
+    return sendGet<Comments>(url);
+}
+
 QCoro::QmlTask Piqi::commentReplies(Comment *comment) {
     return commentRepliesTask(comment);
 }

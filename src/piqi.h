@@ -1,4 +1,5 @@
 #pragma once
+#include "comments.h"
 #include "illustration.h"
 #include "novel.h"
 #include "piqi_export.h"
@@ -69,6 +70,9 @@ class PIQI_EXPORT Piqi : public QObject {
     QCoro::Task<PiqiResponse *> watchlistFeedTask();
 
     // Other methods
+    Q_INVOKABLE QCoro::QmlTask fetchComments(Illustration *illustration);
+    QCoro::Task<PiqiResponse *> fetchCommentsTask(Illustration *illustration);
+
     Q_INVOKABLE QCoro::QmlTask commentReplies(Comment *comment);
     QCoro::Task<PiqiResponse *> commentRepliesTask(Comment *comment);
 

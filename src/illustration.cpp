@@ -10,15 +10,7 @@ Illustration::Illustration(QObject *parent, QJsonObject data) : Work(parent), m_
 const QString Illustration::type() const {
     return "illust";
 }
-QCoro::QmlTask Illustration::FetchComments() {
-    return FetchCommentsTask();
-}
-QCoro::Task<Comments *> Illustration::FetchCommentsTask() {
-    QUrl url("https://app-api.pixiv.net/v3/illust/comments");
-    QUrlQuery query{{"illust_id", QString::number(m_id)}};
-    url.setQuery(query);
-    return PiqiInternal::SendGet<Comments>(url);
-}
+
 void Illustration::assignProperty(const QString &propertyName, const QJsonValue &data) {
     switch (properties.indexOf(propertyName)) {
     case 0:
