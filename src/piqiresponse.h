@@ -13,6 +13,9 @@ class PIQI_EXPORT PiqiResponse : public QObject {
   public:
     PiqiResponse(QObject *obj, const QNetworkReply &reply);
 
+    template<typename T>
+    static PiqiResponse *buildResponse(const QNetworkReply &reply);
+
     QVariant data();
     QString response();
     int statusCode();
