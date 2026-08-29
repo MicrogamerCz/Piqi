@@ -3,6 +3,7 @@
 #include "work.h"
 #include "workspace.h"
 #include <QCoro>
+#include <qtmetamacros.h>
 
 class PIQI_EXPORT Illustration : public Work {
     Q_OBJECT
@@ -32,6 +33,7 @@ class PIQI_EXPORT Illustration : public Work {
     Illustration(QObject *parent = nullptr);
     Illustration(QObject *parent, QJsonObject data);
 
+    Q_INVOKABLE QCoro::QmlTask FetchComments();
     QCoro::Task<Comments *> FetchCommentsTask();
     QCoro::QmlTask FetchComments();
 

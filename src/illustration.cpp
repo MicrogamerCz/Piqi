@@ -28,6 +28,8 @@ void Illustration::assignProperty(const QString &propertyName, const QJsonValue 
     case 1:
         if (!data.isNull())
             m_series = new WorkPrimitive(this, data.toObject());
+        // m_series = !data.isNull() ? new WorkPrimitive(this, data.toObject()) : nullptr;
+        Q_EMIT seriesChanged();
         break;
     case 2: {
         const QJsonObject metaSinglePageObject = data.toObject();
