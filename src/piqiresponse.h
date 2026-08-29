@@ -1,6 +1,8 @@
 #pragma once
 #include "piqi_export.h"
 #include <QNetworkReply>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
 
 class PIQI_EXPORT PiqiResponse : public QObject {
     Q_OBJECT
@@ -14,7 +16,18 @@ class PIQI_EXPORT PiqiResponse : public QObject {
     PiqiResponse(QObject *obj, const QNetworkReply &reply);
 
     template<typename T>
-    static PiqiResponse *buildResponse(const QNetworkReply &reply);
+    static PiqiResponse *buildResponse(QNetworkReply &reply) {
+        if (!reply.isFinished())
+            return nullptr;
+
+        T *obj = nullptr;
+        if (reply.error() == QNetworkReply::NoError) {
+            QJsonObject json = QJsonDocument::fromJson(reply.readAll()).object();
+            obj = new T(nullptr, json);
+        }
+
+        return new PiqiResponse(obj, reply);
+    }
 
     QVariant data();
     QString response();
