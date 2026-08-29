@@ -21,8 +21,8 @@ class PIQI_EXPORT Piqi : public QObject {
     Piqi(QObject *parent = nullptr);
 
     // Feed methods
-    Q_INVOKABLE QCoro::QmlTask Walkthrough();
-    QCoro::Task<PiqiResponse *> WalkthroughTask();
+    Q_INVOKABLE QCoro::QmlTask walkthrough();
+    QCoro::Task<PiqiResponse *> walkthroughTask();
 
     // TODO: replace qstring type for enum - illust, manga, novel
     Q_INVOKABLE QCoro::QmlTask

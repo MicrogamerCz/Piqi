@@ -19,10 +19,10 @@
 Piqi::Piqi(QObject *parent) : QObject(parent), m_user(nullptr) {
 }
 
-QCoro::QmlTask Piqi::Walkthrough() {
-    return WalkthroughTask();
+QCoro::QmlTask Piqi::walkthrough() {
+    return walkthroughTask();
 }
-QCoro::Task<PiqiResponse *> Piqi::WalkthroughTask() {
+QCoro::Task<PiqiResponse *> Piqi::walkthroughTask() {
     return sendGet<Illusts>(QUrl("https://app-api.pixiv.net/v1/walkthrough/illusts"), false);
 }
 
