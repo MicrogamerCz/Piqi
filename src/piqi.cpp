@@ -219,7 +219,7 @@ QCoro::QmlTask Piqi::login(QString refreshToken) {
     return loginTask(refreshToken);
 }
 QCoro::Task<PiqiResponse *> Piqi::loginTask(QString refreshToken) {
-    PiqiResponse *response = co_await PiqiInternal::LoginTask(refreshToken);
+    PiqiResponse *response = co_await PiqiInternal::loginTask(refreshToken);
     m_user = response->data().value<Account *>();
     Q_EMIT userChanged();
 
@@ -286,7 +286,7 @@ QCoro::Task<QNetworkRequest> Piqi::createRequest(const QUrl &url, bool authentic
     QNetworkRequest request(url);
     if (authenticated) {
         if (QDateTime::currentDateTime().msecsTo(PiqiInternal::expiration) < 0)
-            co_await PiqiInternal::LoginTask(PiqiInternal::refreshToken);
+            co_await PiqiInternal::loginTask(PiqiInternal::refreshToken);
 
         request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     }

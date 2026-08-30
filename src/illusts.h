@@ -14,10 +14,10 @@ class PIQI_EXPORT Illusts : public QAbstractListModel {
     Illusts(QObject *parent = nullptr);
     Illusts(QObject *parent, QJsonObject data);
 
-    Q_SLOT QCoro::QmlTask NextFeed();
-    QCoro::Task<> NextFeedTask();
+    Q_SLOT QCoro::QmlTask nextFeed();
+    QCoro::Task<> nextFeedTask();
 
-    Q_SLOT void Extend(Illusts *nextFeed) {
+    Q_SLOT void extend(Illusts *nextFeed) {
         m_nextUrl = nextFeed->m_nextUrl;
         Q_EMIT nextUrlChanged();
 

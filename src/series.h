@@ -20,11 +20,11 @@ class PIQI_EXPORT SeriesDetail : public Work {
     SeriesDetail(QObject *parent = nullptr);
     SeriesDetail(QObject *parent, QJsonObject data);
 
-    QCoro::Task<> WatchlistAddTask();
-    QCoro::Task<> WatchlistDeleteTask();
+    QCoro::Task<> watchlistAddTask();
+    QCoro::Task<> watchlistDeleteTask();
 
-    Q_SLOT QCoro::QmlTask WatchlistAdd();
-    Q_SLOT QCoro::QmlTask WatchlistDelete();
+    Q_SLOT QCoro::QmlTask watchlistAdd();
+    Q_SLOT QCoro::QmlTask watchlistDelete();
 
   protected:
     const QString type() const override;
@@ -88,7 +88,7 @@ class PIQI_EXPORT SeriesDetails : public QAbstractListModel {
         else
             m_nextUrl = "";
     }
-    Q_SLOT void Extend(SeriesDetails *nextFeed) {
+    Q_SLOT void extend(SeriesDetails *nextFeed) {
         m_nextUrl = nextFeed->m_nextUrl;
         Q_EMIT nextUrlChanged();
 

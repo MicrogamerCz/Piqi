@@ -7,17 +7,17 @@ SearchRequest::SearchRequest(QObject *parent) : QObject(parent) {
     m_start_date = m_end_date = nullptr;
 };
 
-void SearchRequest::SetTags(QAbstractListModel *tags) {
+void SearchRequest::setTags(QAbstractListModel *tags) {
     for (int i = 0; i < tags->rowCount(); i++) {
         auto item = tags->data(tags->index(i), Qt::DisplayRole).value<Tag *>();
         m_tags.append(item);
     }
 }
 
-QCoro::QmlTask SearchRequest::Search() {
-    return SearchTask();
+QCoro::QmlTask SearchRequest::search() {
+    return searchTask();
 }
-QCoro::Task<SearchResults *> SearchRequest::SearchTask() {
+QCoro::Task<SearchResults *> SearchRequest::searchTask() {
     QUrl url("https://app-api.pixiv.net/v1/search/illust");
     QUrlQuery query;
 
@@ -60,13 +60,13 @@ QCoro::Task<SearchResults *> SearchRequest::SearchTask() {
 
     url.setQuery(query);
 
-    return PiqiInternal::SendGet<SearchResults>(url);
+    return PiqiInternal::sendGet<SearchResults>(url);
 }
 
-QCoro::QmlTask SearchRequest::SearchNovels() {
-    return SearchNovelsTask();
+QCoro::QmlTask SearchRequest::searchNovels() {
+    return searchNovelsTask();
 }
-QCoro::Task<NovelSearchResults *> SearchRequest::SearchNovelsTask() {
+QCoro::Task<NovelSearchResults *> SearchRequest::searchNovelsTask() {
     QUrl url("https://app-api.pixiv.net/v1/search/novel");
     QUrlQuery query;
 
@@ -109,13 +109,13 @@ QCoro::Task<NovelSearchResults *> SearchRequest::SearchNovelsTask() {
 
     url.setQuery(query);
 
-    return PiqiInternal::SendGet<NovelSearchResults>(url);
+    return PiqiInternal::sendGet<NovelSearchResults>(url);
 }
 
-QCoro::QmlTask SearchRequest::SearchPopularPreview() {
-    return SearchPopularPreviewTask();
+QCoro::QmlTask SearchRequest::searchPopularPreview() {
+    return searchPopularPreviewTask();
 }
-QCoro::Task<Illusts *> SearchRequest::SearchPopularPreviewTask() {
+QCoro::Task<Illusts *> SearchRequest::searchPopularPreviewTask() {
     QUrl url("https://app-api.pixiv.net/v1/search/popular-preview/illust");
     QUrlQuery query;
 
@@ -152,13 +152,13 @@ QCoro::Task<Illusts *> SearchRequest::SearchPopularPreviewTask() {
     }
 
     url.setQuery(query);
-    return PiqiInternal::SendGet<Illusts>(url);
+    return PiqiInternal::sendGet<Illusts>(url);
 }
 
-QCoro::QmlTask SearchRequest::SearchNovelsPopularPreview() {
-    return SearchNovelsPopularPreviewTask();
+QCoro::QmlTask SearchRequest::searchNovelsPopularPreview() {
+    return searchNovelsPopularPreviewTask();
 }
-QCoro::Task<Novels *> SearchRequest::SearchNovelsPopularPreviewTask() {
+QCoro::Task<Novels *> SearchRequest::searchNovelsPopularPreviewTask() {
     QUrl url("https://app-api.pixiv.net/v1/search/popular-preview/novel");
     QUrlQuery query;
 
@@ -195,5 +195,5 @@ QCoro::Task<Novels *> SearchRequest::SearchNovelsPopularPreviewTask() {
     }
 
     url.setQuery(query);
-    return PiqiInternal::SendGet<Novels>(url);
+    return PiqiInternal::sendGet<Novels>(url);
 }

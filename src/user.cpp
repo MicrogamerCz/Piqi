@@ -9,10 +9,10 @@ User::User(QObject *parent, QJsonObject data) : QJObject(parent), m_profileImage
     // m_isFollowed = data["is_followed"].toBool(); // 0 - not followed, 1 -
     // publicly followed, 2 - privately followed // ?
 }
-Q_SLOT QCoro::QmlTask User::Follow(bool privateFollow) {
-    return FollowTask(privateFollow);
+Q_SLOT QCoro::QmlTask User::follow(bool privateFollow) {
+    return followTask(privateFollow);
 }
-QCoro::Task<> User::FollowTask(bool privateFollow) {
+QCoro::Task<> User::followTask(bool privateFollow) {
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/user/follow/add"));
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -24,10 +24,10 @@ QCoro::Task<> User::FollowTask(bool privateFollow) {
 
     co_await PiqiInternal::manager.post(request, query.toString().toUtf8());
 }
-Q_SLOT QCoro::QmlTask User::RemoveFollow() {
-    return RemoveFollowTask();
+Q_SLOT QCoro::QmlTask User::removeFollow() {
+    return removeFollowTask();
 }
-QCoro::Task<> User::RemoveFollowTask() {
+QCoro::Task<> User::removeFollowTask() {
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/user/follow/delete"));
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -41,10 +41,10 @@ QCoro::Task<> User::RemoveFollowTask() {
 
     co_await PiqiInternal::manager.post(request, query.toString().toUtf8());
 }
-QCoro::QmlTask User::FollowDetail() {
-    return FollowDetailTask();
+QCoro::QmlTask User::followDetail() {
+    return followDetailTask();
 }
-QCoro::Task<FollowDetails *> User::FollowDetailTask() {
+QCoro::Task<FollowDetails *> User::followDetailTask() {
     QUrl url("https://app-api.pixiv.net/v1/user/follow/detail");
     QUrlQuery query{{"user_id", QString::number(m_id)}};
     url.setQuery(query);
@@ -53,7 +53,7 @@ QCoro::Task<FollowDetails *> User::FollowDetailTask() {
 
     QNetworkReply *reply = co_await PiqiInternal::manager.get(request);
     QJsonObject data = QJsonDocument::fromJson(reply->readAll()).object();
-    co_return new FollowDetails(nullptr, data["follow_detail"].toObject()); // * check where it's used
+    co_return new FollowDetails(nullptr, data["follow_detail"].toObject());
 }
 void User::assignProperty(const QString &propertyName, const QJsonValue &data) {
     if (propertyName == "profileImageUrls") {

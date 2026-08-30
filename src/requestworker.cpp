@@ -1,7 +1,7 @@
 #include "requestworker.h"
 #include "user.h"
 
-QCoro::Task<bool> PiqiInternal::IsLoggedIn() {
+QCoro::Task<bool> PiqiInternal::isLoggedIn() {
     bool emptyAT = accessToken.isEmpty();
     bool expired = (expiration.toMSecsSinceEpoch() - QDateTime::currentDateTime().toMSecsSinceEpoch()) < 0;
     bool result = !(emptyAT || expired);
@@ -10,7 +10,7 @@ QCoro::Task<bool> PiqiInternal::IsLoggedIn() {
     co_return result;
 }
 
-QCoro::Task<PiqiResponse *> PiqiInternal::LoginTask(QString refreshToken) {
+QCoro::Task<PiqiResponse *> PiqiInternal::loginTask(QString refreshToken) {
     QNetworkRequest request(QUrl("https://oauth.secure.pixiv.net/auth/token"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setHeader(QNetworkRequest::UserAgentHeader, "PixivAndroidApp/6.183.0 (Android 13; WayDroid x86_64 Device)");

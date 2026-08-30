@@ -2,6 +2,7 @@
 #include "novel.h"
 #include "privacypolicy.h"
 #include <QAbstractItemModel>
+#include <qtmetamacros.h>
 
 class PIQI_EXPORT Novels : public QAbstractListModel {
     Q_OBJECT
@@ -14,7 +15,7 @@ class PIQI_EXPORT Novels : public QAbstractListModel {
     Novels(QObject *parent = nullptr);
     Novels(QObject *parent, QJsonObject data);
 
-    Q_SLOT void Extend(Novels *nextFeed);
+    Q_INVOKABLE void extend(Novels *nextFeed);
 
     enum CustomRoles {
         NovelRole = Qt::UserRole,

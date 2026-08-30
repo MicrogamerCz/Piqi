@@ -43,14 +43,14 @@ class PIQI_EXPORT Work : public WorkPrimitive {
     Work(QObject *parent = nullptr);
     Work(QObject *parent, QJsonObject data);
 
-    QCoro::Task<> AddBookmarkTask(bool isPrivate = false);
-    QCoro::Task<> RemoveBookmarkTask();
-    QCoro::Task<BookmarkDetails *> BookmarkDetailTask();
+    QCoro::Task<> addBookmarkTask(bool isPrivate = false);
+    QCoro::Task<> removeBookmarkTask();
+    QCoro::Task<BookmarkDetails *> bookmarkDetailTask();
 
   public Q_SLOTS:
-    QCoro::QmlTask AddBookmark(bool isPrivate = false);
-    QCoro::QmlTask RemoveBookmark();
-    QCoro::QmlTask BookmarkDetail();
+    QCoro::QmlTask addBookmark(bool isPrivate = false);
+    QCoro::QmlTask removeBookmark();
+    QCoro::QmlTask bookmarkDetail();
 
   protected:
     virtual const QString type() const = 0;

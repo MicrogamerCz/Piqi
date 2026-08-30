@@ -12,7 +12,7 @@ Novels::Novels(QObject *parent, QJsonObject data) : QAbstractListModel(parent) {
     else
         m_nextUrl = "";
 }
-void Novels::Extend(Novels *nextFeed) {
+void Novels::extend(Novels *nextFeed) {
     m_nextUrl = nextFeed->m_nextUrl;
     Q_EMIT nextUrlChanged();
 

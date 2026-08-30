@@ -8,12 +8,12 @@ inline QNetworkAccessManager manager;
 inline QString accessToken, refreshToken;
 inline QDateTime expiration;
 
-QCoro::Task<PiqiResponse *> LoginTask(QString refreshToken = "");
-QCoro::Task<bool> IsLoggedIn();
+QCoro::Task<PiqiResponse *> loginTask(QString refreshToken = "");
+QCoro::Task<bool> isLoggedIn();
 
 template<class T>
-QCoro::Task<T *> SendGet(QUrl url, bool authenticated = true) {
-    if (authenticated && !(co_await IsLoggedIn()))
+QCoro::Task<T *> sendGet(QUrl url, bool authenticated = true) {
+    if (authenticated && !(co_await isLoggedIn()))
         co_return nullptr;
 
     QNetworkRequest request(url);

@@ -10,7 +10,7 @@ Tags::Tags(QObject *parent, QJsonObject data) : QAbstractListModel(parent) {
 
     m_nextUrl = data["next_url"].toString();
 }
-void Tags::Extend(Tags *nextTags) {
+void Tags::extend(Tags *nextTags) {
     m_nextUrl = nextTags->m_nextUrl;
     Q_EMIT nextUrlChanged();
 

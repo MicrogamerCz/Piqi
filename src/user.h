@@ -20,14 +20,14 @@ class PIQI_EXPORT User : public QJObject {
     User(QObject *parent = nullptr);
     User(QObject *parent, QJsonObject data);
 
-    Q_INVOKABLE QCoro::QmlTask Follow(bool privateFollow = false);
-    QCoro::Task<> FollowTask(bool privateFollow = false);
+    Q_INVOKABLE QCoro::QmlTask follow(bool privateFollow = false);
+    QCoro::Task<> followTask(bool privateFollow = false);
 
-    Q_INVOKABLE QCoro::QmlTask RemoveFollow();
-    QCoro::Task<> RemoveFollowTask();
+    Q_INVOKABLE QCoro::QmlTask removeFollow();
+    QCoro::Task<> removeFollowTask();
 
-    Q_INVOKABLE QCoro::QmlTask FollowDetail();
-    QCoro::Task<FollowDetails *> FollowDetailTask();
+    Q_INVOKABLE QCoro::QmlTask followDetail();
+    QCoro::Task<FollowDetails *> followDetailTask();
 
   private:
     void assignProperty(const QString &propertyName, const QJsonValue &data) override;

@@ -17,10 +17,10 @@ Work::Work(QObject *parent) : WorkPrimitive(parent), m_imageUrls(nullptr), m_use
 Work::Work(QObject *parent, QJsonObject data) : WorkPrimitive(parent), m_imageUrls(nullptr), m_user(nullptr) {
     deserialize(data);
 }
-QCoro::QmlTask Work::AddBookmark(bool isPrivate) {
-    return AddBookmarkTask(isPrivate);
+QCoro::QmlTask Work::addBookmark(bool isPrivate) {
+    return addBookmarkTask(isPrivate);
 }
-QCoro::Task<> Work::AddBookmarkTask(bool isPrivate) {
+QCoro::Task<> Work::addBookmarkTask(bool isPrivate) {
     QNetworkAccessManager manager;
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v2/illust/bookmark/add"));
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
@@ -47,10 +47,10 @@ QCoro::Task<> Work::AddBookmarkTask(bool isPrivate) {
     m_totalBookmarks = totalBookmarksCache;
     Q_EMIT totalBookmarksChanged();
 }
-QCoro::QmlTask Work::RemoveBookmark() {
-    return RemoveBookmarkTask();
+QCoro::QmlTask Work::removeBookmark() {
+    return removeBookmarkTask();
 }
-QCoro::Task<> Work::RemoveBookmarkTask() {
+QCoro::Task<> Work::removeBookmarkTask() {
     QNetworkAccessManager manager;
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/" + type() + "/bookmark/delete"));
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
@@ -78,10 +78,10 @@ QCoro::Task<> Work::RemoveBookmarkTask() {
     m_totalBookmarks = totalBookmarksCache;
     Q_EMIT totalBookmarksChanged();
 }
-QCoro::QmlTask Work::BookmarkDetail() {
-    return BookmarkDetailTask();
+QCoro::QmlTask Work::bookmarkDetail() {
+    return bookmarkDetailTask();
 }
-QCoro::Task<BookmarkDetails *> Work::BookmarkDetailTask() {
+QCoro::Task<BookmarkDetails *> Work::bookmarkDetailTask() {
     QNetworkAccessManager manager;
     QUrl url("https://app-api.pixiv.net/v2/" + type() + "/bookmark/detail");
     QUrlQuery query{{"illust_id", QString::number(m_id)}};
@@ -94,7 +94,7 @@ QCoro::Task<BookmarkDetails *> Work::BookmarkDetailTask() {
     co_await qCoro(&manager, &QNetworkAccessManager::finished);
 
     QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
-    co_return new BookmarkDetails(nullptr, json); // * check where it's used
+    co_return new BookmarkDetails(nullptr, json);
 }
 void Work::assignProperty(const QString &propertyName, const QJsonValue &data) {
     switch (properties.indexOf(propertyName)) {

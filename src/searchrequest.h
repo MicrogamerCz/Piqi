@@ -32,17 +32,17 @@ class PIQI_EXPORT SearchRequest : public QObject {
     Q_ENUM(SearchTarget)
 
     Q_INVOKABLE SearchRequest(QObject *parent = nullptr);
-    Q_INVOKABLE void SetTags(QAbstractListModel *tags);
+    Q_INVOKABLE void setTags(QAbstractListModel *tags);
 
-    Q_INVOKABLE QCoro::QmlTask Search();
-    QCoro::Task<SearchResults *> SearchTask();
+    Q_INVOKABLE QCoro::QmlTask search();
+    QCoro::Task<SearchResults *> searchTask();
 
-    Q_INVOKABLE QCoro::QmlTask SearchNovels();
-    QCoro::Task<NovelSearchResults *> SearchNovelsTask();
+    Q_INVOKABLE QCoro::QmlTask searchNovels();
+    QCoro::Task<NovelSearchResults *> searchNovelsTask();
 
-    Q_INVOKABLE QCoro::QmlTask SearchPopularPreview();
-    QCoro::Task<Illusts *> SearchPopularPreviewTask();
+    Q_INVOKABLE QCoro::QmlTask searchPopularPreview();
+    QCoro::Task<Illusts *> searchPopularPreviewTask();
 
-    Q_INVOKABLE QCoro::QmlTask SearchNovelsPopularPreview();
-    QCoro::Task<Novels *> SearchNovelsPopularPreviewTask();
+    Q_INVOKABLE QCoro::QmlTask searchNovelsPopularPreview();
+    QCoro::Task<Novels *> searchNovelsPopularPreviewTask();
 };
