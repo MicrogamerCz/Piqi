@@ -4,18 +4,18 @@
 #include <qobject.h>
 #include <qvariant.h>
 
-PiqiResponse::PiqiResponse(QObject *obj, QNetworkReply &reply)
-    : QObject(nullptr), reply(reply), obj(QVariant::fromValue(obj)) {
+PiqiResponse::PiqiResponse(QObject *obj, const QByteArray &content, QNetworkReply &reply)
+    : QObject(nullptr), content(content), reply(reply), obj(QVariant::fromValue(obj)) {
 }
 
 QVariant PiqiResponse::data() const {
     return obj;
 }
 QString PiqiResponse::response() const {
-    return reply.errorString();
+    return isSuccessful() ? QString::fromUtf8(content) : reply.errorString();
 }
 QJsonObject PiqiResponse::body() const {
-    QJsonDocument doc = QJsonDocument::fromJson(reply.readAll());
+    const QJsonDocument doc = QJsonDocument::fromJson(content);
     return doc.object();
 }
 int PiqiResponse::statusCode() const {

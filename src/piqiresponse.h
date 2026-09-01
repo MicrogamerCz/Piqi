@@ -14,20 +14,22 @@ class PIQI_EXPORT PiqiResponse : public QObject {
     Q_PROPERTY(bool isSuccessful READ isSuccessful)
 
   public:
-    PiqiResponse(QObject *obj, QNetworkReply &reply);
+    PiqiResponse(QObject *obj, const QByteArray &content, QNetworkReply &reply);
 
     template<typename T>
-    static PiqiResponse *buildResponse(QNetworkReply &reply) {
+    static PiqiResponse *buildResponse(QNetworkReply &reply, const QString &key = QString()) {
         if (!reply.isFinished())
             return nullptr;
 
+        const QByteArray content = reply.readAll();
+
         T *obj = nullptr;
         if (reply.error() == QNetworkReply::NoError) {
-            QJsonObject json = QJsonDocument::fromJson(reply.readAll()).object();
-            obj = new T(nullptr, json);
+            const QJsonObject json = QJsonDocument::fromJson(content).object();
+            obj = new T(nullptr, key.isEmpty() ? json : json[key].toObject());
         }
 
-        return new PiqiResponse(obj, reply);
+        return new PiqiResponse(obj, content, reply);
     }
 
     QVariant data() const;
@@ -37,6 +39,7 @@ class PIQI_EXPORT PiqiResponse : public QObject {
     bool isSuccessful() const;
 
   private:
+    const QByteArray content;
     QNetworkReply &reply;
     QVariant obj;
 };
