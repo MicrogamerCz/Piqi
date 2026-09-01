@@ -6,8 +6,8 @@ class PIQI_EXPORT Stamp : public QJObject {
     Q_OBJECT
     QML_ELEMENT
 
-    QM_PROPERTY(int, id)
-    QM_PROPERTY(QString, url)
+    QM_PROPERTY(int, stampId)
+    QM_PROPERTY(QString, stampUrl)
 
   public:
     Stamp(QObject *parent = nullptr);
