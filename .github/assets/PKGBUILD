@@ -9,15 +9,16 @@ url="https://github.com/MicrogamerCz/Piqi"
 license=(Unlicense)
 depends=(qcoro)
 provides=('piqi')
-makedepends=(extra-cmake-modules ninja git)
-source=("git+https://github.com/MicrogamerCz/Piqi#branch=feat-pkgbuild")
+makedepends=(extra-cmake-modules git)
+options=(!debug)
+source=("git+https://github.com/MicrogamerCz/Piqi")
 sha256sums=('SKIP')
 
 build() {
-  cmake -GNinja -B build -S Piqi \
+  cmake -B build -S Piqi \
     -DCMAKE_INSTALL_PREFIX=/usr
 
-  cmake --build build
+  cmake --build build -j$(nproc)
 }
 
 package() {
