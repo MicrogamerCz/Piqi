@@ -14,7 +14,8 @@ void Comment::assignProperty(const QString &propertyName, const QJsonValue &data
         m_user = new User(this, data.toObject());
         Q_EMIT userChanged();
     } else if (propertyName == "stamp") {
-        m_stamp = new Stamp(this, data.toObject());
+        if (!data.isNull())
+            m_stamp = new Stamp(this, data.toObject());
         Q_EMIT stampChanged();
     } else
         QJObject::assignProperty(propertyName, data);
