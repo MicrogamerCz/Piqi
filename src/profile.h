@@ -29,7 +29,7 @@ class PIQI_EXPORT Profile : public QJObject {
     QM_PROPERTY(int, totalIllustSeries)
     QM_PROPERTY(int, totalNovelSeries)
     QM_PROPERTY(QString, backgroundImageUrl) // profile banner
-    // twitter_account
+    // QM_PROPERTY(QString, twitterAccount)
     QM_PROPERTY(QString, twitterUrl)
     QM_PROPERTY(bool, isPremium)
     QM_PROPERTY(bool, isUsingCustomProfileImage)

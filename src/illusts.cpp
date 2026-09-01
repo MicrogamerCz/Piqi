@@ -16,12 +16,12 @@ Illusts::Illusts(QObject *parent, QJsonObject data) : QAbstractListModel(parent)
     else
         m_nextUrl = "";
 }
-QCoro::QmlTask Illusts::NextFeed() {
-    return NextFeedTask();
+QCoro::QmlTask Illusts::nextFeed() {
+    return nextFeedTask();
 }
-QCoro::Task<> Illusts::NextFeedTask() {
-    Illusts *feed = co_await PiqiInternal::SendGet<Illusts>(QUrl(m_nextUrl));
-    Extend(feed);
+QCoro::Task<> Illusts::nextFeedTask() {
+    Illusts *feed = co_await PiqiInternal::sendGet<Illusts>(QUrl(m_nextUrl));
+    extend(feed);
 }
 int Illusts::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)

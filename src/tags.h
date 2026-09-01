@@ -18,7 +18,7 @@ class PIQI_EXPORT Tags : public QAbstractListModel {
     QVariant data(const QModelIndex &index, int role = Qt::UserRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_SLOT void Extend(Tags *nextTags);
+    Q_SLOT void extend(Tags *nextTags);
 
     enum Roles {
         TagRole = Qt::UserRole + 1,

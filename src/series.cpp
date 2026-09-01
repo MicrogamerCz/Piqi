@@ -9,10 +9,10 @@ SeriesDetail::SeriesDetail(QObject *parent, QJsonObject data) : Work(parent), m_
 const QString SeriesDetail::type() const {
     return "manga"; // default for now
 }
-QCoro::QmlTask SeriesDetail::WatchlistAdd() {
-    return WatchlistAddTask();
+QCoro::QmlTask SeriesDetail::watchlistAdd() {
+    return watchlistAddTask();
 }
-QCoro::Task<> SeriesDetail::WatchlistAddTask() {
+QCoro::Task<> SeriesDetail::watchlistAddTask() {
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/add"));
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -21,10 +21,10 @@ QCoro::Task<> SeriesDetail::WatchlistAddTask() {
     };
     co_await PiqiInternal::manager.post(request, query.toString().toUtf8());
 }
-QCoro::QmlTask SeriesDetail::WatchlistDelete() {
-    return WatchlistDeleteTask();
+QCoro::QmlTask SeriesDetail::watchlistDelete() {
+    return watchlistDeleteTask();
 }
-QCoro::Task<> SeriesDetail::WatchlistDeleteTask() {
+QCoro::Task<> SeriesDetail::watchlistDeleteTask() {
     QNetworkRequest request(QUrl("https://app-api.pixiv.net/v1/watchlist/manga/delete"));
     request.setRawHeader("Authorization", ("Bearer " + PiqiInternal::accessToken).toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");

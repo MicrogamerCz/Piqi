@@ -1,8 +1,8 @@
 #pragma once
-#include "comments.h"
 #include "work.h"
 #include "workspace.h"
 #include <QCoro>
+#include <qtmetamacros.h>
 
 class PIQI_EXPORT Illustration : public Work {
     Q_OBJECT
@@ -31,9 +31,6 @@ class PIQI_EXPORT Illustration : public Work {
   public:
     Illustration(QObject *parent = nullptr);
     Illustration(QObject *parent, QJsonObject data);
-
-    QCoro::Task<Comments *> FetchCommentsTask();
-    QCoro::QmlTask FetchComments();
 
   private:
     const QStringList properties = {"tools", "series", "metaSinglePage", "metaPages", "restrictionAttributes"};
