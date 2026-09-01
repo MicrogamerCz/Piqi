@@ -19,6 +19,10 @@ qt_add_library(piqi SHARED
     illustration.cpp
     illusts.cpp
     imageurls.cpp
+    notification.cpp
+    notificationcontent.cpp
+    notificationmore.cpp
+    notifications.cpp
     novel.cpp
     novels.cpp
     privacypolicy.cpp
@@ -52,6 +56,10 @@ ecm_generate_headers(piqi_HEADERS
         Illustration
         Illusts
         ImageUrls
+        Notification
+        NotificationContent
+        NotificationMore
+        Notifications
         Novel
         Novels
         Piqi

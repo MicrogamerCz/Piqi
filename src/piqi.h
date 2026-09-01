@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Micro <microgamercz@proton.me>
+
 #pragma once
 #include "comments.h"
 #include "illustration.h"
@@ -10,6 +13,7 @@
 #include <QCoroQmlTask>
 #include <QNetworkAccessManager>
 #include <qqmlintegration.h>
+#include <qtmetamacros.h>
 
 class PIQI_EXPORT Piqi : public QObject {
     Q_OBJECT
@@ -92,6 +96,12 @@ class PIQI_EXPORT Piqi : public QObject {
 
     Q_INVOKABLE QCoro::QmlTask login(QString refreshToken);
     QCoro::Task<PiqiResponse *> loginTask(QString refreshToken);
+
+    Q_INVOKABLE QCoro::QmlTask notificationsList(int limit = 30);
+    QCoro::Task<PiqiResponse *> notificationsListTask(int limit = 30);
+
+    Q_INVOKABLE QCoro::QmlTask checkUnreadNotifications();
+    QCoro::Task<bool> checkUnreadNotificationsTask();
 
     Q_INVOKABLE QCoro::QmlTask searchAutocomplete(QString query);
     QCoro::Task<QList<Tag *>>

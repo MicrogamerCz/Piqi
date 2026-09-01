@@ -1,7 +1,11 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Micro <microgamercz@proton.me>
+
 #include "piqi.h"
 #include "comments.h"
 #include "illustration.h"
 #include "illusts.h"
+#include "notifications.h"
 #include "novels.h"
 #include "piqiresponse.h"
 #include "requestworker.h"
@@ -11,6 +15,8 @@
 #include <QUrlQuery>
 #include <qcorotask.h>
 #include <qdatetime.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
 #include <qnetworkreply.h>
 #include <qnetworkrequest.h>
 #include <qurl.h>
@@ -224,6 +230,33 @@ QCoro::Task<PiqiResponse *> Piqi::loginTask(QString refreshToken) {
     Q_EMIT userChanged();
 
     co_return response;
+}
+
+QCoro::QmlTask Piqi::notificationsList(int limit) {
+    return notificationsListTask(limit);
+}
+QCoro::Task<PiqiResponse *> Piqi::notificationsListTask(int limit) {
+    QUrl url("https://app-api.pixiv.net/v1/notification/list");
+    QUrlQuery query{{"limit", QString::number(limit)}};
+    url.setQuery(query);
+
+    return sendGet<Notifications>(url);
+}
+
+QCoro::QmlTask Piqi::checkUnreadNotifications() {
+    return checkUnreadNotificationsTask();
+}
+QCoro::Task<bool> Piqi::checkUnreadNotificationsTask() {
+    QUrl url("https://app-api.pixiv.net/v1/notification/has-unread-notifications");
+
+    QNetworkRequest request = co_await createRequest(url);
+    QNetworkReply *reply = co_await manager.get(request);
+
+    if (reply->error() != QNetworkReply::NoError)
+        co_return false;
+
+    QJsonObject replyContent = QJsonDocument::fromJson(reply->readAll()).object();
+    co_return replyContent["has_unread_notifications"].toBool();
 }
 
 QCoro::QmlTask Piqi::searchAutocomplete(QString query) {
