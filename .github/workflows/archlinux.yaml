@@ -41,7 +41,7 @@ jobs:
           tag_version="${GITHUB_REF#refs/tags/}"
           sudo -u builduser bash -c 'cd /var/tmp/piqi-archlinux; makepkg -s'
           zst_file=$(find /var/tmp/piqi-archlinux -name "*.zst")
-          publish_filename=piqi-${tag_version}-1-x86_64.pkg.tar.zst
+          echo "ZST_ASSET=$zst_file" >> "$GITHUB_ENV"
       - name: Release
         uses: softprops/action-gh-release@v2.0.8
         if: startsWith(github.ref, 'refs/tags/')
