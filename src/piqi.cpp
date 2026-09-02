@@ -207,7 +207,9 @@ QCoro::Task<PiqiResponse *> Piqi::illustDetailTask(int id) {
     QUrlQuery query{{"illust_id", QString::number(id)}};
     url.setQuery(query);
 
-    return sendGet<Illustration>(url);
+    QNetworkRequest request = co_await createRequest(url);
+    QNetworkReply *reply = co_await manager.get(request);
+    co_return PiqiResponse::buildResponse<Illustration>(*reply, "illust");
 }
 
 QCoro::QmlTask Piqi::illustSeriesDetails(Illustration *illust) {
