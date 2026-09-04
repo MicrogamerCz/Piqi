@@ -15,7 +15,7 @@ However this compatibility with QtQuick means, that QtQuick is a dependency of a
 # AUR
 yay -S piqi-git
 # Prebuilt Arch package (use from download directory)
-sudo pacman -U ./piqi-0.3.0-1-x86_64.pkg.tar.zst
+sudo pacman -U ./piqi-0.3.1-1-x86_64.pkg.tar.zst
 ```
 
 ### Building from source
